@@ -21,10 +21,12 @@ apt:
 
 
 packages:
-
   - docker-ce
-
-
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin
+  - unattended-upgrades # Debian/Ubuntu
 
 power_state:
 
