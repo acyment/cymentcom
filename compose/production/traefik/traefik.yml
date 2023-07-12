@@ -28,7 +28,7 @@ certificatesResolvers:
 http:
   routers:
     web-secure-router:
-      rule: 'Host(`alancyment.com`) || Host(`www.alancyment.com`)'
+      rule: 'Host(`cyment.com`) || Host(`www.cyment.com`)'
       entryPoints:
         - web-secure
       middlewares:
@@ -39,7 +39,7 @@ http:
         certResolver: letsencrypt
 
     web-media-router:
-      rule: '(Host(`alancyment.com`) || Host(`www.alancyment.com`)) && PathPrefix(`/media/`)'
+      rule: '(Host(`cyment.com`) || Host(`www.cyment.com`)) && PathPrefix(`/media/`)'
       entryPoints:
         - web-secure
       middlewares:
