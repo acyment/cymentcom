@@ -1,24 +1,15 @@
 #cloud-config
 
+package_update: true # Update the apt database
 
-
-package_update: true     # Update the apt database
-
-package_upgrade: true   # Upgrade the instance's packages
-
-
+package_upgrade: true # Upgrade the instance's packages
 
 apt:
-
   sources:
-
     docker.list:
-
-      source: "deb [arch=amd64] https://download.docker.com/linux/ubuntu $RELEASE stable"
+      source: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu $RELEASE stable'
 
       keyid: FFFF0000 # Example GPG key ID
-
-
 
 packages:
   - docker-ce
@@ -29,11 +20,13 @@ packages:
   - unattended-upgrades # Debian/Ubuntu
 
 power_state:
-
-  delay: "now"
+  delay: 'now'
 
   mode: reboot
 
   message: Reboot after installing Docker
 
   condition: True
+
+runcmd:
+  - sysctl vm.overcommit_memory=1 # Recommended by redis (https://github.com/jemalloc/jemalloc/issues/1328)

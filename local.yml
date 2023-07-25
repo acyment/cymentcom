@@ -56,3 +56,19 @@ services:
     container_name: cyment_com_local_mailhog
     ports:
       - '8025:8025'
+
+  node:
+    build:
+      context: .
+      dockerfile: ./compose/local/node/Dockerfile
+    image: cyment_com_local_node
+    container_name: cyment_com_local_node
+    depends_on:
+      - django
+    volumes:
+      - .:/app:z
+      # http://jdlm.info/articles/2016/03/06/lessons-building-node-app-docker.html
+      - /app/node_modules
+    command: npm run dev
+    ports:
+      - '3000:3000'

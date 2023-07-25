@@ -75,6 +75,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "webpack_loader",
 ]
 
 LOCAL_APPS = [
@@ -224,6 +225,9 @@ ADMIN_URL = "admin/"
 ADMINS = [("""Alan Cyment""", "alan@cyment.com")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
+# https://cookiecutter-django.readthedocs.io/en/latest/settings.html#other-environment-settings
+# Force the `admin` sign in process to go through the `django-allauth` workflow
+DJANGO_ADMIN_FORCE_ALLAUTH = env.bool("DJANGO_ADMIN_FORCE_ALLAUTH", default=False)
 
 # LOGGING
 # ------------------------------------------------------------------------------
@@ -272,5 +276,15 @@ SOCIALACCOUNT_ADAPTER = "cyment_com.users.adapters.SocialAccountAdapter"
 SOCIALACCOUNT_FORMS = {"signup": "cyment_com.users.forms.UserSocialSignupForm"}
 
 
+# django-webpack-loader
+# ------------------------------------------------------------------------------
+WEBPACK_LOADER = {
+    "DEFAULT": {
+        "CACHE": not DEBUG,
+        "STATS_FILE": BASE_DIR / "webpack-stats.json",
+        "POLL_INTERVAL": 0.1,
+        "IGNORE": [r".+\.hot-update.js", r".+\.map"],
+    }
+}
 # Your stuff...
 # ------------------------------------------------------------------------------

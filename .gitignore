@@ -158,9 +158,8 @@ typings/
 !.vscode/extensions.json
 *.code-workspace
 
-# Local History for Visual Studio Code
-.history/
-
+# Local History for devcontainer
+.devcontainer/bash_history
 
 
 
@@ -276,6 +275,8 @@ cyment_com/media/
 
 .pytest_cache/
 .ipython/
+cyment_com/static/webpack_bundles/
+webpack-stats.json
 .env
 .envs/*
 !.envs/.local/

@@ -1,4 +1,12 @@
+FROM node:18-bullseye-slim as client-builder
 
+ARG APP_HOME=/app
+WORKDIR ${APP_HOME}
+
+COPY ./package.json ${APP_HOME}
+RUN npm install && npm cache clean --force
+COPY . ${APP_HOME}
+RUN npm run build
 # define an alias for the specific python version used in this file.
 FROM python:3.11.4-slim-bullseye as python
 
@@ -68,11 +76,16 @@ RUN chmod +x /start
 
 
 # copy application code to WORKDIR
-COPY --chown=django:django . ${APP_HOME}
+COPY --from=client-builder --chown=django:django ${APP_HOME} ${APP_HOME}
+
 
 # make django owner of the WORKDIR directory as well.
 RUN chown django:django ${APP_HOME}
 
 USER django
+
+RUN DATABASE_URL="" \
+  DJANGO_SETTINGS_MODULE="config.settings.test" \
+  python manage.py compilemessages
 
 ENTRYPOINT ["/entrypoint"]
