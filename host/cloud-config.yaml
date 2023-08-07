@@ -36,3 +36,16 @@ power_state:
 
 runcmd:
   - sysctl vm.overcommit_memory=1 # Recommended by redis (https://github.com/jemalloc/jemalloc/issues/1328)
+  - |
+    printf "Unattended-Upgrade::Allowed-Origins {\n" > /etc/apt/apt.conf.d/50unattended-upgrades
+    printf  "\"\${distro_id}:\${distro_codename}\";\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
+    printf   "\"\${distro_id}:\${distro_codename}-security\";\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
+    printf   "\"\${distro_id}ESMApps:\${distro_codename}-apps-security\";\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
+    printf   "\"\${distro_id}ESM:\${distro_codename}-infra-security\";};\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
+    printf   "Unattended-Upgrade::Package-Blacklist {};\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
+    printf   "Unattended-Upgrade::DevRelease \"auto\";\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
+    printf   "Unattended-Upgrade::Mail \"alan@cyment.com\";\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
+    printf   "Unattended-Upgrade::Remove-Unused-Kernel-Packages \"true\";\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
+    printf   "Unattended-Upgrade::Remove-New-Unused-Dependencies \"true\";\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
+    printf   "Unattended-Upgrade::Remove-Unused-Dependencies \"true\";\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
+    printf   "Unattended-Upgrade::Automatic-Reboot \"true\";\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
