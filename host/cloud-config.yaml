@@ -8,7 +8,7 @@ users:
   - name: acyment
     ssh_authorized_keys:
       - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDlYRrYQhWO3x/kdyoyBepGsAV+VLYepc+jQX0d4GAuHRzWibN9nq4Ed36dMJLOqrKlerg6kwo4KbqnzIKMnqTnINCrv/VwerE+3s3ECBQzzzLsVHRlUWZMBdWBiNjSTpGkLAi1pRi2yGcA4SJvfTZq5qqICJLYoYapedXvpP1walEQ7VHfzn+mZxn/zvQLE5t3tsNq19VVkSE9aD6RSZqPOEXdS5FLdjLnwjL1FP+6m010HrXtIL6xlZnsxyfRKeYcuILa1aq+I4WY/po+WTwyt++eSGNgsqJG0Zbqs8uhq5JG6CMotO4TNUBgzDrhda5lA4cHPjbcIYMlRoWk0uJhmE5i4KnJrajYyvcRxWDOjBhvPEziUHEAkiJ4GAJMzdnzut4sNnHEBcGzjvcNCsmxg8NZNYQAWSMk3mOurdWCVlqGV/uoJrO0iVwLP88IDkJkcHbuGsp1qoxPfeVIrHVE+hugeMqAd5zP+xmZTWMJD6+rLbg42zLAK/4r1x2Sf70= alan@cyment.com'
-    groups: sudo
+    groups: sudo, docker
     shell: /bin/bash
 
 apt:
@@ -35,6 +35,8 @@ power_state:
   condition: True
 
 runcmd:
+  - usermod -aG docker
+  - newgrp docker
   - sysctl vm.overcommit_memory=1 # Recommended by redis (https://github.com/jemalloc/jemalloc/issues/1328)
   - |
     printf "Unattended-Upgrade::Allowed-Origins {\n" > /etc/apt/apt.conf.d/50unattended-upgrades
