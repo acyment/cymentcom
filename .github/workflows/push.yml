@@ -22,7 +22,7 @@ jobs:
     uses: ./.github/workflows/_testing.yml
 
   deploy:
-    needs: test
+    needs: [test, lint]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code Repository
