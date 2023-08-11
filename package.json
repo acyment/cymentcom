@@ -8,7 +8,6 @@
     "autoprefixer": "^10.4.0",
     "babel-loader": "^9.1.2",
     "css-loader": "^6.5.1",
-    "gulp-concat": "^2.6.1",
     "mini-css-extract-plugin": "^2.4.5",
     "node-sass-tilde-importer": "^1.0.2",
     "pixrem": "^5.0.0",
