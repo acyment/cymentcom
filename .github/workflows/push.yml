@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Rsync deployments
         uses: burnett01/rsync-deployments@6.0.0
         with:
