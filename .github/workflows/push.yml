@@ -27,10 +27,24 @@ jobs:
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
+      - name: Fill in Postgres .env with secrets
+        uses: falnyr/replace-env-vars-action@master
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        with:
+          filename: /.env/.production/.postgres
+      - name: Fill in Django .env with secrets
+        uses: falnyr/replace-env-vars-action@master
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_ADMIN_URL: ${{ secrets.DJANGO_ADMIN_URL }}
+        with:
+          filename: /.env/.production/.django
       - name: Rsync deployments
         uses: burnett01/rsync-deployments@6.0.0
         with:
-          switches: -avzr --delete --mkpath --exclude .envs/.production
+          switches: -avzr --delete --mkpath
           path: ./
           remote_path: ${{ secrets.DEPLOY_PATH }}
           remote_host: ${{ secrets.DEPLOY_SSH_HOST }}
