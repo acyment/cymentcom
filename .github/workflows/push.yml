@@ -27,6 +27,15 @@ jobs:
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
+      - name: Get path
+        id: get-path
+        uses: michmich112/get-actions-dir-path@main
+      - name: Display result
+        run: |
+          echo "path -> $DIRPATH"
+        env:
+          DIRPATH: ${{ steps.get-path.outputs.dir-path }}
+
       - name: Fill in Postgres .env with secrets
         uses: falnyr/replace-env-vars-action@master
         env:
