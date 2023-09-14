@@ -28,13 +28,16 @@ jobs:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
 
-      - name: Fill in Postgres .env with secrets
-        uses: falnyr/replace-env-vars-action@master
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      - name: Create production .postgres
+        uses: SpicyPizza/create-envfile@v2.0
         with:
-          filename: .envs/.production/.postgres
+          envkey_POSTGRES_HOST: 'postgres'
+          envkey_POSTGRES_PORT: 5432
+          envkey_POSTGRES_DB: 'cyment_com'
+          envkey_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          directory: .envs/.production
+          file_name: .postgres
       - name: Fill in Django .env with secrets
         uses: falnyr/replace-env-vars-action@master
         env:
@@ -42,6 +45,8 @@ jobs:
           DJANGO_ADMIN_URL: ${{ secrets.DJANGO_ADMIN_URL }}
         with:
           filename: .envs/.production/.django
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Rsync deployments
         uses: burnett01/rsync-deployments@6.0.0
         with:
