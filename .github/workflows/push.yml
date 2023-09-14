@@ -45,8 +45,6 @@ jobs:
           DJANGO_ADMIN_URL: ${{ secrets.DJANGO_ADMIN_URL }}
         with:
           filename: .envs/.production/.django
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: Rsync deployments
         uses: burnett01/rsync-deployments@6.0.0
         with:
