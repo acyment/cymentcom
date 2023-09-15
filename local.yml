@@ -9,6 +9,8 @@ services:
     build:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
+      tags:
+        - "acyment:cyment_com_local_django"
     image: cyment_com_local_django
     container_name: cyment_com_local_django
     depends_on:
@@ -27,6 +29,8 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
+      tags:
+        - "acyment:cyment_com_production_postgres"
     image: cyment_com_production_postgres
     container_name: cyment_com_local_postgres
     volumes:
@@ -41,6 +45,8 @@ services:
     build:
       context: .
       dockerfile: ./compose/local/docs/Dockerfile
+      tags:
+        - "acyment:cyment_com_local_docs"
     env_file:
       - ./.envs/.local/.django
     volumes:
@@ -61,6 +67,8 @@ services:
     build:
       context: .
       dockerfile: ./compose/local/node/Dockerfile
+      tags:
+        - "acyment:cyment_com_local_node"
     image: cyment_com_local_node
     container_name: cyment_com_local_node
     depends_on:
