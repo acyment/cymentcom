@@ -22,7 +22,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
+          context: .
           push: true
+          load: true
           tags: acyment/cymentcom:latest
 
       - name: Run DB Migrations
