@@ -19,14 +19,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v5
+      - name: Bake
+        uses: docker/bake-action@v4
         with:
-          context: ./compose/local/django/
+          files: local.yml
           push: true
-          tags: acyment/cymentcom:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Run DB Migrations
         run: docker compose -f local.yml run --rm django python manage.py migrate
