@@ -24,7 +24,6 @@ jobs:
         with:
           context: .
           push: true
-          load: true
           tags: acyment/cymentcom:latest
 
       - name: Run DB Migrations
