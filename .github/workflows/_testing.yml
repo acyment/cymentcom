@@ -25,6 +25,8 @@ jobs:
           context: ./compose/local/django/
           push: true
           tags: acyment/cymentcom:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Run DB Migrations
         run: docker compose -f local.yml run --rm django python manage.py migrate
