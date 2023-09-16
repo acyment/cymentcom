@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
       tags:
-        - "acyment:cymentcom"
+        - 'acyment:cymentcom'
     image: cyment_com_local_django
     container_name: cyment_com_local_django
     depends_on:
