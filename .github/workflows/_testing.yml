@@ -22,7 +22,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: compose/local/django/Dockerfile
+          context: compose/local/django/
           push: true
           tags: acyment/cymentcom:latest
 
