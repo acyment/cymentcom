@@ -33,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./compose/local/postgres/Dockerfile
+          file: ./compose/production/postgres/Dockerfile
           push: false
           tags: acyment/postgres:latest
           cache-from: type=gha
