@@ -19,13 +19,23 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build and push Django image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./compose/local/django/Dockerfile
           push: false
           tags: acyment/django:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push Postgres image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./compose/local/postgres/Dockerfile
+          push: false
+          tags: acyment/postgres:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
