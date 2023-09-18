@@ -18,6 +18,7 @@ apt:
       keyid: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88 # Example GPG key ID
 
 packages:
+  - git
   - docker-ce
   - docker-ce-cli
   - containerd.io
@@ -42,6 +43,7 @@ runcmd:
     printf "Unattended-Upgrade::Allowed-Origins {\n" > /etc/apt/apt.conf.d/50unattended-upgrades
     printf  "\"\${distro_id}:\${distro_codename}\";\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
     printf   "\"\${distro_id}:\${distro_codename}-security\";\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
+    printf   "\"\${distro_id}:\${distro_codename}-updates\";\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
     printf   "\"\${distro_id}ESMApps:\${distro_codename}-apps-security\";\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
     printf   "\"\${distro_id}ESM:\${distro_codename}-infra-security\";};\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
     printf   "Unattended-Upgrade::Package-Blacklist {};\n" >> /etc/apt/apt.conf.d/50unattended-upgrades
