@@ -13,7 +13,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - uses: crazy-max/ghaction-github-runtime@v1
+      - uses: crazy-max/ghaction-github-runtime@v3
       - uses: docker/bake-action@v4
         with:
           files: ./local.yml
