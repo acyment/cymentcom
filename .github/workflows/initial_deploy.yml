@@ -23,4 +23,4 @@ jobs:
           username: ${{ secrets.DEPLOY_SSH_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: ${{ secrets.PORT }}
-          script: pwd
+          script: docker compose -f /home/acyment/src/production.yml up -d
