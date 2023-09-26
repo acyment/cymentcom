@@ -23,6 +23,7 @@ services:
       - ./.envs/.local/.postgres
     ports:
       - '8000:8000'
+      - '5678:5678'
     command: /start
 
   postgres:
@@ -71,6 +72,9 @@ services:
         - 'acyment/node'
     image: cyment_com_local_node
     container_name: cyment_com_local_node
+    environment:
+      NODE_ENV: development
+      NODE_OPTIONS: '--inspect=0.0.0.0:9229' # Expose the debugging port
     depends_on:
       - django
     volumes:
@@ -80,3 +84,4 @@ services:
     command: npm run dev
     ports:
       - '3000:3000'
+      - '9229:9229'
