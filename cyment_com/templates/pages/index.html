@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <title>DevFolio Bootstrap Portfolio Template - Index</title>
+    <meta content="" name="description" />
+    <meta content="" name="keywords" />
+
+    <!-- Favicons -->
+    <link href="../static/images/favicon.ico" rel="icon" />
+    <link href="../static/images/apple-touch-icon.png" rel="apple-touch-icon" />
+
+    <!-- Vendor CSS Files -->
+    <link
+      href="../static/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../static/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../static/vendor/glightbox/css/glightbox.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../static/vendor/swiper/swiper-bundle.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Template Main CSS File -->
+    <link href="../static/css/style.css" rel="stylesheet" />
+
+    <!-- EmailJS code for contact form  -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
+    ></script>
+    <script type="text/javascript">
+      (function () {
+        // https://dashboard.emailjs.com/admin/account
+        emailjs.init('jowku7upgbilAPGc6');
+      })();
+    </script>
+    <script type="text/javascript">
+      window.onload = function () {
+        let thisForm = document.getElementById('contact-form');
+        thisForm.addEventListener('submit', function (event) {
+          event.preventDefault();
+          emailjs.sendForm('service_wwwcymentcom', 'contact_form', this).then(
+            function () {
+              console.log('SUCCESS!');
+              thisForm.querySelector('.sent-message').classList.add('d-block');
+              thisForm.reset();
+            },
+            function (error) {
+              console.log('FAILED...', error);
+              thisForm.querySelector('.error-message').innerHTML = error;
+              thisForm.querySelector('.error-message').classList.add('d-block');
+            }
+          );
+        });
+      };
+    </script>
+
+    <!-- =======================================================
+  * Template Name: DevFolio - v4.9.1
+  * Template URL: https://bootstrapmade.com/devfolio-bootstrap-portfolio-html-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+  </head>
+
+  <body>
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top">
+      <div class="container d-flex align-items-center justify-content-between">
+        <!-- <h1 class="logo"><a href="index.html">Deep Agility</a></h1> -->
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <a href="index.html" class="logo"
+          ><img src="../static/images/logo.svg" alt="" class="img-fluid"
+        /></a>
+
+        <nav id="navbar" class="navbar">
+          <ul>
+            <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+            <li><a class="nav-link scrollto" href="#training">Training</a></li>
+            <li>
+              <a class="nav-link scrollto" href="#transformation"
+                >Transformation</a
+              >
+            </li>
+            <li>
+              <a class="nav-link scrollto" href="#deep-agility">Deep Agility</a>
+            </li>
+            <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+          </ul>
+          <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+        <!-- .navbar -->
+      </div>
+    </header>
+    <!-- End Header -->
+
+    <!-- ======= Hero Section ======= -->
+    <div
+      id="hero"
+      class="hero route bg-image"
+      style="background-image: url(../static/images/hero-bg.jpg)"
+    >
+      <div class="overlay-itro"></div>
+      <div class="hero-content display-table">
+        <div class="table-cell">
+          <div class="container">
+            <!--<p class="display-6 color-d">Hello, world!</p>-->
+            <h1 class="hero-title mb-4">Alan Cyment is</h1>
+            <p class="hero-subtitle">
+              <span
+                class="typed"
+                data-typed-items="Deep Agility, a slick agile coach, an awesome Certified Scrum Trainer, a sharp organizational consultant"
+              ></span>
+            </p>
+            <!-- <p class="pt-3"><a class="btn btn-primary btn js-scroll px-4" href="#about" role="button">Learn More</a></p> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Hero Section -->
+
+    <main id="main">
+      <!-- ======= About Section ======= -->
+      <section id="about" class="about-mf sect-pt4 route">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="box-shadow-full">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-sm-6 col-md-5">
+                        <div class="about-img">
+                          <img
+                            src="../static/images/about.jpg"
+                            class="img-fluid rounded b-shadow-a"
+                            alt=""
+                          />
+                        </div>
+                      </div>
+                      <div class="col-sm-6 col-md-7">
+                        <div class="about-info">
+                          <p>
+                            <span class="title-s">Name: </span>
+                            <span>Alan Cyment</span>
+                          </p>
+                          <p>
+                            <span class="title-s">Profile: </span>
+                            <span>Certified Scrum Trainer</span>
+                          </p>
+                          <p>
+                            <span class="title-s">Email: </span>
+                            <a href="mailto:alan@cyment.com"
+                              ><span>alan@cyment.com</span></a
+                            >
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="skill-mf">
+                      <p class="title-left">Services</p>
+                      <ul>
+                        <li>Training</li>
+                        <li></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="about-me pt-4 pt-md-0">
+                      <div class="title-box-2">
+                        <h5 class="title-left">About Alan</h5>
+                      </div>
+                      <p class="lead">
+                        Alan started his career as passionate software
+                        developer, obsessed with code legiblity and team
+                        dynamics. He then became involved in the agile movement
+                        back in 2005. He quickly raised to become the first
+                        Spanish-speaking Certified Scrum Trainer of the Scrum
+                        Alliance.
+                      </p>
+                      <p class="lead">
+                        He went on to become a world-class trainer, facilitator
+                        and organizational transformation catalyzer. Alan has
+                        the ability to work with both CEOs and junior
+                        developers.
+                      </p>
+                      <p class="lead">
+                        He has specialized in delivering intensive training
+                        sessions that shatter paradigms and profound ongoing
+                        transformation interventions, that help pivot to achieve
+                        deep agility.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End About Section -->
+
+      <!-- ======= Training Section ======= -->
+      <section id="training" class="services-mf pt-5 route">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="title-box text-center">
+                <h3 class="title-a">Training</h3>
+                <p class="subtitle-a">
+                  World-class interactive online training for teams, leaders and
+                  executives
+                </p>
+                <div class="line-mf"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="service-box">
+                <div class="service-ico">
+                  <span class="ico-circle"
+                    ><i class="bi bi-briefcase"></i
+                  ></span>
+                </div>
+                <div class="service-content">
+                  <h2 class="s-title">Certified ScrumMaster</h2>
+                  <p class="s-description text-center">
+                    Paradigm-shattering introduction to the world of deep
+                    agility. From the philosophical underpinnings of Scrum to
+                    concrete tips on how to run effective Sprints in just five
+                    days!
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="service-box">
+                <div class="service-ico">
+                  <span class="ico-circle"
+                    ><i class="bi bi-card-checklist"></i
+                  ></span>
+                </div>
+                <div class="service-content">
+                  <h2 class="s-title">Certified Scrum Product Owner</h2>
+                  <p class="s-description text-center">
+                    With the Product Owner at the center of the scene, this
+                    training provides deep insight into both supporting
+                    discovery and delivery.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="service-box">
+                <div class="service-ico">
+                  <span class="ico-circle"
+                    ><i class="bi bi-bar-chart"></i
+                  ></span>
+                </div>
+                <div class="service-content">
+                  <h2 class="s-title">Scaling with LeSS</h2>
+                  <p class="s-description text-center">
+                    Go narrow and deep, not wide and shallow! Learn the basics
+                    of the minimalistic yet ambitious scaling framework that
+                    best embodies the agile spirit.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Training Section -->
+
+      <!-- ======= Counter Section ======= -->
+      <div
+        class="section-counter paralax-mf bg-image"
+        style="background-image: url(../static/images/clase-bg.jpg)"
+      >
+        <div class="overlay-mf"></div>
+        <div class="container position-relative">
+          <div class="row">
+            <div class="col-sm-3 col-lg-3">
+              <div class="counter-box counter-box pt-4 pt-md-0">
+                <div class="counter-ico">
+                  <span class="ico-circle"><i class="bi bi-check"></i></span>
+                </div>
+                <div class="counter-num">
+                  <p
+                    data-purecounter-start="0"
+                    data-purecounter-end="312"
+                    data-purecounter-duration="1"
+                    class="counter purecounter"
+                  ></p>
+                  <span class="counter-text">CERTIFIED TRAININGS</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3 col-lg-3">
+              <div class="counter-box pt-4 pt-md-0">
+                <div class="counter-ico">
+                  <span class="ico-circle"
+                    ><i class="bi bi-journal-richtext"></i
+                  ></span>
+                </div>
+                <div class="counter-num">
+                  <p
+                    data-purecounter-start="0"
+                    data-purecounter-end="23"
+                    data-purecounter-duration="1"
+                    class="counter purecounter"
+                  ></p>
+                  <span class="counter-text">YEARS OF EXPERIENCE</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3 col-lg-3">
+              <div class="counter-box pt-4 pt-md-0">
+                <div class="counter-ico">
+                  <span class="ico-circle"><i class="bi bi-people"></i></span>
+                </div>
+                <div class="counter-num">
+                  <p
+                    data-purecounter-start="0"
+                    data-purecounter-end="5500"
+                    data-purecounter-duration="1"
+                    class="counter purecounter"
+                  ></p>
+                  <span class="counter-text">STUDENTS</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3 col-lg-3">
+              <div class="counter-box pt-4 pt-md-0">
+                <div class="counter-ico">
+                  <span class="ico-circle"><i class="bi bi-pin-map"></i></span>
+                </div>
+                <div class="counter-num">
+                  <p
+                    data-purecounter-start="0"
+                    data-purecounter-end="19"
+                    data-purecounter-duration="1"
+                    class="counter purecounter"
+                  ></p>
+                  <span class="counter-text">COUNTRIES</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Counter Section -->
+
+      <!-- ======= Transformation Section ======= -->
+      <section id="transformation" class="services-mf pt-5 route">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="title-box text-center">
+                <h3 class="title-a">Transformation</h3>
+                <p class="subtitle-a">
+                  A unique mix of consulting and coaching to make your
+                  transformation reach new depths
+                </p>
+                <div class="line-mf"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="service-box">
+                <div class="service-ico">
+                  <span class="ico-circle"
+                    ><i class="bi bi-align-start"></i
+                  ></span>
+                </div>
+                <div class="service-content">
+                  <h2 class="s-title">Inception</h2>
+                  <p class="s-description text-center">
+                    Kick-start your digital transformation with alignment and
+                    depth. Inception workshops range from a couple of hours to a
+                    whole week!
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="service-box">
+                <div class="service-ico">
+                  <span class="ico-circle"><i class="bi bi-map"></i></span>
+                </div>
+                <div class="service-content">
+                  <h2 class="s-title">Strategy</h2>
+                  <p class="s-description text-center">
+                    Let transformation sponsors reflect themselves continuously
+                    on an expert mirror. Mantain inertia by iteratively checking
+                    on an external expert.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="service-box">
+                <div class="service-ico">
+                  <span class="ico-circle"><i class="bi bi-compass"></i></span>
+                </div>
+                <div class="service-content">
+                  <h2 class="s-title">Pivot</h2>
+                  <p class="s-description text-center">
+                    Perhaps it's time to rethink your transformation. Immerse
+                    everyone, from sponsors to citizens, in an intense week of
+                    deep reflection and concrete action.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Transformation Section -->
+
+      <!-- ======= Testimonials Section ======= -->
+      <div
+        class="testimonials paralax-mf bg-image"
+        style="background-image: url(../static/images/legos-bg.jpg)"
+      >
+        <div class="overlay-mf"></div>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div
+                class="testimonials-slider swiper"
+                data-aos="fade-up"
+                data-aos-delay="100"
+              >
+                <div class="swiper-wrapper">
+                  <div class="swiper-slide">
+                    <div class="testimonial-box">
+                      <div class="author-test">
+                        <img
+                          src="../static/images/testimonial-2.jpg"
+                          alt=""
+                          class="rounded-circle b-shadow-a"
+                        />
+                        <span class="author">Tobias Mayer</span>
+                      </div>
+                      <div class="content-test">
+                        <p class="description lead">
+                          Of all the people I have met in the Scrum world Alan
+                          is probably the person who best embodies the Agile
+                          spirit. Alan is an intuitive and sensitive
+                          facilitator, with a deep understanding of his subject,
+                          and a wonderful sense of fun.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- End testimonial item -->
+
+                  <div class="swiper-slide">
+                    <div class="testimonial-box">
+                      <div class="author-test">
+                        <img
+                          src="../static/images/testimonial-4.jpg"
+                          alt=""
+                          class="rounded-circle b-shadow-a"
+                        />
+                        <span class="author">Walter Ariel Risi</span>
+                      </div>
+                      <div class="content-test">
+                        <p class="description lead">
+                          The CSM training facilitated by Alan is an outstanding
+                          experience. It's more than just Scrum...it's an
+                          opportunity to take some distance from your day to
+                          day, reflect, share, introspect, and get back
+                          energized and inspired.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- End testimonial item -->
+
+                  <div class="swiper-slide">
+                    <div class="testimonial-box">
+                      <div class="author-test">
+                        <img
+                          src="../static/images/testimonial-6.jpg"
+                          alt=""
+                          class="rounded-circle b-shadow-a"
+                        />
+                        <span class="author">Leo Antoli</span>
+                      </div>
+                      <div class="content-test">
+                        <p class="description lead">
+                          The CSM course taught by Alan is probably the best
+                          course I've ever attended. It was a very good mix of
+                          practical exercises, group dynamics and some theory to
+                          sustain it. I strongly recommend this course to anyone
+                          who has some interest in Scrum and agile methodologies
+                          and wants to really understand the spirit of Scrum.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- End testimonial item -->
+
+                  <div class="swiper-slide">
+                    <div class="testimonial-box">
+                      <div class="author-test">
+                        <img
+                          src="../static/images/testimonial-8.jpg"
+                          alt=""
+                          class="rounded-circle b-shadow-a"
+                        />
+                        <span class="author">Marcelo Marmol</span>
+                      </div>
+                      <div class="content-test">
+                        <p class="description lead">
+                          Alan is "the trainer". I attended his Scrum Master
+                          course in 2009 and was the best investment I have ever
+                          made in my carrier. He explained Scrum so well and
+                          from a fresh point of view with great practical
+                          examples. I got so encourage after attending his
+                          course that I even give one my self in my company the
+                          week after attending. I strongly recommend Alan.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- End testimonial item -->
+                </div>
+                <div class="swiper-pagination"></div>
+              </div>
+
+              <!-- <div id="testimonial-mf" class="owl-carousel owl-theme">
+
+        </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Testimonials Section -->
+
+      <!-- ======= Deep Agility Section ======= -->
+      <section id="deep-agility" class="services-mf pt-5 route">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="title-box text-center">
+                <h3 class="title-a">What is Deep Agility?</h3>
+                <p class="subtitle-a">
+                  Deep Agility is an ever evolving model by Alan Cyment
+                  describing the inner workings of agility
+                </p>
+                <div class="line-mf"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="service-box">
+                <div class="service-ico">
+                  <span class="ico-circle"
+                    ><i class="bi bi-hypnotize"></i
+                  ></span>
+                </div>
+                <div class="service-content">
+                  <h2 class="s-title">Complexity</h2>
+                  <p class="s-description text-center">
+                    Complexity is the big why behind agility. Modern product
+                    development has become increasingly complex and standard
+                    methods of organizing people to work together just cannot
+                    cope with this new level of complexity.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="service-box">
+                <div class="service-ico">
+                  <span class="ico-circle"><i class="bi bi-tree"></i></span>
+                </div>
+                <div class="service-content">
+                  <h2 class="s-title">Organic development</h2>
+                  <p class="s-description text-center">
+                    Organic development serves as the core metaphor that
+                    describes the answer agility gives to the increased
+                    complexity question. A simple analogy summarizes ellaborated
+                    techniques such as MVPs, slicing, and user story mapping.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="service-box">
+                <div class="service-ico">
+                  <span class="ico-circle"><i class="bi bi-water"></i></span>
+                </div>
+                <div class="service-content">
+                  <h2 class="s-title">Flow</h2>
+                  <p class="s-description text-center">
+                    Based on the groundbreaking concepts brought about by lean
+                    methods, agility also faces complexity by optimizing on flow
+                    rather than on resource utilization. If trying to do
+                    agility, then flow is definitely in the air!
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="service-box">
+                <div class="service-ico">
+                  <span class="ico-circle"><i class="bi bi-people"></i></span>
+                </div>
+                <div class="service-content">
+                  <h2 class="s-title">Autonomy</h2>
+                  <p class="s-description text-center">
+                    In order to try and tackle complexity, agile approaches need
+                    two classes of autonomy at play: intra- and inter-team. The
+                    former refers to self-organization and the latter to the
+                    lack (or at least lowering) of dependencies among teams.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="service-box">
+                <div class="service-ico">
+                  <span class="ico-circle"
+                    ><i class="bi bi-emoji-smile"></i
+                  ></span>
+                </div>
+                <div class="service-content">
+                  <h2 class="s-title">Minimalistic impact</h2>
+                  <p class="s-description text-center">
+                    Suppose we define output as the by-product of a team's work,
+                    and outcome as the impact provoked by it. Most organizations
+                    shoot themselves in the foot by defining success in terms of
+                    output. What about yours?
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="service-box">
+                <div class="service-ico">
+                  <span class="ico-circle"
+                    ><i class="bi bi-eyeglasses"></i
+                  ></span>
+                </div>
+                <div class="service-content">
+                  <h2 class="s-title">Learning & Adaptability</h2>
+                  <p class="s-description text-center">
+                    Does your organization's journey look more like a sunny day
+                    or like a foggy evening? Are you better off optimizing for
+                    predictability and speed? Or rather for learning and
+                    adaptability? What does agility propose? Could you do both?
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Deep Agility Section -->
+
+      <!-- ======= Contact Section ======= -->
+      <section
+        id="contact"
+        class="paralax-mf footer-paralax bg-image sect-mt4 route"
+        style="background-image: url(../static/images/lightboard-bg.png)"
+      >
+        <div class="overlay-mf"></div>
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="contact-mf">
+                <div id="contact" class="box-shadow-full">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="title-box-2">
+                        <h5 class="title-left">Send a message</h5>
+                      </div>
+                      <div>
+                        <form id="contact-form" role="form">
+                          <div class="row">
+                            <div class="col-md-12 mb-3">
+                              <div class="form-group">
+                                <input
+                                  type="text"
+                                  name="from_name"
+                                  class="form-control"
+                                  id="name"
+                                  placeholder="Your Name"
+                                  required
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                              <div class="form-group">
+                                <input
+                                  type="email"
+                                  class="form-control"
+                                  name="from_email"
+                                  id="email"
+                                  placeholder="Your Email"
+                                  required
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                              <div class="form-group">
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  name="subject"
+                                  id="subject"
+                                  placeholder="Subject"
+                                  required
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-12">
+                              <div class="form-group">
+                                <textarea
+                                  class="form-control"
+                                  name="message"
+                                  rows="5"
+                                  placeholder="Message"
+                                  required
+                                ></textarea>
+                              </div>
+                            </div>
+                            <div class="col-md-12 text-center my-3">
+                              <div class="loading">Loading</div>
+                              <div class="error-message"></div>
+                              <div class="sent-message">
+                                Your message has been sent. Thank you!
+                              </div>
+                            </div>
+                            <div class="col-md-12 text-center">
+                              <button
+                                type="submit"
+                                class="button button-a button-big button-rouded"
+                              >
+                                Send Message
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="title-box-2 pt-4 pt-md-0">
+                        <h5 class="title-left">Other ways to get in touch</h5>
+                      </div>
+                      <div class="more-info">
+                        <p class="lead">
+                          From in-company training to organization-wide
+                          transformation strategy envisioning, do send me a
+                          message and let's just talk about it!
+                        </p>
+                        <ul class="list-ico">
+                          <!--<li><span class="bi bi-geo-alt"></span> 329 WASHINGTON ST BOSTON, MA 02108</li>
+                        <li><span class="bi bi-phone"></span> (617) 557-0089</li>-->
+                          <li>
+                            <span class="bi bi-envelope"></span
+                            ><a href="mailto:alan@cyment.com"
+                              >alan@cyment.com</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="socials">
+                        <ul>
+                          <li>
+                            <a href="https://www.facebook.com/acyment/"
+                              ><span class="ico-circle"
+                                ><i class="bi bi-facebook"></i></span
+                            ></a>
+                          </li>
+                          <li>
+                            <a href="https://www.instagram.com/acyment/"
+                              ><span class="ico-circle"
+                                ><i class="bi bi-instagram"></i></span
+                            ></a>
+                          </li>
+                          <li>
+                            <a href="https://twitter.com/acyment"
+                              ><span class="ico-circle"
+                                ><i class="bi bi-twitter"></i></span
+                            ></a>
+                          </li>
+                          <li>
+                            <a href="https://www.linkedin.com/in/acyment/"
+                              ><span class="ico-circle"
+                                ><i class="bi bi-linkedin"></i></span
+                            ></a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Contact Section -->
+    </main>
+    <!-- End #main -->
+
+    <!-- ======= Footer ======= -->
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="copyright-box">
+              <p class="copyright">
+                &copy; Copyright <strong>DevFolio</strong>. All Rights Reserved
+              </p>
+              <div class="credits">
+                <!--
+              All the links in the footer should remain intact.
+              You can delete the links only if you purchased the pro version.
+              Licensing information: https://bootstrapmade.com/license/
+              Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=DevFolio
+            -->
+                Designed by
+                <a href="https://bootstrapmade.com/">BootstrapMade</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- End  Footer -->
+
+    <div id="preloader"></div>
+    <a
+      href="#"
+      class="back-to-top d-flex align-items-center justify-content-center"
+      ><i class="bi bi-arrow-up-short"></i
+    ></a>
+
+    <!-- Vendor JS Files -->
+    <script src="../static/vendor/purecounter/purecounter_vanilla.js"></script>
+    <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="../static/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="../static/vendor/typed.js/typed.min.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="../static/js/main.js"></script>
+  </body>
+</html>
