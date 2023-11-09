@@ -1,9 +1,9 @@
 {
-    "files.associations": {
-        "local.yml": "dockercompose"
-    },
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
-    },
-    "python.formatting.provider": "none"
+  "files.associations": {
+    "local.yml": "dockercompose"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "python.formatting.provider": "none"
 }
