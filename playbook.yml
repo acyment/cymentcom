@@ -1,0 +1,84 @@
+---
+- name: Prepara servidor cyment.com
+  hosts: all
+  become: true
+  vars:
+    created_username: acyment
+
+  tasks:
+    - name: Install aptitude
+      apt:
+        name: aptitude
+        state: latest
+        update_cache: true
+
+    - name: Setup passwordless sudo
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^%sudo'
+        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+        validate: '/usr/sbin/visudo -cf %s'
+
+    - name: Create a new regular user with sudo privileges
+      user:
+        name: '{{ created_username }}'
+        state: present
+        groups: sudo
+        append: true
+        create_home: true
+
+    - name: Set authorized key for remote user
+      ansible.posix.authorized_key:
+        user: '{{ created_username }}'
+        state: present
+        key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
+    - name: Disable password authentication for root
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: '^#?PermitRootLogin'
+        line: 'PermitRootLogin prohibit-password'
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+
+    - name: Upgrade apt
+      apt:
+        upgrade: true
+        update_cache: true
+
+    - name: Install required system packages
+      apt:
+        pkg:
+          - curl
+          - git
+          - ufw
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+          - unattended-upgrades
+        state: latest
+
+    - name: UFW - Allow SSH connections
+      community.general.ufw:
+        rule: allow
+        name: OpenSSH
+
+    - name: UFW - Enable and deny by default
+      community.general.ufw:
+        state: enabled
+        default: deny
+
+    - name: Unconditionally reboot the machine with all defaults
+      ansible.builtin.reboot:
