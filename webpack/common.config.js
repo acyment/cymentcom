@@ -1,54 +1,44 @@
 const path = require('path');
 const BundleTracker = require('webpack-bundle-tracker');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
   target: 'web',
-  context: path.join(__dirname, '../'),
   entry: {
-    project: path.resolve(__dirname, '../cyment_com/static/js/project'),
-    vendors: path.resolve(__dirname, '../cyment_com/static/js/vendors'),
+    main: path.resolve(__dirname, '../frontend/src/main.ts'),
   },
   output: {
-    path: path.resolve(__dirname, '../cyment_com/static/webpack_bundles/'),
-    publicPath: '/static/webpack_bundles/',
-    filename: 'js/[name]-[fullhash].js',
-    chunkFilename: 'js/[name]-[hash].js',
+    path: path.resolve(__dirname, './bundles'),
+    publicPath: '/static/bundles/',
   },
   plugins: [
+    new VueLoaderPlugin(),
     new BundleTracker({
-      path: path.resolve(path.join(__dirname, '../')),
+      path: path.resolve(path.join(__dirname, '../frontend/')),
       filename: 'webpack-stats.json',
     }),
-    new MiniCssExtractPlugin({ filename: 'css/[name].[contenthash].css' }),
+    new MiniCssExtractPlugin({ filename: '[name].css' }),
   ],
   module: {
     rules: [
-      // we pass the output from babel loader to react-hot loader
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
+        test: /\.vue$/,
+        use: 'vue-loader',
       },
       {
-        test: /\.s?css$/i,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: ['postcss-preset-env', 'autoprefixer', 'pixrem'],
-              },
-            },
-          },
-          'sass-loader',
-        ],
+        test: /\.ts$/,
+        loader: 'ts-loader',
+        options: {
+          appendTsSuffixTo: [/\.vue$/],
+        },
       },
     ],
   },
   resolve: {
-    modules: ['node_modules'],
-    extensions: ['.js', '.jsx'],
+    extensions: ['.ts', '.js', '.vue', '.json'],
+    alias: {
+      vue: '@vue/runtime-dom',
+    },
   },
 };
