@@ -1,20 +1,14 @@
 <template>
-  <h2>This is a Vue 3 component!</h2>
-  <button @click="increase">Clicked {{ count }} times.</button>
+  <Disclosure>
+    <DisclosureButton class="py-2">
+      Is team pricing available?
+    </DisclosureButton>
+    <DisclosurePanel class="text-gray-500">
+      Yes! You can purchase a license that you can share with your entire team.
+    </DisclosurePanel>
+  </Disclosure>
 </template>
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
-export default defineComponent({
-  setup() {
-    const count = ref(0);
-    const increase = () => {
-      count.value++;
-    };
 
-    return {
-      count,
-      increase,
-    };
-  },
-});
+<script setup>
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 </script>

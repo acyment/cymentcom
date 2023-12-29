@@ -41,6 +41,8 @@
     "build": "webpack --config webpack/prod.config.js"
   },
   "dependencies": {
+    "@ark-ui/vue": "^0.9.0",
+    "@headlessui/vue": "^1.7.16",
     "vue": "^3.2.36",
     "webpack-bundle-tracker": "^2.0.0"
   }
