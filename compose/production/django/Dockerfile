@@ -4,9 +4,10 @@ ARG APP_HOME=/app
 WORKDIR ${APP_HOME}
 
 COPY ./package.json ${APP_HOME}
-RUN npm install && npm cache clean --force
+RUN npm install -g pnpm
+RUN pnpm install && pnpm store prune
 COPY . ${APP_HOME}
-RUN npm run build
+RUN pnpm run build
 # define an alias for the specific python version used in this file.
 FROM python:3.11.5-slim-bullseye as python
 
@@ -43,7 +44,7 @@ ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 WORKDIR ${APP_HOME}
 
 RUN addgroup --system django \
-    && adduser --system --ingroup django django
+  && adduser --system --ingroup django django
 
 
 # Install required system dependencies
