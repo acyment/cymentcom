@@ -1,7 +1,6 @@
 """
 Base settings to build other settings files upon.
 """
-import os.path
 from pathlib import Path
 
 import environ
@@ -158,8 +157,6 @@ MEDIA_ROOT = str(APPS_DIR / "media")
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = "/media/"
 
-FRONTEND_DIR = str(BASE_DIR / "frontend")
-
 # TEMPLATES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#templates
@@ -168,7 +165,7 @@ TEMPLATES = [
         # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-TEMPLATES-BACKEND
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         # https://docs.djangoproject.com/en/dev/ref/settings/#dirs
-        "DIRS": [str(BASE_DIR / "templates")],
+        "DIRS": [str(APPS_DIR / "templates")],
         # https://docs.djangoproject.com/en/dev/ref/settings/#app-dirs
         "APP_DIRS": True,
         "OPTIONS": {
@@ -279,14 +276,12 @@ SOCIALACCOUNT_FORMS = {"signup": "cyment_com.users.forms.UserSocialSignupForm"}
 
 # django-webpack-loader
 # ------------------------------------------------------------------------------
-
 WEBPACK_LOADER = {
     "DEFAULT": {
         "CACHE": not DEBUG,
-        "STATS_FILE": os.path.join(FRONTEND_DIR, "webpack-stats.json"),
+        "STATS_FILE": BASE_DIR / "webpack-stats.json",
         "POLL_INTERVAL": 0.1,
         "IGNORE": [r".+\.hot-update.js", r".+\.map"],
-        "BUNDLE_DIR_NAME": "/bundles/",  # must end with slash
     }
 }
 # Your stuff...
