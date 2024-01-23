@@ -1,21 +1,22 @@
 const path = require('path');
 const BundleTracker = require('webpack-bundle-tracker');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const DashboardPlugin = require('webpack-dashboard/plugin');
 
 module.exports = {
   target: 'web',
   context: path.join(__dirname, '../'),
   entry: {
-    project: path.resolve(__dirname, '../cyment_com/static/js/project'),
-    vendors: path.resolve(__dirname, '../cyment_com/static/js/vendors'),
+    main: path.resolve(__dirname, '../frontend/src/index.js'),
   },
   output: {
-    path: path.resolve(__dirname, '../cyment_com/static/webpack_bundles/'),
+    path: path.resolve(__dirname, '../frontend/public/webpack_bundles/'),
     publicPath: '/static/webpack_bundles/',
     filename: 'js/[name]-[fullhash].js',
     chunkFilename: 'js/[name]-[hash].js',
   },
   plugins: [
+    new DashboardPlugin({ port: 3001 }),
     new BundleTracker({
       path: path.resolve(path.join(__dirname, '../')),
       filename: 'webpack-stats.json',
@@ -26,7 +27,7 @@ module.exports = {
     rules: [
       // we pass the output from babel loader to react-hot loader
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         loader: 'babel-loader',
       },
       {
