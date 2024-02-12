@@ -9,6 +9,13 @@ module.exports = merge(commonConfig, {
     proxy: {
       '/': 'http://django:8000',
     },
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+        runtimeErrors: true,
+      },
+    },
     // We need hot=false (Disable HMR) to set liveReload=true
     hot: false,
     liveReload: true,

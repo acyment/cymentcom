@@ -6,6 +6,7 @@
     "@babel/preset-env": "^7.16.5",
     "@babel/preset-react": "^7.23.3",
     "@popperjs/core": "^2.10.2",
+    "@unocss/webpack": "^0.58.5",
     "autoprefixer": "^10.4.0",
     "babel-loader": "^9.1.2",
     "css-loader": "^6.5.1",
@@ -20,12 +21,11 @@
     "webpack": "^5.65.0",
     "webpack-bundle-tracker": "^2.0.1",
     "webpack-cli": "^5.0.1",
-    "webpack-dashboard": "^3.3.8",
     "webpack-dev-server": "^4.6.0",
     "webpack-merge": "^5.8.0"
   },
   "engines": {
-    "node": "18"
+    "node": "20"
   },
   "browserslist": [
     "last 2 versions"
@@ -45,8 +45,11 @@
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-navigation-menu": "^1.1.4",
+    "@stripe/react-stripe-js": "^2.4.0",
+    "@stripe/stripe-js": "^2.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-snap-carousel": "^0.4.0"
+    "react-snap-carousel": "^0.4.0",
+    "use-font-face-observer": "^1.2.1"
   }
 }

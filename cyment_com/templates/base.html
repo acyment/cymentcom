@@ -16,6 +16,7 @@
     <meta name="description" content="Behold My Awesome Project!" />
     <meta name="author" content="Alan Cyment" />
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
+    {% render_bundle 'main' 'css' 'DEFAULT' %}
     {% block css %}
       <!-- Your stuff: Third-party CSS libraries go here -->
       <!-- This file stores project-specific CSS -->

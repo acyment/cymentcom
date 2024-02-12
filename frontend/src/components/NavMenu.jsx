@@ -3,22 +3,32 @@ import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 
 const NavMenu = () => {
   return (
-    <NavigationMenu.Root>
-      <NavigationMenu.List>
+    <NavigationMenu.Root className="NavigationMenuRoot">
+      <NavigationMenu.List className="NavigationMenuList">
         <NavigationMenu.Item>
-          <NavigationMenu.Link>Alan</NavigationMenu.Link>
+          <NavigationMenu.Link className="NavigationMenuLink">
+            Alan
+          </NavigationMenu.Link>
         </NavigationMenu.Item>
         <NavigationMenu.Item>
-          <NavigationMenu.Link>Cursos</NavigationMenu.Link>
+          <NavigationMenu.Link className="NavigationMenuLink">
+            Cursos
+          </NavigationMenu.Link>
         </NavigationMenu.Item>
         <NavigationMenu.Item>
-          <NavigationMenu.Link>Intervenciones</NavigationMenu.Link>
+          <NavigationMenu.Link className="NavigationMenuLink">
+            Intervenciones
+          </NavigationMenu.Link>
         </NavigationMenu.Item>
         <NavigationMenu.Item>
-          <NavigationMenu.Link>Agilidad profunda</NavigationMenu.Link>
+          <NavigationMenu.Link className="NavigationMenuLink">
+            Agilidad profunda
+          </NavigationMenu.Link>
         </NavigationMenu.Item>
         <NavigationMenu.Item>
-          <NavigationMenu.Link>Contacto</NavigationMenu.Link>
+          <NavigationMenu.Link className="NavigationMenuLink">
+            Contacto
+          </NavigationMenu.Link>
         </NavigationMenu.Item>
         <NavigationMenu.Indicator />
       </NavigationMenu.List>

@@ -1,7 +1,7 @@
 const path = require('path');
 const BundleTracker = require('webpack-bundle-tracker');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const DashboardPlugin = require('webpack-dashboard/plugin');
+const UnoCSS = require('@unocss/webpack').default;
 
 module.exports = {
   target: 'web',
@@ -11,12 +11,12 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../frontend/public/webpack_bundles/'),
-    publicPath: '/static/webpack_bundles/',
+    publicPath: '/frontend/webpack_bundles/',
     filename: 'js/[name]-[fullhash].js',
     chunkFilename: 'js/[name]-[hash].js',
   },
   plugins: [
-    new DashboardPlugin({ port: 3001 }),
+    UnoCSS(),
     new BundleTracker({
       path: path.resolve(path.join(__dirname, '../')),
       filename: 'webpack-stats.json',
@@ -51,5 +51,8 @@ module.exports = {
   resolve: {
     modules: ['node_modules'],
     extensions: ['.js', '.jsx'],
+  },
+  optimization: {
+    realContentHash: true,
   },
 };

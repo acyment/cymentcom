@@ -8,7 +8,7 @@ const Sections = () => {
       <Accordion.Item value="Alan">
         <Accordion.Trigger>Alan</Accordion.Trigger>
         <Accordion.Content>
-          <p>Alan es un gran programador</p>
+          <p>Alan es un gran programador!</p>
         </Accordion.Content>
       </Accordion.Item>
       <Cursos />

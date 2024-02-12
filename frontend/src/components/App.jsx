@@ -1,18 +1,31 @@
 import React from 'react';
-import { useSnapCarousel } from 'react-snap-carousel';
+import Logo from './Logo';
 import NavMenu from './NavMenu';
 import Sections from './Sections';
+import useFontFaceObserver from 'use-font-face-observer';
+import '../../public/css/styles.css';
 
-class App extends React.Component {
-  render() {
-    return (
-      <div>
-        <NavMenu />
+function App() {
+  const isFontListLoaded = useFontFaceObserver([
+    {
+      family: `Rubik`,
+    },
+  ]);
+
+  return (
+    <div>
+      <header className="header">
+        <Logo className="logo" />
+        <NavMenu className="nav-menu" />
+      </header>
+      <main>
         <Sections />
-        <div>Contacto</div>
-      </div>
-    );
-  }
+      </main>
+      <footer>
+        <div>Contactos</div>
+      </footer>
+    </div>
+  );
 }
 
 export default App;
