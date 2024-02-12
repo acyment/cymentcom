@@ -19,7 +19,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1em;
+  padding: 2em 8em;
 }
 
 .NavigationMenuRoot {
@@ -28,6 +28,7 @@ body {
   justify-content: center;
   width: 100vw;
   z-index: 1;
+  font-weight: lighter;
 }
 
 .NavigationMenuList {
@@ -43,20 +44,18 @@ body {
 
 .NavigationMenuTrigger,
 .NavigationMenuLink {
-  padding: 8px 12px;
+  padding: 1em 1.8em;
   outline: none;
   user-select: none;
-  font-weight: 500;
   line-height: 1;
   border-radius: 4px;
-  font-size: 15px;
+  font-size: 1.5em;
   color: var(--violet-11);
 }
 
 .NavigationMenuLink {
   display: block;
   text-decoration: none;
-  font-size: 15px;
   line-height: 1;
 }
 
@@ -64,4 +63,33 @@ body {
   .NavigationMenuContent {
     width: auto;
   }
+}
+
+.NavigationMenuIndicator {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 10px;
+  top: 100%;
+  overflow: hidden;
+  z-index: 1;
+  transition:
+    width,
+    transform 250ms ease;
+}
+.NavigationMenuIndicator[data-state='visible'] {
+  animation: fadeIn 200ms ease;
+}
+.NavigationMenuIndicator[data-state='hidden'] {
+  animation: fadeOut 200ms ease;
+}
+
+.Arrow {
+  position: relative;
+  top: 70%;
+  background-color: white;
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+  border-top-left-radius: 2px;
 }
