@@ -93,3 +93,68 @@ body {
   transform: rotate(45deg);
   border-top-left-radius: 2px;
 }
+
+.HeroAccordion {
+  width: 100%;
+  background-color: black;
+  position: relative;
+}
+
+.HeroText {
+  font-size: 1.7em;
+  font-weight: 100;
+  position: absolute;
+  color: white;
+  width: 30%;
+  padding-left: 7%;
+  padding-top: 7%;
+}
+
+.HeroTextBold {
+  color: #7b68ee;
+}
+
+.HeroImage {
+  display: block;
+  margin-left: auto;
+}
+
+.CircleButton {
+  width: 75px; /* Adjust as needed */
+  height: 75px; /* Adjust as needed */
+  background: url('../images/plus-btn.svg') no-repeat center center;
+  background-size: contain; /* Adjust as needed */
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  left: 50%;
+  bottom: 1%;
+}
+
+.HeroContent {
+  background-color: white;
+  font-size: 1.7em;
+  font-weight: 100;
+  padding-left: 5%;
+  padding-top: 1%;
+}
+
+.HeroContentTitle {
+  color: #7b68ee;
+  font-weight: 500;
+}
+
+.HeroContentList {
+  width: 55%;
+}
+
+.Firulete {
+  max-width: 10%;
+  max-height: 10%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.HeroContentListContainer {
+  display: flex;
+}

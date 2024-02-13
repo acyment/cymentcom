@@ -1,16 +1,12 @@
 import React from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
 import Cursos from './Cursos';
+import Hero from './Hero';
 
 const Sections = () => {
   return (
     <Accordion.Root type="multiple">
-      <Accordion.Item value="Alan">
-        <Accordion.Trigger>Alan</Accordion.Trigger>
-        <Accordion.Content>
-          <p>Alan es un gran programador!</p>
-        </Accordion.Content>
-      </Accordion.Item>
+      <Hero />
       <Cursos />
       <Accordion.Item value="Intervenciones">
         <Accordion.Trigger>Intervenciones</Accordion.Trigger>
