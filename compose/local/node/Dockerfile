@@ -4,5 +4,6 @@ WORKDIR /app
 
 COPY ./package.json /app
 
-RUN npm install -g pnpm
-RUN pnpm install && pnpm store prune
+RUN corepack enable
+RUN pnpm fetch
+RUN pnpm install
