@@ -1,6 +1,8 @@
 import React from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
 import { AccordionHeader } from '@radix-ui/react-accordion';
+import Marquee from 'react-fast-marquee';
+import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
 
 const Hero = () => {
   const handlePayClick = () => {};
@@ -10,9 +12,30 @@ const Hero = () => {
       <AccordionHeader>
         <p className="HeroText">
           <b className="HeroTextBold">Alan</b> explica la agilidad como nadie.
-          Transmite ideas complejas en poco tiempo de manera interactiva. Domina
-          la oscilación entre lo filosófico y lo pragmático. Se adapta sin
-          sobresaltos a cualquier tipo de público.
+          Transmite ideas complejas en poco tiempo de{' '}
+          <RoughNotation
+            color="#7b68ee"
+            type="underline"
+            show="true"
+            animate="true"
+            iterations={8}
+            padding={[0, 5]}
+          >
+            manera interactiva
+          </RoughNotation>
+          . Domina la oscilación entre lo filosófico y lo pragmático. Se adapta
+          sin sobresaltos a{' '}
+          <RoughNotation
+            padding={[5, 17]}
+            strokeWidth={2}
+            color="#7b68ee"
+            type="circle"
+            show="true"
+            animate="true"
+          >
+            cualquier tipo de público
+          </RoughNotation>
+          .
         </p>
         <img src="static/images/hero.jpg" className="HeroImage"></img>
       </AccordionHeader>
