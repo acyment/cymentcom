@@ -1,8 +1,8 @@
 import React from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
 import { AccordionHeader } from '@radix-ui/react-accordion';
-import Marquee from 'react-fast-marquee';
 import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
+import Clientes from './Clientes';
 
 const Hero = () => {
   const handlePayClick = () => {};
@@ -41,7 +41,9 @@ const Hero = () => {
       </AccordionHeader>
       <Accordion.Trigger className="CircleButton"></Accordion.Trigger>
       <Accordion.Content className="HeroContent">
-        <h3 className="HeroContentTitle">¿Quién es Alan?</h3>
+        <RoughNotation type="circle" color="#7b68ee" show="true" animate="true">
+          <h3 className="HeroContentTitle">¿Quién es Alan?</h3>
+        </RoughNotation>
         <div className="HeroContentListContainer">
           <ul className="HeroContentList">
             <li>
@@ -73,6 +75,7 @@ const Hero = () => {
           </ul>
           <img src="static/images/firulete.svg" className="Firulete"></img>
         </div>
+        <Clientes></Clientes>
       </Accordion.Content>
     </Accordion.Item>
   );

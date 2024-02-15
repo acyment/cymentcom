@@ -122,13 +122,20 @@ body {
 .CircleButton {
   width: 75px; /* Adjust as needed */
   height: 75px; /* Adjust as needed */
-  background: url('../images/plus-btn.svg') no-repeat center center;
   background-size: contain; /* Adjust as needed */
   border: none;
   cursor: pointer;
   position: absolute;
   left: 50%;
   bottom: 1%;
+}
+
+.CircleButton[data-state='closed'] {
+  background: url('../images/plus-btn.svg') no-repeat center center;
+}
+
+.CircleButton[data-state='open'] {
+  background: url('../images/minus-btn.svg') no-repeat center center;
 }
 
 .HeroContent {
@@ -157,4 +164,13 @@ body {
 
 .HeroContentListContainer {
   display: flex;
+}
+
+.Clientes {
+  margin-left: -10%;
+  padding-right: 7em;
+}
+
+.Logo {
+  margin-right: 7em;
 }
