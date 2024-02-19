@@ -206,10 +206,40 @@ body {
   align-items: center;
 }
 
-.CursosTitulo {
-  color: white;
+.TextoResumenCurso {
+  align-items: flex-start;
+  justify-content: flex-start;
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  margin-left: 1em;
+  margin-top: 2em;
+  position: relative;
+  align-self: flex-start;
+}
+
+.CursosTituloAcronimo {
   font-size: 1.75em;
   font-weight: 600;
+  margin-top: 0.2em;
+}
+
+.CursosTitulo {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-top: 0.2em;
+}
+
+.CursosTituloBajada {
+  font-size: 1.25em;
+  font-weight: 300;
+  margin-top: 0.2em;
+}
+
+.ToggleResumenCurso[data-state='off'] .TextoResumenCurso .CursosTituloAcronimo {
+  color: #7b68ee;
+}
+.ToggleResumenCurso[data-state='on'] .TextoResumenCurso {
+  color: white;
 }
 
 .CarouselResumenesCursos {
@@ -224,30 +254,54 @@ button {
   margin: 0;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+figure,
+p,
+ol,
+ul {
+  margin: 0;
+}
+
 /* Button styles end */
 
 .ToggleResumenCurso {
   border-radius: 2em;
   width: 25em;
-  height: 32em;
-  display: inline-flex; /* Use flexbox to align items */
-  align-items: flex-start;
   position: relative;
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  align-items: center;
 }
 
 .ToggleResumenCurso[data-state='on'] {
   background-color: #7b68ee;
+  height: 42em;
 }
 
 .ToggleResumenCurso[data-state='off'] {
   background-color: white;
+  height: 32em;
 }
 
 .ImagenResumenCurso {
   border-radius: 2em 2em 0 0;
   width: 100%; /* Stretch the image to take the button's width */
   height: auto; /* Maintain aspect ratio */
-  display: block; /* Ensure the image fills the button horizontally */
-  position: absolute; /* Position the image relative to the button */
-  top: 0; /* Align the image to the top */
+}
+
+.ToggleResumenCurso[data-state='on'] .ImagenResumenCurso {
+  content: url('../images/resumen-CSM.jpg');
+}
+
+.CircleButtonCursos {
+  position: absolute;
+  bottom: 0;
+  align-self: center;
+  left: auto;
+  margin-top: 1.3em;
+  justify-self: end;
 }

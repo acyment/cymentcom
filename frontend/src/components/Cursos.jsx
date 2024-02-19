@@ -15,9 +15,17 @@ const Cursos = () => {
         <div className="CarouselResumenesCursos">
           <Toggle.Root className="ToggleResumenCurso">
             <img
-              src="static/images/resumen-CSM.jpg"
+              src="static/images/resumen-CSM-colored.jpg"
               className="ImagenResumenCurso"
-            ></img>
+            />
+            <div className="TextoResumenCurso">
+              <h3 className="CursosTituloAcronimo">CSM</h3>
+              <h4 className="CursosTitulo">Certified ScrumMaster</h4>
+              <p className="CursosTituloBajada">
+                Introducción a la agilidad más profunda
+              </p>
+            </div>
+            <span className="CircleButton CircleButtonCursos" />
           </Toggle.Root>
           <div className="ResumenCurso"></div>
           <div className="ResumenCurso"></div>
