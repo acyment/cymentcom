@@ -3,7 +3,9 @@ import Logo from './Logo';
 import NavMenu from './NavMenu';
 import Sections from './Sections';
 import useFontFaceObserver from 'use-font-face-observer';
+import 'normalize.css';
 import '../../public/css/styles.css';
+import * as Toggle from '@radix-ui/react-toggle';
 
 function App() {
   const isFontListLoaded = useFontFaceObserver([

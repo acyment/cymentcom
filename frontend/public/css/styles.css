@@ -130,7 +130,8 @@ body {
   bottom: 1%;
 }
 
-.CircleButton[data-state='closed'] {
+.CircleButton[data-state='closed'],
+.ToggleResumenCurso[data-state='off'] .CircleButton {
   background: url('../images/plus-btn.svg') no-repeat center center;
 }
 
@@ -138,6 +139,9 @@ body {
   background: url('../images/minus-btn.svg') no-repeat center center;
 }
 
+.ToggleResumenCurso[data-state='on'] .CircleButton {
+  background: url('../images/minus-btn-inv.svg') no-repeat center center;
+}
 .HeroContent {
   background-color: white;
   font-size: 1.7em;
@@ -169,8 +173,81 @@ body {
 .Clientes {
   margin-left: -10%;
   padding-right: 7em;
+  padding-bottom: 5em;
+  padding-top: 2em;
 }
 
 .Logo {
   margin-right: 7em;
+}
+
+.CursosAccordion {
+  width: 100%;
+  position: relative;
+}
+
+.CursosHeader {
+  background-image: linear-gradient(
+    to right top,
+    #2c1873,
+    #492bb5,
+    #7854fa,
+    #492bb5,
+    #2c1873
+  );
+  padding-left: 4em;
+  padding-right: 4em;
+  padding-top: 1.5em;
+  padding-bottom: 9em;
+}
+
+.ResumenCursosCarousel {
+  display: flex;
+  align-items: center;
+}
+
+.CursosTitulo {
+  color: white;
+  font-size: 1.75em;
+  font-weight: 600;
+}
+
+.CarouselResumenesCursos {
+  display: flex;
+}
+
+/* Buttons styles start */
+button {
+  display: inline-block;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Button styles end */
+
+.ToggleResumenCurso {
+  border-radius: 2em;
+  width: 25em;
+  height: 32em;
+  display: inline-flex; /* Use flexbox to align items */
+  align-items: flex-start;
+  position: relative;
+}
+
+.ToggleResumenCurso[data-state='on'] {
+  background-color: #7b68ee;
+}
+
+.ToggleResumenCurso[data-state='off'] {
+  background-color: white;
+}
+
+.ImagenResumenCurso {
+  border-radius: 2em 2em 0 0;
+  width: 100%; /* Stretch the image to take the button's width */
+  height: auto; /* Maintain aspect ratio */
+  display: block; /* Ensure the image fills the button horizontally */
+  position: absolute; /* Position the image relative to the button */
+  top: 0; /* Align the image to the top */
 }

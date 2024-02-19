@@ -1,14 +1,28 @@
 import React from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
 import * as Dialog from '@radix-ui/react-dialog';
-import { initMercadoPago } from '@mercadopago/sdk-react';
+import * as Toggle from '@radix-ui/react-toggle';
 
+import { initMercadoPago } from '@mercadopago/sdk-react';
 initMercadoPago('APP_USR-debfd4aa-4ee0-481f-b5d9-5afedae2a7af');
 const Cursos = () => {
   const handlePayClick = () => {};
 
   return (
-    <Accordion.Item value="Cursos">
+    <Accordion.Item value="Cursos" className="CursosAccordion">
+      <Accordion.AccordionHeader className="CursosHeader">
+        <p className="CursosTitulo">Cursos</p>
+        <div className="CarouselResumenesCursos">
+          <Toggle.Root className="ToggleResumenCurso">
+            <img
+              src="static/images/resumen-CSM.jpg"
+              className="ImagenResumenCurso"
+            ></img>
+          </Toggle.Root>
+          <div className="ResumenCurso"></div>
+          <div className="ResumenCurso"></div>
+        </div>
+      </Accordion.AccordionHeader>
       <Accordion.Trigger>Cursos</Accordion.Trigger>
       <Accordion.Content>
         <Dialog.Root>

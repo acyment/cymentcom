@@ -45,13 +45,15 @@
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-navigation-menu": "^1.1.4",
+    "@radix-ui/react-toggle": "^1.0.3",
     "@stripe/react-stripe-js": "^2.4.0",
     "@stripe/stripe-js": "^2.4.0",
+    "normalize.css": "8.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-fast-marquee": "^1.6.4",
     "react-rough-notation": "^1.0.5",
-    "react-snap-carousel": "^0.4.0",
+    "react-slick": "^0.30.2",
     "use-font-face-observer": "^1.2.1"
   }
 }
