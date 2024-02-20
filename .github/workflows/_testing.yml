@@ -27,6 +27,7 @@ jobs:
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cymentcom:latest
 
       - name: Run DB Migrations
         run: docker compose -f local.yml run --rm django python manage.py migrate
