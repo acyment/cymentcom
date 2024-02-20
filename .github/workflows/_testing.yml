@@ -23,11 +23,7 @@ jobs:
       - uses: docker/bake-action@v4
         with:
           files: ./local.yml
-          load: true
           push: true
-          set: |
-            *.cache-from=type=gha
-            *.cache-to=type=gha,mode=max
 
       - name: Run DB Migrations
         run: docker compose -f local.yml run --rm django python manage.py migrate
