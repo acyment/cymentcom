@@ -80,5 +80,21 @@
         state: enabled
         default: deny
 
+    - name: Ensure group "docker" exists
+      ansible.builtin.group:
+        name: docker
+        state: present
+
+    - name: Add user acyment to docker group
+      user:
+        name: acyment
+        groups: docker
+        append: yes
+
+    - name: Install Fish shell on Debian/Ubuntu
+      apt:
+        name: fish
+        state: present
+
     - name: Unconditionally reboot the machine with all defaults
       ansible.builtin.reboot:
