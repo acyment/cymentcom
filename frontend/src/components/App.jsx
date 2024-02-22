@@ -4,8 +4,8 @@ import NavMenu from './NavMenu';
 import Sections from './Sections';
 import useFontFaceObserver from 'use-font-face-observer';
 import 'normalize.css';
-import '../../public/css/styles.css';
-import * as Toggle from '@radix-ui/react-toggle';
+import '../../public/css/styles.scss';
+import Contacto from './Contacto';
 
 function App() {
   const isFontListLoaded = useFontFaceObserver([
@@ -24,7 +24,7 @@ function App() {
         <Sections />
       </main>
       <footer>
-        <div>Contactos</div>
+        <Contacto />
       </footer>
     </div>
   );

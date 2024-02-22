@@ -5,9 +5,6 @@
 
 body {
   font-family: Rubik;
-}
-
-body {
   margin: 0;
   padding: 0;
   display: flex;
@@ -304,4 +301,50 @@ ul {
   left: auto;
   margin-top: 1.3em;
   justify-self: end;
+}
+
+.NavigationMenuIndicator {
+  background-color: grey;
+  height: 3px;
+  transition:
+    width,
+    transform,
+    250ms ease;
+}
+
+.IntervencionesAccordion {
+  background-color: black;
+  color: white;
+  padding-top: 2em;
+  padding-left: 5em;
+  padding-right: 5em;
+}
+
+.IntervencionesTitulo {
+  font-size: 1.6em;
+  font-weight: 700;
+}
+
+.IntervencionesAreaPreguntas {
+  display: flex;
+  padding-top: 6em;
+  padding-bottom: 6em;
+}
+
+.IntervencionesSeccionPregunta {
+  flex-grow: 1;
+  flex: 1;
+  padding-left: 5em;
+  padding-right: 5em;
+}
+.IntervencionesTituloPregunta {
+  font-size: 2.5em;
+  font-weight: 700;
+  padding-bottom: 2em;
+  display: inline-block;
+}
+
+.IntervencionesContenidoPregunta {
+  font-size: 1.4em;
+  font-weight: 100;
 }
