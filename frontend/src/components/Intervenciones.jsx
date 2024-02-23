@@ -5,7 +5,11 @@ import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
 
 const Intervenciones = () => {
   return (
-    <Accordion.Item value="Intervencion" className="IntervencionesAccordion">
+    <Accordion.Item
+      value="Intervencion"
+      className="IntervencionesAccordion"
+      id="intervenciones"
+    >
       <AccordionHeader>
         <p className="IntervencionesTitulo">Intervenciones</p>
         <div className="IntervencionesAreaPreguntas">

@@ -8,6 +8,7 @@ const AgilidadProfunda = () => {
     <Accordion.Item
       value="AgilidadProfunda"
       className="AgilidadProfundaAccordion"
+      id="agilidadProfunda"
     >
       <AccordionHeader className="AccordionHeader">
         <p className="TituloSeccionAccordion AgilidadProfundaTitulo">

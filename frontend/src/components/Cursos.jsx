@@ -9,7 +9,7 @@ const Cursos = () => {
   const handlePayClick = () => {};
 
   return (
-    <Accordion.Item value="Cursos" className="CursosAccordion">
+    <Accordion.Item value="Cursos" className="CursosAccordion" id="cursos">
       <Accordion.AccordionHeader className="CursosHeader">
         <p className="CursosTitulo">Cursos</p>
         <div className="CarouselResumenesCursos">

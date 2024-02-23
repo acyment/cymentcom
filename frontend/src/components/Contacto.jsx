@@ -5,7 +5,7 @@ import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
 
 const Contacto = () => {
   return (
-    <div className="AreaContacto">
+    <div className="AreaContacto" id="contacto">
       <h3 className="TituloSeccionAccordion">Contacto</h3>
       <ul className="LinksContacto">
         <li>alan@cyment.com</li>
