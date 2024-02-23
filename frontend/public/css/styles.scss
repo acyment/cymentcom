@@ -14,7 +14,7 @@ $fondo-violaceo: linear-gradient(
 
 body {
   font-family: Rubik;
-  margin: 0;
+  padding-top: 5vh;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -31,6 +31,7 @@ body {
   width: 100%;
   background-color: white; /* Optional: Add a background color */
   z-index: 2999;
+  height: 5vh;
 }
 
 .NavigationMenuRoot {
@@ -164,6 +165,7 @@ body {
 .HeroContentTitle {
   color: #7b68ee;
   font-weight: 500;
+  display: inline-block;
 }
 
 .HeroContentList {
