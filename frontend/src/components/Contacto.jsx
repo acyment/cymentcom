@@ -5,15 +5,18 @@ import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
 
 const Contacto = () => {
   return (
-    <div>
-      <h3>Contacto</h3>
-      <ul>
-        <li>alan@cyment</li>
+    <div className="AreaContacto">
+      <h3 className="TituloSeccionAccordion">Contacto</h3>
+      <ul className="LinksContacto">
+        <li>alan@cyment.com</li>
         <li>LinkedIn</li>
         <li>YouTube</li>
       </ul>
       <img></img>
-      <span>© Cyment 2024</span>
+      <div className="Copyright">
+        <img src="static/images/isotipo.svg" />
+        <span className="CopyrightText">© Cyment 2024</span>
+      </div>
     </div>
   );
 };

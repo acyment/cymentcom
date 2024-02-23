@@ -3,6 +3,7 @@ import * as Accordion from '@radix-ui/react-accordion';
 import Cursos from './Cursos';
 import Hero from './Hero';
 import Intervenciones from './Intervenciones';
+import AgilidadProfunda from './AgilidadProfunda';
 
 const Sections = () => {
   return (
@@ -10,12 +11,7 @@ const Sections = () => {
       <Hero />
       <Cursos />
       <Intervenciones />
-      <Accordion.Item value="AgilidadProfunda">
-        <Accordion.Trigger>AgilidadProfunda</Accordion.Trigger>
-        <Accordion.Content>
-          <p>Cuánta profundidad</p>
-        </Accordion.Content>
-      </Accordion.Item>
+      <AgilidadProfunda />
     </Accordion.Root>
   );
 };
