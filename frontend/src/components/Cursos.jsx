@@ -1,19 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
-import * as Dialog from '@radix-ui/react-dialog';
-import * as Toggle from '@radix-ui/react-toggle';
+import * as ToggleGroup from '@radix-ui/react-toggle-group';
+import DetalleCurso from './DetalleCurso';
+import 'keen-slider/keen-slider.min.css';
+import { useKeenSlider } from 'keen-slider/react';
 
-import { initMercadoPago } from '@mercadopago/sdk-react';
-initMercadoPago('APP_USR-debfd4aa-4ee0-481f-b5d9-5afedae2a7af');
 const Cursos = () => {
-  const handlePayClick = () => {};
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [sliderRef, instanceRef] = useKeenSlider(
+    {
+      slideChanged() {},
+      slides: {
+        perView: 3,
+      },
+    },
+    [
+      // add plugins here
+    ],
+  );
+
+  // Function to handle item selection
+  const updateSelectedItem = (value) => {
+    setSelectedCourse(value); // Update selected item
+  };
 
   return (
-    <Accordion.Item value="Cursos" className="CursosAccordion" id="cursos">
-      <Accordion.AccordionHeader className="CursosHeader">
-        <p className="CursosTitulo">Cursos</p>
-        <div className="CarouselResumenesCursos">
-          <Toggle.Root className="ToggleResumenCurso">
+    <div className="CursosAccordion">
+      <div className="CursosHeader">
+        <ToggleGroup.Root
+          ref={sliderRef}
+          type="single"
+          onValueChange={updateSelectedItem}
+          className=" ResumenCursosCarousel"
+        >
+          <ToggleGroup.Item className=" ToggleResumenCurso" value="CSM">
             <img
               src="static/images/resumen-CSM-colored.jpg"
               className="ImagenResumenCurso"
@@ -26,63 +46,39 @@ const Cursos = () => {
               </p>
             </div>
             <span className="CircleButton CircleButtonCursos" />
-          </Toggle.Root>
-          <div className="ResumenCurso"></div>
-          <div className="ResumenCurso"></div>
-        </div>
-      </Accordion.AccordionHeader>
-      <Accordion.Trigger>Cursos</Accordion.Trigger>
-      <Accordion.Content>
-        <Dialog.Root>
-          <Dialog.Trigger asChild>
-            <button>Pagar</button>
-          </Dialog.Trigger>
-          <Dialog.Portal>
-            <Dialog.Overlay className="DialogOverlay" />
-            <Dialog.Content className="DialogContent">
-              <Dialog.Title className="DialogTitle">Pagar!</Dialog.Title>
-              <Dialog.Description className="DialogDescription">
-                Ingresa tus datos
-              </Dialog.Description>
-              <fieldset className="Fieldset">
-                <label className="Label" htmlFor="name">
-                  Nombre
-                </label>
-                <input
-                  className="Input"
-                  id="name"
-                  defaultValue="Pedro Duarte"
-                />
-              </fieldset>
-              <fieldset className="Fieldset">
-                <label className="Label" htmlFor="email">
-                  Email
-                </label>
-                <input
-                  className="Input"
-                  id="email"
-                  defaultValue="peduarte@gmail.com"
-                />
-              </fieldset>
-              <div
-                style={{
-                  display: 'flex',
-                  marginTop: 25,
-                  justifyContent: 'flex-end',
-                }}
-              >
-                <Dialog.Close asChild>
-                  <button>Pagar con Mercado Pago</button>
-                </Dialog.Close>
-              </div>
-              <Dialog.Close asChild>
-                <button className="IconButton" aria-label="Close"></button>
-              </Dialog.Close>
-            </Dialog.Content>
-          </Dialog.Portal>
-        </Dialog.Root>
-      </Accordion.Content>
-    </Accordion.Item>
+          </ToggleGroup.Item>
+          <ToggleGroup.Item className="ToggleResumenCurso" value="CSPO">
+            <img
+              src="static/images/resumen-CSM-colored.jpg"
+              className="ImagenResumenCurso"
+            />
+            <div className="TextoResumenCurso">
+              <h3 className="CursosTituloAcronimo">CSPO</h3>
+              <h4 className="CursosTitulo">Certified Scrum Product Owner</h4>
+              <p className="CursosTituloBajada">
+                Introducción a la agilidad más profunda
+              </p>
+            </div>
+            <span className="CircleButton CircleButtonCursos" />
+          </ToggleGroup.Item>
+          <ToggleGroup.Item className=" ToggleResumenCurso" value="LeSS">
+            <img
+              src="static/images/resumen-CSM-colored.jpg"
+              className="ImagenResumenCurso"
+            />
+            <div className="TextoResumenCurso">
+              <h3 className="CursosTituloAcronimo">LeSS</h3>
+              <h4 className="CursosTitulo">Intro a LeSS</h4>
+              <p className="CursosTituloBajada">
+                Introducción a la agilidad más profunda
+              </p>
+            </div>
+            <span className="CircleButton CircleButtonCursos" />
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>
+        {selectedCourse && <DetalleCurso type={selectedCourse} />}
+      </div>
+    </div>
   );
 };
 

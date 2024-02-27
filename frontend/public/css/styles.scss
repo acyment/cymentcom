@@ -19,6 +19,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  position: relative;
 }
 
 .header {
@@ -140,6 +141,7 @@ body {
   position: absolute;
   left: 50%;
   bottom: 1%;
+  z-index: 999;
 }
 
 .CircleButton[data-state='closed'],
@@ -149,6 +151,14 @@ body {
 
 .CircleButton[data-state='open'] {
   background: url('../images/minus-btn.svg') no-repeat center center;
+}
+
+.CircleButtonNegro[data-state='closed'] {
+  background: url('../images/plus-btn-negro.svg') no-repeat center center;
+}
+
+.CircleButtonNegro[data-state='open'] {
+  background: url('../images/minus-btn-negro.svg') no-repeat center center;
 }
 
 .ToggleResumenCurso[data-state='on'] .CircleButton {
@@ -205,11 +215,14 @@ body {
   padding-right: 4em;
   padding-top: 1.5em;
   padding-bottom: 9em;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .ResumenCursosCarousel {
   display: flex;
-  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
 }
 
 .TextoResumenCurso {
@@ -239,6 +252,7 @@ body {
   font-size: 1.25em;
   font-weight: 300;
   margin-top: 0.2em;
+  margin-bottom: 4em;
 }
 
 .ToggleResumenCurso[data-state='off'] .TextoResumenCurso .CursosTituloAcronimo {
@@ -327,6 +341,7 @@ ul {
   padding-top: 2em;
   padding-left: 5em;
   padding-right: 5em;
+  position: relative;
 }
 
 .IntervencionesTitulo {
@@ -361,6 +376,7 @@ ul {
 .AgilidadProfundaAccordion {
   background-image: $fondo-violaceo;
   color: white;
+  position: relative;
 }
 
 .TituloSeccionAccordion {
