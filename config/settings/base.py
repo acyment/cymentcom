@@ -80,6 +80,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "drf_spectacular",
     "webpack_loader",
+    "payments",
 ]
 
 LOCAL_APPS = [
