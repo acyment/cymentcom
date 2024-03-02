@@ -27,7 +27,7 @@ const AgilidadProfunda = () => {
         />
       </AccordionHeader>
       <Accordion.Trigger className="CircleButton CircleButtonNegro"></Accordion.Trigger>
-      <Accordion.Content className="AgilidadProfundaContent">
+      <Accordion.Content className="AccordionContent AgilidadProfundaContent">
         <video />
       </Accordion.Content>
     </Accordion.Item>

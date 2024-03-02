@@ -40,7 +40,7 @@ const Hero = () => {
         <img src="static/images/hero.jpg" className="HeroImage"></img>
       </AccordionHeader>
       <Accordion.Trigger className="CircleButton"></Accordion.Trigger>
-      <Accordion.Content className="HeroContent">
+      <Accordion.Content className="AccordionContent HeroContent">
         <RoughNotation type="circle" color="#7b68ee" show="true" animate="true">
           <h3 className="HeroContentTitle">¿Quién es Alan?</h3>
         </RoughNotation>

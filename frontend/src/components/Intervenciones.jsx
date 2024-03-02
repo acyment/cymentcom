@@ -91,7 +91,7 @@ const Intervenciones = () => {
         </div>
       </AccordionHeader>
       <Accordion.Trigger className="CircleButton"></Accordion.Trigger>
-      <Accordion.Content className="HeroContent">
+      <Accordion.Content className="AccordionContent HeroContent">
         <p>Casos</p>
       </Accordion.Content>
     </Accordion.Item>

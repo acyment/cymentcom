@@ -7,6 +7,8 @@ $fondo-violaceo: linear-gradient(
   #2c1873
 );
 
+$azul-violaceo: #7854fa;
+
 @font-face {
   font-family: Rubik;
   src: url('../fonts/Rubik-VariableFont_wght.ttf');
@@ -20,6 +22,8 @@ body {
   flex-direction: column;
   min-height: 100vh;
   position: relative;
+  line-height: 1.25;
+  letter-spacing: 0.0001em;
 }
 
 .header {
@@ -124,12 +128,72 @@ body {
 }
 
 .HeroTextBold {
-  color: #7b68ee;
+  color: $azul-violaceo;
 }
 
 .HeroImage {
   display: block;
   margin-left: auto;
+}
+
+.FAQAccordion {
+  width: 100%;
+}
+
+.FAQItem {
+  font-size: 2.2rem;
+  width: 100%;
+}
+
+.PreguntaFAQ {
+  font-weight: 500;
+  background-color: white;
+  border-top: 2px solid black;
+  width: 100%;
+  text-align: left;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.RespuestaFAQ {
+  font-weight: 100;
+}
+
+.AccordionChevron {
+  transition: transform 300ms;
+}
+.AccordionTrigger[data-state='open'] > .AccordionChevron {
+  transform: rotate(180deg);
+}
+
+.AccordionContent {
+  overflow: hidden;
+}
+
+.AccordionContent[data-state='open'] {
+  animation: slideDown 300ms ease-out;
+}
+.AccordionContent[data-state='closed'] {
+  animation: slideUp 300ms ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
 }
 
 .CircleButton {
@@ -173,7 +237,7 @@ body {
 }
 
 .HeroContentTitle {
-  color: #7b68ee;
+  color: $azul-violaceo;
   font-weight: 500;
   display: inline-block;
 }
@@ -223,6 +287,8 @@ body {
   display: flex;
   justify-content: space-evenly;
   width: 100%;
+  margin-right: 8em;
+  margin-left: 8em;
 }
 
 .TextoResumenCurso {
@@ -256,7 +322,7 @@ body {
 }
 
 .ToggleResumenCurso[data-state='off'] .TextoResumenCurso .CursosTituloAcronimo {
-  color: #7b68ee;
+  color: $azul-violaceo;
 }
 .ToggleResumenCurso[data-state='on'] .TextoResumenCurso {
   color: white;
@@ -266,6 +332,42 @@ body {
   display: flex;
 }
 
+.VideoGrande {
+  align-self: center;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.DetalleCurso {
+  background-color: white;
+  padding-left: 6vw;
+  padding-right: 6vw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.TituloDetalleCurso {
+  font-size: 2vw;
+  font-weight: 500;
+  margin-bottom: -0.5vh;
+  display: inline-block;
+  text-align: left;
+}
+
+.ResumenDetalleCurso {
+  font-weight: 100;
+  font-size: 1.2vw;
+  padding-right: 43vw;
+  margin-top: 4vh;
+  margin-bottom: 4vh;
+}
+.SubtituloDetalleCurso {
+  color: $azul-violaceo;
+  font-size: 1.2vw;
+  font-weight: 600;
+  margin-bottom: 5vh;
+}
 /* Buttons styles start */
 button {
   display: inline-block;
@@ -298,19 +400,54 @@ ul {
 }
 
 .ToggleResumenCurso[data-state='on'] {
-  background-color: #7b68ee;
-  height: 42em;
+  background-color: $azul-violaceo;
+  height: 46em;
 }
 
 .ToggleResumenCurso[data-state='off'] {
   background-color: white;
-  height: 32em;
+  height: 36em;
 }
 
 .ImagenResumenCurso {
   border-radius: 2em 2em 0 0;
   width: 100%; /* Stretch the image to take the button's width */
   height: auto; /* Maintain aspect ratio */
+}
+
+.ContenidoCurso {
+  font-size: 1.2vw;
+  font-weight: 100;
+}
+
+.VerMasMenos {
+  background: none;
+  border: none;
+  color: $azul-violaceo;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  font-size: inherit;
+  font-weight: 100;
+}
+
+.ContenidoCurso ul > li {
+  font-weight: bold;
+  list-style-type: none;
+}
+
+.ContenidoCurso ul ul > li {
+  font-weight: normal;
+  list-style-type: disc;
+}
+
+.Separador {
+  border-top: 1px dashed #000; /* Adjust thickness and color as needed */
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+  width: 100vw;
 }
 
 .ToggleResumenCurso[data-state='on'] .ImagenResumenCurso {
@@ -324,6 +461,80 @@ ul {
   left: auto;
   margin-top: 1.3em;
   justify-self: end;
+}
+
+.HorarioCurso {
+  border-radius: 1vw;
+  border: 0.3vw solid $azul-violaceo;
+  height: 13rem;
+  width: 98%;
+  display: flex;
+  flex-direction: horizontal;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 2rem;
+  position: relative;
+  padding-top: 0.8rem;
+}
+.ContenedorFechaCurso {
+  position: relative;
+  display: inline-block; /* Ensures container only takes up space necessary */
+  margin-right: 2rem;
+}
+
+.FechaCurso {
+  position: absolute;
+  top: 50%; /* Positions the overlay vertically centered */
+  left: 50%; /* Positions the overlay horizontally centered */
+  transform: translate(-50%, -50%); /* Centers the overlay */
+  text-align: center; /* Centers the text inside the overlay */
+  display: flex;
+  flex-direction: column;
+}
+
+.MesFechaCurso,
+.DiaFechaCurso {
+  color: $azul-violaceo;
+  font-weight: 600;
+  letter-spacing: 0.0002em;
+}
+
+.MesFechaCurso {
+  font-size: 2rem;
+  margin-top: 3.5rem;
+}
+
+.DiaFechaCurso {
+  font-size: 5rem;
+  margin-top: -1rem;
+}
+
+.DesdeHasta {
+  margin-top: -1rem;
+}
+.DesdeHastaFecha {
+  font-weight: 700;
+  font-size: 2.2rem;
+  padding-top: -1rem;
+}
+
+.HorariosOtrosPaises {
+  font-weight: 100;
+  font-size: 1.7rem;
+}
+
+.BotonInscripcion {
+  background-color: $azul-violaceo;
+  width: 18rem;
+  height: 5rem;
+  border-radius: 1rem;
+  color: white;
+  font-size: 2.3rem;
+  font-weight: 500;
+  position: absolute;
+  top: 50%;
+  right: 3rem;
+  transform: translateY(-50%);
 }
 
 .NavigationMenuIndicator {
