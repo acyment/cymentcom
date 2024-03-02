@@ -76,8 +76,8 @@ const Cursos = () => {
             <span className="CircleButton CircleButtonCursos" />
           </ToggleGroup.Item>
         </ToggleGroup.Root>
-        {selectedCourse && <DetalleCurso type={selectedCourse} />}
       </div>
+      {selectedCourse && <DetalleCurso type={selectedCourse} />}
     </div>
   );
 };
