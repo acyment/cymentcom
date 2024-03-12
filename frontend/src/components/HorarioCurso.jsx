@@ -1,5 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
+import Inscripcion from './Inscripcion';
+
 const HorarioCurso = () => {
+  const header = document.querySelector('header');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleDialogOpenChange = (open) => {
+    setIsDialogOpen(open);
+    if (open) {
+      turnOffHeaderStickiness();
+    } else {
+      turnOnHeaderStickiness();
+    }
+  };
+
+  const turnOffHeaderStickiness = () => {
+    header.style.position = 'relative';
+  };
+
+  const turnOnHeaderStickiness = () => {
+    header.style.position = 'sticky';
+  };
+
   return (
     <div className="HorarioCurso">
       <div className="ContenedorFechaCurso">
@@ -22,7 +45,17 @@ const HorarioCurso = () => {
           ARG/CHI/PAR/URU [GMT-3] 15:00 a 18:30 hs.
         </p>
       </div>
-      <button className="BotonInscripcion">Inscribirme</button>
+      <Dialog.Root onOpenChange={handleDialogOpenChange}>
+        <Dialog.Trigger asChild>
+          <button className="BotonInscripcion">Inscribirme</button>
+        </Dialog.Trigger>
+        <Dialog.Portal>
+          <Dialog.Overlay className="DialogOverlay" />
+          <Dialog.Content className="DialogContent">
+            <Inscripcion />
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 };

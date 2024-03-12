@@ -75,3 +75,5 @@ INSTALLED_APPS += ["django_extensions"]
 WEBPACK_LOADER["DEFAULT"]["CACHE"] = not DEBUG
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+MP_ACCESS_TOKEN = env("MP_ACCESS_TOKEN")

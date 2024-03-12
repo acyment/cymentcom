@@ -86,6 +86,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "cyment_com.users",
     # Your stuff: custom apps go here
+    "cyment_com.pagos",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -317,7 +318,3 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
 }
-# django-webpack-loader
-# ------------------------------------------------------------------------------
-# Your stuff...
-# ------------------------------------------------------------------------------

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
-import { ChevronDownIcon } from '@radix-ui/react-icons';
-import * as Dialog from '@radix-ui/react-dialog';
 import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
 import EllipsisNestedList from './EllipsisNestedList';
 import HorarioCurso from './HorarioCurso';

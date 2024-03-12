@@ -2,3 +2,5 @@
 # ------------------------------------------------------------------------------
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
+MP_ACCESS_TOKEN=TEST-5750996062324782-052509-fcd854e6360644a3a1fee65744c25e56-77699069
+STRIPE_API_KEY=sk_test_51MMvnOAXZPf5d77evg76MFqt69AzMU6XpO6U0YewxwDB6zXzpn6q27Gc7iY5qZfjKbahPzsd8WJlefvUQNOoud5g00cQpVlEut
