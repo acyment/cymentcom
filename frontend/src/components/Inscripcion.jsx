@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import Select from 'react-select';
-import countryList from 'react-select-country-list';
+import React, { useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Wallet, initMercadoPago } from '@mercadopago/sdk-react';
 import axios from 'axios';
+import CountryDropdown from './CountryDropDown';
 
 const Inscripcion = () => {
   const [preferenceId, setPreferenceId] = useState(null);
+  const [mostrarMercadoPago, setMostrarMercadoPago] = useState(false);
+  const [mostrarStripe, setMostrarStripe] = useState(false);
 
   useEffect(() => {
     const fetchPreferenceId = async () => {
@@ -28,12 +29,19 @@ const Inscripcion = () => {
 
   const mercadopago = initMercadoPago(
     'TEST-196caf2e-4115-42ea-b5be-91e57bdd9084',
+    { locale: 'es-AR' },
   );
-  const [value, setValue] = useState('');
-  const countryOptions = useMemo(() => countryList().getData(), []);
+  const [country, setCountry] = useState('');
 
-  const changeHandler = (value) => {
-    setValue(value);
+  const countryWasSelected = (selectedCountry) => {
+    setCountry(selectedCountry);
+    if (selectedCountry === 'AR') {
+      setMostrarMercadoPago(true);
+      setMostrarStripe(false);
+    } else {
+      setMostrarMercadoPago(false);
+      setMostrarStripe(true);
+    }
   };
 
   const customStyles = {
@@ -41,6 +49,10 @@ const Inscripcion = () => {
       ...provided,
       color: '#cccccc', // Change placeholder text color
     }),
+  };
+
+  const onSubmitMercadoPago = async (formData) => {
+    console.log(formData);
   };
 
   return (
@@ -53,15 +65,7 @@ const Inscripcion = () => {
           <Dialog.Description className="DialogDescription"></Dialog.Description>
           <h2>Datos de facturación</h2>
           <fieldset className="Fieldset">
-            <Select
-              options={countryOptions}
-              value={value}
-              onChange={changeHandler}
-              placeholder="País"
-              styles={customStyles}
-              className="ContenedorCombobox"
-              classNamePrefix="Combobox"
-            ></Select>
+            <CountryDropdown className="Input" onSelect={countryWasSelected} />
             <input
               className="Input"
               id="NombreCompleto"
@@ -77,8 +81,6 @@ const Inscripcion = () => {
             <input className="Input" id="Direccion" placeholder="Dirección" />
             <input className="Input" id="Teléfono" placeholder="Teléfono" />
           </fieldset>
-          <Wallet initialization={{ preferenceId: preferenceId }} />
-
           <hr className="SeparadorModal" />
           <h2>Datos del participante</h2>
           <fieldset className="Fieldset">
@@ -121,7 +123,12 @@ const Inscripcion = () => {
         }}
       >
         <Dialog.Close asChild>
-          <button className="Button green">Pagar</button>
+          {preferenceId && mostrarMercadoPago && (
+            <Wallet
+              initialization={{ preferenceId: preferenceId }}
+              onSubmit={onSubmitMercadoPago}
+            />
+          )}
         </Dialog.Close>
       </div>
       <Dialog.Close asChild>

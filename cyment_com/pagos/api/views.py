@@ -1,10 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from django.conf import settings
 import mercadopago
 
-sdk = mercadopago.SDK(settings.MP_ACCESS_TOKEN)
+sdk = mercadopago.SDK(
+    "TEST-5750996062324782-052509-fcd854e6360644a3a1fee65744c25e56-77699069"
+)
 
 
 class CreateMpPreferenceView(APIView):
@@ -23,7 +24,12 @@ class CreateMpPreferenceView(APIView):
                     "currency_id": "USD",  # or other currency according to your needs
                 }
             ],
-            "payer": {"email": "test_user_123456@testuser.com"},
+            "back_urls": {
+                "success": "https://181.12.202.157/finished-payment",
+                "pending": "https://181.12.202.157/finished-payment",
+                "failure": "https://181.12.202.157/finished-payment",
+            },
+            "notification_url": "https://181.12.202.157/api/webhook-mp/",
             # Additional settings can be added here (e.g., payment methods, external references)
         }
         preference_response = sdk.preference().create(preference_data)
