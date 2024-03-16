@@ -23,4 +23,4 @@ django-webpack-loader==3.0.1  # https://github.com/django-webpack/django-webpack
 
 django-payments==2.0.0 # https://github.com/jazzband/django-payments
 mercadopago==2.2.1 # https://github.com/mercadopago/sdk-python
-stripe==8.4.0 # https://github.com/stripe/stripe-python
+stripe==8.6.0 # https://github.com/stripe/stripe-python
