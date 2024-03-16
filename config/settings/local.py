@@ -15,7 +15,7 @@ SECRET_KEY = env(
     default="6HlIZs0DubfMQwIG4OvemBE05F3f9mUwQjZ0Jv7TCS5ulscFE8kJSq1zSmYtEeaH",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]  # noqa: S104
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "cymentcom.loca.lt"]  # noqa: S104
 
 # CACHES
 # ------------------------------------------------------------------------------
@@ -76,4 +76,4 @@ WEBPACK_LOADER["DEFAULT"]["CACHE"] = not DEBUG
 # Your stuff...
 # ------------------------------------------------------------------------------
 
-MP_ACCESS_TOKEN = env("MP_ACCESS_TOKEN")
+WEBHOOKS_DOMAIN = "https://cymentcom.loca.lt/"

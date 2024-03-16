@@ -9,11 +9,9 @@ import hmac
 from django.http import HttpResponse
 import time
 import environ
+from django.conf import settings
 
 env = environ.Env()
-
-
-YOUR_DOMAIN = env("LOCAL_HOST_TUNNEL")
 
 
 class CreateMpPreferenceView(APIView):
@@ -33,11 +31,11 @@ class CreateMpPreferenceView(APIView):
                 }
             ],
             "back_urls": {
-                "success": YOUR_DOMAIN + "/finished-payment",
-                "pending": YOUR_DOMAIN + "/finished-payment",
-                "failure": YOUR_DOMAIN + "/finished-payment",
+                "success": settings.WEBHOOKS_DOMAIN + "/finished-payment",
+                "pending": settings.WEBHOOKS_DOMAIN + "/finished-payment",
+                "failure": settings.WEBHOOKS_DOMAIN + "/finished-payment",
             },
-            "notification_url": YOUR_DOMAIN + "/api/webhook-mp/",
+            "notification_url": settings.WEBHOOKS_DOMAIN + "/api/webhook-mp/",
             # Additional settings can be added here (e.g., payment methods, external references)
         }
         sdk = mercadopago.SDK(env("MP_ACCESS_TOKEN"))
@@ -83,8 +81,8 @@ class CreateStripeCheckoutSessionView(APIView):
                     },
                 ],
                 mode="payment",
-                success_url=YOUR_DOMAIN + "?status=approved",
-                cancel_url=YOUR_DOMAIN + "?status=canceled",
+                success_url=settings.WEBHOOKS_DOMAIN + "?status=approved",
+                cancel_url=settings.WEBHOOKS_DOMAIN + "?status=canceled",
             )
         except Exception as e:
             return str(e)
