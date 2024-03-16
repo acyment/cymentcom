@@ -1,7 +1,8 @@
 # ==== pytest ====
 [tool.pytest.ini_options]
-minversion = "6.0"
+minversion = "7.0"
 addopts = "--ds=config.settings.test --reuse-db"
+pythonpath = "cyment_com"
 python_files = [
     "tests.py",
     "test_*.py",
