@@ -893,3 +893,22 @@ select,
     transform: translate(-50%, -50%) scale(1);
   }
 }
+
+.BotonPagarConStripe {
+  background-color: $azul-violaceo;
+  color: white;
+  border-radius: 16px;
+  font-size: 2rem;
+  padding: 1rem;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.BotonPagarConStripe[disabled] {
+  cursor: not-allowed; /* Change cursor to not-allowed */
+  background-color: #999;
+}
+
+.BotonPagarConMercadoPago {
+  width: 3rem;
+}

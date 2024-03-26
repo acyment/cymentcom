@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Wallet, initMercadoPago } from '@mercadopago/sdk-react';
 import axios from 'axios';
 import CountryDropdown from './CountryDropDown';
+import DisableableWallet from './DisableableWallet';
 
 const Inscripcion = () => {
   const [preferenceId, setPreferenceId] = useState(null);
   const [mostrarMercadoPago, setMostrarMercadoPago] = useState(false);
   const [mostrarStripe, setMostrarStripe] = useState(false);
+  const [disablePayButton, setDisablePayButton] = useState(false);
 
   useEffect(() => {
     const fetchPreferenceId = async () => {
@@ -42,21 +44,17 @@ const Inscripcion = () => {
       setMostrarMercadoPago(false);
       setMostrarStripe(true);
     }
+    handleInputChange();
   };
 
-  const customStyles = {
-    placeholder: (provided) => ({
-      ...provided,
-      color: '#cccccc', // Change placeholder text color
-    }),
-  };
+  const handleInputChange = (event) => {
+    var form = document.getElementById('formulario-inscripcion'); // Change 'yourFormId' to the actual ID of your form
 
-  const onSubmitMercadoPago = async (formData) => {
-    console.log(formData);
+    setDisablePayButton(!form.checkValidity());
   };
 
   return (
-    <form>
+    <form id="formulario-inscripcion">
       <div className="ContenedorModal">
         <div>
           <Dialog.Title className="DialogTitle">
@@ -72,11 +70,12 @@ const Inscripcion = () => {
               type="text"
               required
               placeholder="Nombre completo*"
+              onBlur={handleInputChange}
             />
             <input
               className="Input"
               id="IdentificadorFiscal"
-              placeholder="Identificador fiscal o documento*"
+              placeholder="Identificador fiscal o documento"
             />
             <input className="Input" id="Direccion" placeholder="Dirección" />
             <input className="Input" id="Teléfono" placeholder="Teléfono" />
@@ -90,6 +89,7 @@ const Inscripcion = () => {
               required
               id="Nombre"
               placeholder="Nombre*"
+              onBlur={handleInputChange}
             />
             <input
               className="Input"
@@ -97,6 +97,7 @@ const Inscripcion = () => {
               required
               id="Apellido"
               placeholder="Apellido*"
+              onBlur={handleInputChange}
             />
             <input
               className="Input"
@@ -104,6 +105,7 @@ const Inscripcion = () => {
               required
               id="Email"
               placeholder="E-mail*"
+              onBlur={handleInputChange}
             />
             <input
               className="Input"
@@ -115,22 +117,28 @@ const Inscripcion = () => {
         </div>
         <img src="static/images/firulete-triple.svg"></img>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          marginTop: 25,
-          justifyContent: 'flex-end',
-        }}
-      >
-        <Dialog.Close asChild>
+
+      <Dialog.Close asChild>
+        <Fragment>
+          {preferenceId && mostrarStripe && (
+            <button
+              className="BotonPagarConStripe"
+              formAction="/api/create-stripe-checkoutsession"
+              formMethod="post"
+              disabled={disablePayButton}
+            >
+              Pagar con Stripe
+            </button>
+          )}
           {preferenceId && mostrarMercadoPago && (
-            <Wallet
-              initialization={{ preferenceId: preferenceId }}
-              onSubmit={onSubmitMercadoPago}
+            <DisableableWallet
+              preferenceId={preferenceId}
+              disableWallet={disablePayButton}
             />
           )}
-        </Dialog.Close>
-      </div>
+        </Fragment>
+      </Dialog.Close>
+
       <Dialog.Close asChild>
         <button className="IconButton" aria-label="Close">
           <Cross2Icon />
