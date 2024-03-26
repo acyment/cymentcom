@@ -32,7 +32,7 @@ jobs:
           envkey_DJANGO_ACCOUNT_ALLOW_REGISTRATION: 'True'
           envkey_WEB_CONCURRENCY: '4'
           envkey_REDIS_URL: 'redis://redis:6379/0'
-          envkey_MP_ACCESS_TOKENL: ${{ secrets.MP_ACCESS_TOKEN }}
+          envkey_MP_ACCESS_TOKEN: ${{ secrets.MP_ACCESS_TOKEN }}
           directory: .envs/.production
           file_name: .django
       - name: Rsync deployments
