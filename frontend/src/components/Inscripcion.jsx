@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { Wallet, initMercadoPago } from '@mercadopago/sdk-react';
+import { initMercadoPago } from '@mercadopago/sdk-react';
 import axios from 'axios';
 import CountryDropdown from './CountryDropDown';
 import DisableableWallet from './DisableableWallet';
@@ -29,10 +29,9 @@ const Inscripcion = () => {
     fetchPreferenceId();
   }, []); // Empty dependency array means this effect runs once on mount
 
-  const mercadopago = initMercadoPago(
-    'TEST-196caf2e-4115-42ea-b5be-91e57bdd9084',
-    { locale: 'es-AR' },
-  );
+  const mercadopago = initMercadoPago(process.env.MP_PUBLIC_KEY, {
+    locale: 'es-AR',
+  });
   const [country, setCountry] = useState('');
 
   const countryWasSelected = (selectedCountry) => {

@@ -62,7 +62,8 @@ target/
 # pyenv
 .python-version
 
-
+# celery beat schedule file
+celerybeat-schedule
 
 # Environments
 .venv
@@ -278,3 +279,5 @@ cyment_com/media/
 cyment_com/static/webpack_bundles/
 webpack-stats.json
 .env
+*.min.js
+*.min.js.map

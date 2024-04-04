@@ -1,14 +1,19 @@
 const { merge } = require('webpack-merge');
 const commonConfig = require('./common.config');
+const Dotenv = require('dotenv-webpack');
+const path = require('path');
 
 module.exports = merge(commonConfig, {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
     port: 3000,
-    proxy: {
-      '/': 'http://django:8000',
-    },
+    proxy: [
+      {
+        context: ['/'],
+        target: 'http://django:8000',
+      },
+    ],
     client: {
       overlay: {
         errors: true,
@@ -20,4 +25,12 @@ module.exports = merge(commonConfig, {
     hot: false,
     liveReload: true,
   },
+  plugins: [
+    new Dotenv({
+      path: path.resolve(__dirname, '../.envs/.local/.webpack'),
+      // load this
+    }),
+  ],
 });
+
+console.log('Webpack is using directory:', __dirname);

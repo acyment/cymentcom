@@ -1,16 +1,13 @@
-from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from cyment_com.users.models import User as UserType
-
-User = get_user_model()
+from cyment_com.users.models import User
 
 
-class UserSerializer(serializers.ModelSerializer[UserType]):
+class UserSerializer(serializers.ModelSerializer[User]):
     class Meta:
         model = User
-        fields = ["name", "url"]
+        fields = ["username", "name", "url"]
 
         extra_kwargs = {
-            "url": {"view_name": "api:user-detail", "lookup_field": "pk"},
+            "url": {"view_name": "api:user-detail", "lookup_field": "username"},
         }

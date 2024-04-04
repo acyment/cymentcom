@@ -89,3 +89,11 @@ updates:
     # Every weekday
     schedule:
       interval: 'daily'
+
+  # Enable version updates for javascript/npm
+  - package-ecosystem: 'npm'
+    # Look for a `packages.json` in the `root` directory
+    directory: '/'
+    # Every weekday
+    schedule:
+      interval: 'daily'

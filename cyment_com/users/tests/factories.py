@@ -1,13 +1,15 @@
 from collections.abc import Sequence
 from typing import Any
 
-from django.contrib.auth import get_user_model
 from factory import Faker
 from factory import post_generation
 from factory.django import DjangoModelFactory
 
+from cyment_com.users.models import User
+
 
 class UserFactory(DjangoModelFactory):
+    username = Faker("user_name")
     email = Faker("email")
     name = Faker("name")
 
@@ -35,5 +37,5 @@ class UserFactory(DjangoModelFactory):
             instance.save()
 
     class Meta:
-        model = get_user_model()
-        django_get_or_create = ["email"]
+        model = User
+        django_get_or_create = ["username"]

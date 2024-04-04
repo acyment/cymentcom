@@ -1,15 +1,13 @@
 from django.conf import settings
+from django.urls import path
 from rest_framework.routers import DefaultRouter
 from rest_framework.routers import SimpleRouter
-from django.urls import path
 
 from cyment_com.users.api.views import UserViewSet
-from cyment_com.pagos.api.views import (
-    CreateMpPreferenceView,
-    CreateStripeCheckoutSessionView,
-    MPPaymentConfirmationView,
-    StripePaymentConfirmationView,
-)
+from pagos.api.views import CreateMpPreferenceView
+from pagos.api.views import CreateStripeCheckoutSessionView
+from pagos.api.views import MPPaymentConfirmationView
+from pagos.api.views import StripePaymentConfirmationView
 
 router = DefaultRouter() if settings.DEBUG else SimpleRouter()
 

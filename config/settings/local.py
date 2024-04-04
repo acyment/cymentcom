@@ -30,7 +30,7 @@ CACHES = {
 # EMAIL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-host
-EMAIL_HOST = env("EMAIL_HOST", default="mailhog")
+EMAIL_HOST = env("EMAIL_HOST", default="mailpit")
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-port
 EMAIL_PORT = 1025
 
@@ -69,6 +69,11 @@ if env("USE_DOCKER") == "yes":
 # ------------------------------------------------------------------------------
 # https://django-extensions.readthedocs.io/en/latest/installation_instructions.html#configuration
 INSTALLED_APPS += ["django_extensions"]
+# Celery
+# ------------------------------------------------------------------------------
+
+# https://docs.celeryq.dev/en/stable/userguide/configuration.html#task-eager-propagates
+CELERY_TASK_EAGER_PROPAGATES = True
 
 # django-webpack-loader
 # ------------------------------------------------------------------------------

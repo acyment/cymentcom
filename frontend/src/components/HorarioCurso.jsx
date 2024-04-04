@@ -45,7 +45,7 @@ const HorarioCurso = () => {
           ARG/CHI/PAR/URU [GMT-3] 15:00 a 18:30 hs.
         </p>
       </div>
-      <Dialog.Root onOpenChange={handleDialogOpenChange}>
+      <Dialog.Root onOpenChange={handleDialogOpenChange} modal={true}>
         <Dialog.Trigger asChild>
           <button className="BotonInscripcion">Inscribirme</button>
         </Dialog.Trigger>

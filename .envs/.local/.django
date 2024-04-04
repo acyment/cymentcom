@@ -2,5 +2,15 @@
 # ------------------------------------------------------------------------------
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
-MP_ACCESS_TOKEN=TEST-5750996062324782-052509-fcd854e6360644a3a1fee65744c25e56-77699069
-STRIPE_API_KEY=sk_test_51MMvnOAXZPf5d77evg76MFqt69AzMU6XpO6U0YewxwDB6zXzpn6q27Gc7iY5qZfjKbahPzsd8WJlefvUQNOoud5g00cQpVlEut
+# Redis
+# ------------------------------------------------------------------------------
+REDIS_URL=redis://redis:6379/0
+
+# Celery
+# ------------------------------------------------------------------------------
+
+# Flower
+CELERY_FLOWER_USER=MMWaqGxoHitqjDTpkbBwspMkvNNNyfpJ
+CELERY_FLOWER_PASSWORD=3oiJeb95fDWjPB7JFPd19lmYPiA48LQYJKCsynAdwrt6SfV0I0sS36optzVUOrvH
+
+LOCAL_HOST_TUNNEL=https://cymentcom.loca.lt/
