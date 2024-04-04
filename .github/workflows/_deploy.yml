@@ -21,7 +21,7 @@ jobs:
           directory: .envs/.production
           file_name: .postgres
       - name: Create production .django
-        uses: SpicyPizza/create-envfile@v2.0
+        uses: SpicyPizza/create-envfile@v2.0.3
         with:
           envkey_DJANGO_SETTINGS_MODULE: 'config.settings.production'
           envkey_DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
@@ -31,8 +31,11 @@ jobs:
           envkey_DJANGO_SERVER_EMAIL: ''
           envkey_DJANGO_ACCOUNT_ALLOW_REGISTRATION: 'True'
           envkey_WEB_CONCURRENCY: '4'
+          envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           envkey_REDIS_URL: 'redis://redis:6379/0'
           envkey_MP_ACCESS_TOKEN: ${{ secrets.MP_ACCESS_TOKEN }}
+          envkey_CELERY_FLOWER_USER: ${{ secrets.CELERY_FLOWER_USER }}
+          envkey_CELERY_FLOWER_PASSWORD: ${{ secrets.CELERY_FLOWER_PASSWORD }}
           directory: .envs/.production
           file_name: .django
       - name: Rsync deployments
