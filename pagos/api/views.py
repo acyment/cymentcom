@@ -1,3 +1,4 @@
+# ruff: noqa
 import hashlib
 import hmac
 import time
@@ -89,6 +90,7 @@ class CreateStripeCheckoutSessionView(APIView):
         except Exception as e:  # noqa: BLE001
             return str(e)
 
+        print("Stripe checkout URL:" + checkout_session.url)
         return redirect(checkout_session.url, code=303)
 
 
