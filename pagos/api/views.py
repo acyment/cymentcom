@@ -89,6 +89,7 @@ class CreateStripeCheckoutSessionView(APIView):
             )
         except Exception as e:  # noqa: BLE001
             # TODO: Manejar excepciones de Stripe https://docs.stripe.com/api/errors/handling
+            print("Excepcion Stripe:" + str(e))
             return str(e)
 
         print("Stripe checkout URL:" + checkout_session.url)
