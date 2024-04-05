@@ -79,7 +79,7 @@ class CreateStripeCheckoutSessionView(APIView):
                 line_items=[
                     {
                         # Provide the exact Price ID (for example, pr_1234) of the prod.
-                        "price": "price_1NBdhjAXZPf5d77ewsFM3qQ5",
+                        "price": env("CSM_PRICE_STRIPE_ID"),
                         "quantity": 1,
                     },
                 ],
@@ -88,7 +88,7 @@ class CreateStripeCheckoutSessionView(APIView):
                 cancel_url=settings.WEBHOOKS_DOMAIN + "?status=canceled",
             )
         except Exception as e:  # noqa: BLE001
-            print("Error:" + str(e))
+            # TODO: Manejar excepciones de Stripe https://docs.stripe.com/api/errors/handling
             return str(e)
 
         print("Stripe checkout URL:" + checkout_session.url)
