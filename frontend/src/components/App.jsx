@@ -8,6 +8,8 @@ import '../../public/css/styles.scss';
 import Contacto from './Contacto';
 import ResultadoPago from './ResultadoPago';
 
+console.log(process.env.MP_PUBLIC_KEY);
+
 function App() {
   const isFontListLoaded = useFontFaceObserver([
     {
