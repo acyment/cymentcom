@@ -38,6 +38,12 @@ jobs:
           envkey_CELERY_FLOWER_PASSWORD: ${{ secrets.CELERY_FLOWER_PASSWORD }}
           directory: .envs/.production
           file_name: .django
+      - name: Create production .webpack
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_MP_PUBLIC_KEY: ${{ secrets.MP_PUBLIC_KEY }}
+          directory: .envs/.production
+          file_name: .webpack
       - name: Rsync deployments
         uses: burnett01/rsync-deployments@6.0.0
         with:
