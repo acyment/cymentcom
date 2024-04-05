@@ -122,7 +122,7 @@ const Inscripcion = () => {
           {preferenceId && mostrarStripe && (
             <button
               className="BotonPagarConStripe"
-              formAction="/api/create-stripe-checkoutsession"
+              formAction="/api/create-stripe-checkoutsession/"
               formMethod="post"
               disabled={disablePayButton}
             >
