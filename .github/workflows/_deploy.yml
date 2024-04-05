@@ -36,6 +36,7 @@ jobs:
           envkey_MP_ACCESS_TOKEN: ${{ secrets.MP_ACCESS_TOKEN }}
           envkey_CELERY_FLOWER_USER: ${{ secrets.CELERY_FLOWER_USER }}
           envkey_CELERY_FLOWER_PASSWORD: ${{ secrets.CELERY_FLOWER_PASSWORD }}
+          envkey_STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
           directory: .envs/.production
           file_name: .django
       - name: Create production .webpack

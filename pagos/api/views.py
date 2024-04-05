@@ -88,6 +88,7 @@ class CreateStripeCheckoutSessionView(APIView):
                 cancel_url=settings.WEBHOOKS_DOMAIN + "?status=canceled",
             )
         except Exception as e:  # noqa: BLE001
+            print("Error:" + str(e))
             return str(e)
 
         print("Stripe checkout URL:" + checkout_session.url)
