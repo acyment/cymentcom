@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { initMercadoPago } from '@mercadopago/sdk-react';
+import { Wallet, initMercadoPago } from '@mercadopago/sdk-react';
 import axios from 'axios';
 import CountryDropdown from './CountryDropDown';
 import DisableableWallet from './DisableableWallet';
@@ -48,7 +48,6 @@ const Inscripcion = () => {
 
   const handleInputChange = (event) => {
     var form = document.getElementById('formulario-inscripcion'); // Change 'yourFormId' to the actual ID of your form
-
     setDisablePayButton(!form.checkValidity());
   };
 
@@ -130,9 +129,19 @@ const Inscripcion = () => {
             </button>
           )}
           {preferenceId && mostrarMercadoPago && (
-            <DisableableWallet
-              preferenceId={preferenceId}
-              disableWallet={disablePayButton}
+            <Wallet
+              initialization={{ preferenceId: preferenceId }}
+              customization={{
+                visual: {
+                  buttonBackground: 'blue',
+                  borderRadius: '9px',
+                  hideValueProp: true,
+                },
+                onError: (error) => {
+                  // activado cuando ocurre un error
+                  console.log(error);
+                },
+              }}
             />
           )}
         </Fragment>
