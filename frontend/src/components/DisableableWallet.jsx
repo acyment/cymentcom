@@ -1,66 +1,71 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Wallet } from '@mercadopago/sdk-react';
 
-const DisableableWallet = ({ preferenceId, disableWallet }) => {
-  const containerRef = useRef(null);
-  useEffect(() => {
-    const container = containerRef.current;
-    let observer;
-    let intervalId;
+const DisableableWallet = React.memo(({ preferenceId, disableWallet }) => {
+  // Memoize the initialization and customization objects to ensure they don't cause re-renders
+  const walletProps = useMemo(
+    () => ({
+      initialization: { preferenceId },
+      customization: {
+        visual: {
+          buttonBackground: 'blue',
+          borderRadius: '9px',
+          hideValueProp: true,
+        },
+      },
+      callbacks: {
+        onError: (error) => {
+          // activado cuando ocurre un error
+          console.log(error);
+        },
+        onReady: () => {
+          // activado cuando el Brick está listo
+        },
+        onSubmit: () => {
+          // activado cuando se hace clic en el botón
+        },
+      },
+    }),
 
-    const checkAndDisableButton = () => {
-      const walletButton = container.querySelector('button');
-      const imgElement = container.querySelector('image');
-      if (walletButton && imgElement) {
-        walletButton.disabled = disableWallet;
-        walletButton.style.cssText = disableWallet
-          ? 'background-color: gray !important;'
-          : '';
-        walletButton.style.cursor = disableWallet ? 'not-allowed' : 'pointer';
-        // Once the button is found and disabled, no need to keep looking for it
-        observer && observer.disconnect();
-        clearInterval(intervalId);
+    [preferenceId],
+  ); // dependency array ensures this only recalculates if preferenceId changes
 
-        imgElement.style.filter = disableWallet ? 'grayscale(100%)' : '';
+  // Style for the overlay
+  const overlayStyle = useMemo(
+    () => ({
+      position: 'absolute',
+      top: '16px',
+      left: 0,
+      right: 0,
+      bottom: '16px',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      backdropFilter: 'grayscale(100%)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      color: '#000',
+      fontSize: '20px',
+      zIndex: 1000,
+      borderRadius: '8px',
+      cursor: 'not-allowed',
+    }),
+    [],
+  ); // No dependencies, only calculates once
 
-        const allElements = container.querySelectorAll('*');
-        allElements.forEach((element) => {});
-      }
-    };
-
-    if (container) {
-      // MutationObserver setup
-      observer = new MutationObserver(checkAndDisableButton);
-      observer.observe(container, {
-        childList: true,
-        subtree: true,
-      });
-
-      // Fallback interval check
-      intervalId = setInterval(checkAndDisableButton, 500); // Check every 500ms
-    }
-
-    return () => {
-      // Cleanup
-      observer && observer.disconnect();
-      clearInterval(intervalId);
-    };
-  }, [disableWallet]);
+  // Style for the container
+  const containerStyle = useMemo(
+    () => ({
+      position: 'relative',
+    }),
+    [],
+  ); // No dependencies, only calculates once
 
   return (
-    <div ref={containerRef}>
-      <Wallet
-        initialization={{ preferenceId: preferenceId }}
-        customization={{
-          visual: {
-            buttonBackground: 'blue',
-            borderRadius: '9px',
-            hideValueProp: true,
-          },
-        }}
-      />
+    <div className="siome" style={containerStyle}>
+      <Wallet {...walletProps} />
+      {disableWallet && <div className="chicho" style={overlayStyle}></div>}
     </div>
   );
-};
+});
 
 export default DisableableWallet;
