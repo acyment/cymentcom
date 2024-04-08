@@ -12,23 +12,6 @@ const Inscripcion = () => {
   const [mostrarStripe, setMostrarStripe] = useState(false);
   const [disablePayButton, setDisablePayButton] = useState(false);
 
-  useEffect(() => {
-    const fetchPreferenceId = async () => {
-      try {
-        const response = await axios.post('/api/create-mp-preference/', {
-          // Your payload here. Adjust according to what your endpoint expects.
-        });
-        const { preference_id } = response.data;
-        setPreferenceId(preference_id);
-      } catch (error) {
-        console.error('Error fetching preference ID:', error);
-        // Handle error appropriately
-      }
-    };
-
-    fetchPreferenceId();
-  }, []); // Empty dependency array means this effect runs once on mount
-
   const mercadopago = initMercadoPago(process.env.MP_PUBLIC_KEY, {
     locale: 'es-AR',
   });
@@ -46,9 +29,24 @@ const Inscripcion = () => {
     handleInputChange();
   };
 
+  const areAllRequiredFieldsFilled = () => {
+    // Assuming the form has an id of 'myForm'
+    const formId = 'formulario-inscripcion';
+    const requiredInputs = document.querySelectorAll(
+      `#${formId} input[required]`,
+    );
+
+    for (let input of requiredInputs) {
+      if (input.value.trim() === '') {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   const handleInputChange = (event) => {
-    var form = document.getElementById('formulario-inscripcion'); // Change 'yourFormId' to the actual ID of your form
-    setDisablePayButton(!form.checkValidity());
+    setDisablePayButton(!areAllRequiredFieldsFilled());
   };
 
   return (
@@ -118,7 +116,7 @@ const Inscripcion = () => {
 
       <Dialog.Close asChild>
         <Fragment>
-          {preferenceId && mostrarStripe && (
+          {mostrarStripe && (
             <button
               className="BotonPagarConStripe"
               formAction="/api/create-stripe-checkoutsession/"
@@ -128,21 +126,15 @@ const Inscripcion = () => {
               Pagar con Stripe
             </button>
           )}
-          {preferenceId && mostrarMercadoPago && (
-            <Wallet
-              initialization={{ preferenceId: preferenceId }}
-              customization={{
-                visual: {
-                  buttonBackground: 'blue',
-                  borderRadius: '9px',
-                  hideValueProp: true,
-                },
-                onError: (error) => {
-                  // activado cuando ocurre un error
-                  console.log(error);
-                },
-              }}
-            />
+
+          {mostrarMercadoPago && (
+            <button
+              className="BotonPagarConStripe"
+              formAction="https://mpago.la/12tA6FH"
+              disabled={disablePayButton}
+            >
+              Pagar con Mercado Pago
+            </button>
           )}
         </Fragment>
       </Dialog.Close>
