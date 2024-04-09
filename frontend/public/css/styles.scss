@@ -912,3 +912,68 @@ select,
 .BotonPagarConMercadoPago {
   width: 3rem;
 }
+
+.VideoPlayer {
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
+
+.CarouselCasos {
+  display: flex; /* Enables Flexbox */
+  align-items: center; /* Vertically centers the flex items */
+}
+
+// Define a mixin for common styles
+@mixin carouselArrowStyles {
+  position: absolute;
+  z-index: 10;
+  background: transparent; // Ensure the button has a transparent background
+  border: none; // Remove the default border
+  cursor: pointer;
+}
+
+// Use the mixin for both classes, applying only the unique styles
+.CarouselCasosFlechaAntes {
+  @include carouselArrowStyles;
+  left: 0;
+}
+
+.CarouselCasosFlechaDespues {
+  @include carouselArrowStyles;
+  right: 0;
+}
+
+.CarouselCasosContenido {
+  width: 90rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 12rem;
+}
+
+.ContenedorCasos {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.VideoCaso {
+  width: 90%;
+}
+
+.CasoIndividual {
+  flex-shrink: 0;
+}
+
+.AgilidadProfundaContent {
+  padding-left: 6vw;
+  padding-right: 6vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.VideoAgilidadProfunda {
+  margin-bottom: 12rem;
+}

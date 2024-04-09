@@ -4,6 +4,7 @@ import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
 import EllipsisNestedList from './EllipsisNestedList';
 import HorarioCurso from './HorarioCurso';
 import FAQ from './FAQ';
+import MuxPlayer from '@mux/mux-player-react';
 
 const DetalleCurso = ({ type }) => {
   let [content, setContent] = useState({});
@@ -12,7 +13,7 @@ const DetalleCurso = ({ type }) => {
     switch (type) {
       case 'CSM':
         setContent({
-          videoURL: 'https://www.youtube.com/watch?v=VK8kIYqD0Y8',
+          videoURL: 'https://youtu.be/O8RnYmiux5E',
           title: 'Certified ScrumMaster (CSM)',
           summary:
             'Introducción a la agilidad más profunda. Reflexión intensa sobre el mundo del trabajo. Catarata de trucos sobre el rol del ScrumMaster. Mucho más que un simple curso.',
@@ -284,7 +285,15 @@ const DetalleCurso = ({ type }) => {
 
   return (
     <div className="DetalleCurso">
-      <video src={content.videoURL} className="VideoGrande" />
+      <MuxPlayer
+        streamType="on-demand"
+        playbackId="UxJyrVzp289RvfPfMeVNgGNlm01Fh9MDilKVV00zq4dKc"
+        metadataVideoTitle="Placeholder (optional)"
+        metadataViewerUserId="Placeholder (optional)"
+        primaryColor="#FFFFFF"
+        secondaryColor="#000000"
+        className="VideoPlayer"
+      />
       <RoughNotation
         type="underline"
         color="#7b68ee"

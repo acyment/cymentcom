@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@mercadopago/sdk-react": "^0.0.19",
+    "@mux/mux-player-react": "^2.4.1",
     "@radix-ui/colors": "^2.1.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -55,17 +56,17 @@
     "@stripe/react-stripe-js": "^2.6.2",
     "@stripe/stripe-js": "^2.4.0",
     "axios": "^1.6.7",
-    "react-country-region-selector": "^2.1.0",
     "js-cookie": "^3.0.5",
     "normalize.css": "8.0.1",
     "react": "^18.2.0",
+    "react-country-region-selector": "^2.1.0",
     "react-dom": "^18.2.0",
     "react-fast-marquee": "^1.6.4",
+    "react-multi-carousel": "^2.8.5",
     "react-rough-notation": "^1.0.5",
     "react-select": "^5.8.0",
     "react-select-country-list": "^2.2.3",
     "use-font-face-observer": "^1.2.1",
-    "@boxslider/react": "2.3.13",
     "keen-slider": "^6.8.6"
   }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
 import { AccordionHeader } from '@radix-ui/react-accordion';
 import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
+import MuxPlayer from '@mux/mux-player-react';
 
 const AgilidadProfunda = () => {
   return (
@@ -28,7 +29,12 @@ const AgilidadProfunda = () => {
       </AccordionHeader>
       <Accordion.Trigger className="CircleButton CircleButtonNegro"></Accordion.Trigger>
       <Accordion.Content className="AccordionContent AgilidadProfundaContent">
-        <video />
+        <MuxPlayer
+          className="VideoAgilidadProfunda"
+          playbackId="UxJyrVzp289RvfPfMeVNgGNlm01Fh9MDilKVV00zq4dKc"
+          streamType="on-demand"
+          muted
+        />
       </Accordion.Content>
     </Accordion.Item>
   );
