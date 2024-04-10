@@ -147,6 +147,8 @@ body {
 .FAQItem {
   font-size: 2.2rem;
   width: 100%;
+  margin-top: 0.6rem;
+  margin-bottom: 2rem;
 }
 
 .PreguntaFAQ {
@@ -609,7 +611,8 @@ ul {
 }
 
 .TituloSeccionAccordion {
-  font-size: 1.6vw;
+  font-size: 2.5rem;
+  font-weight: 500;
 }
 
 .AccordionHeader {
@@ -944,7 +947,7 @@ select,
 }
 
 .CarouselCasosContenido {
-  width: 90rem;
+  width: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -956,10 +959,6 @@ select,
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-}
-
-.VideoCaso {
-  width: 90%;
 }
 
 .CasoIndividual {
@@ -976,4 +975,15 @@ select,
 
 .VideoAgilidadProfunda {
   margin-bottom: 12rem;
+}
+
+.TextosCaso {
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+}
+
+.ContenedorCarousel {
+  display: flex;
+  justify-content: center;
 }

@@ -168,11 +168,18 @@ const Intervenciones = () => {
           infinite={true}
           customRightArrow={<CustomRightArrow />}
           customLeftArrow={<CustomLeftArrow />}
+          itemClass="ContenedorCarousel"
         >
           {videos.map((caso, index) => (
             <div className="CarouselCasosContenido">
-              <p>Titulo</p>
-
+              <div className="TextosCaso">
+                <p className="TituloSeccionAccordion">Título del caso</p>
+                <p className="IntervencionesContenidoPregunta">
+                  Evento anual de líderes de todo el país en formato híbrido.
+                  Más de 1000 asistentes en total. Aproximadamente mitad
+                  presenciales y mitad de manera virtual.
+                </p>
+              </div>
               <MuxPlayer
                 className="VideoCaso"
                 playbackId={caso.videoURL}
