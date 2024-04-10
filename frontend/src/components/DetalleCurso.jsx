@@ -319,8 +319,6 @@ const DetalleCurso = ({ type }) => {
       <hr className="Separador" />
       <p className="SubtituloDetalleCurso">FAQ</p>
       <FAQ />
-      <Accordion.Root type="multiple"></Accordion.Root>
-      <button>Pagar</button>
     </div>
   );
 };
