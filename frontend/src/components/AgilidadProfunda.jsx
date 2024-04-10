@@ -12,9 +12,7 @@ const AgilidadProfunda = () => {
       id="agilidadProfunda"
     >
       <AccordionHeader className="AccordionHeader">
-        <p className="TituloSeccionAccordion AgilidadProfundaTitulo">
-          Agilidad profunda
-        </p>
+        <p className="TituloSeccionAccordion">Agilidad profunda</p>
         <p className="ContenidoSeccionAgilidadProfunda">
           La definición de agilidad y de marcos de trabajo asociados como Scrum
           es increíblemente minimalista. Esto le da una potencia y flexibilidad
