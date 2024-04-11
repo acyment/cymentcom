@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
+
 import Inscripcion from './Inscripcion';
+import { Dialog, Portal } from '@ark-ui/react';
 
 const HorarioCurso = () => {
   const header = document.querySelector('header');
@@ -45,16 +46,23 @@ const HorarioCurso = () => {
           ARG/CHI/PAR/URU [GMT-3] 15:00 a 18:30 hs.
         </p>
       </div>
-      <Dialog.Root onOpenChange={handleDialogOpenChange} modal={true}>
+      <Dialog.Root
+        onOpenChange={handleDialogOpenChange}
+        modal={true}
+        closeOnInteractOutside={false}
+      >
         <Dialog.Trigger asChild>
           <button className="BotonInscripcion">Inscribirme</button>
         </Dialog.Trigger>
-        <Dialog.Portal>
-          <Dialog.Overlay className="DialogOverlay" />
-          <Dialog.Content className="DialogContent">
-            <Inscripcion />
-          </Dialog.Content>
-        </Dialog.Portal>
+
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content className="DialogContent">
+              <Inscripcion />
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
       </Dialog.Root>
     </div>
   );

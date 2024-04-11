@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
+import { Dialog, Portal } from '@ark-ui/react';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Wallet, initMercadoPago } from '@mercadopago/sdk-react';
 import axios from 'axios';
@@ -114,7 +114,7 @@ const Inscripcion = () => {
         <img src="static/images/firulete-triple.svg"></img>
       </div>
 
-      <Dialog.Close asChild>
+      <Dialog.CloseTrigger asChild>
         <Fragment>
           {mostrarStripe && (
             <button
@@ -137,13 +137,13 @@ const Inscripcion = () => {
             </button>
           )}
         </Fragment>
-      </Dialog.Close>
+      </Dialog.CloseTrigger>
 
-      <Dialog.Close asChild>
+      <Dialog.CloseTrigger asChild>
         <button className="IconButton" aria-label="Close">
           <Cross2Icon />
         </button>
-      </Dialog.Close>
+      </Dialog.CloseTrigger>
     </form>
   );
 };
