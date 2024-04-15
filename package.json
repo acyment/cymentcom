@@ -6,7 +6,7 @@
     "@babel/preset-env": "^7.16.5",
     "@babel/preset-react": "^7.23.3",
     "@popperjs/core": "^2.10.2",
-    "@unocss/webpack": "^0.58.5",
+    "@unocss/webpack": "^0.59.2",
     "autoprefixer": "^10.4.0",
     "babel-loader": "^9.1.2",
     "css-loader": "^6.5.1",
