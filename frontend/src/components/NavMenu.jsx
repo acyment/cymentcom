@@ -1,6 +1,5 @@
 import React from 'react';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
-import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
 
 const NavMenu = () => {
   return (
