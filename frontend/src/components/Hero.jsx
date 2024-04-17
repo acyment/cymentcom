@@ -8,7 +8,11 @@ const Hero = () => {
   const handlePayClick = () => {};
 
   return (
-    <Accordion.Item value="Hero" className="HeroAccordion" id="hero">
+    <Accordion.Item
+      value="Hero"
+      className="HeroAccordion NavigationBarScrollOffset"
+      id="hero"
+    >
       <AccordionHeader>
         <p className="HeroText">
           <b className="HeroTextBold">Alan</b> explica la agilidad como nadie.

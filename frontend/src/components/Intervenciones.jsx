@@ -78,7 +78,7 @@ const Intervenciones = () => {
   return (
     <Accordion.Item
       value="Intervencion"
-      className="IntervencionesAccordion"
+      className="IntervencionesAccordion NavigationBarScrollOffset"
       id="intervenciones"
     >
       <AccordionHeader>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, forwardRef } from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
 import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
 import EllipsisNestedList from './EllipsisNestedList';
@@ -6,7 +6,7 @@ import HorarioCurso from './HorarioCurso';
 import FAQ from './FAQ';
 import MuxPlayer from '@mux/mux-player-react';
 
-const DetalleCurso = ({ type }) => {
+const DetalleCurso = forwardRef(({ type }, ref) => {
   let [content, setContent] = useState({});
 
   useEffect(() => {
@@ -284,7 +284,17 @@ const DetalleCurso = ({ type }) => {
   }, [type]);
 
   return (
-    <div className="DetalleCurso">
+    <div
+      ref={ref}
+      id="detalle-curso"
+      className="DetalleCurso NavigationBarScrollOffset"
+    >
+      <p className="SubtituloDetalleCurso">Próximos cursos</p>
+      <HorarioCurso />
+      <p className="ResumenDetalleCurso">
+        Lunes a viernes, en 5 sesiones diarias de 3,5 hs cada una
+      </p>
+      <hr className="Separador" />
       <MuxPlayer
         streamType="on-demand"
         playbackId="UxJyrVzp289RvfPfMeVNgGNlm01Fh9MDilKVV00zq4dKc"
@@ -311,16 +321,11 @@ const DetalleCurso = ({ type }) => {
         maxItems={5}
       ></EllipsisNestedList>
       <hr className="Separador" />
-      <p className="SubtituloDetalleCurso">Horarios</p>
-      <p className="ResumenDetalleCurso">
-        Lunes a viernes, en 5 sesiones diarias de 3,5 hs cada una
-      </p>
-      <HorarioCurso />
-      <hr className="Separador" />
+
       <p className="SubtituloDetalleCurso">FAQ</p>
       <FAQ />
     </div>
   );
-};
+});
 
 export default DetalleCurso;

@@ -8,7 +8,7 @@ const AgilidadProfunda = () => {
   return (
     <Accordion.Item
       value="AgilidadProfunda"
-      className="AgilidadProfundaAccordion"
+      className="AgilidadProfundaAccordion NavigationBarScrollOffset"
       id="agilidadProfunda"
     >
       <AccordionHeader className="AccordionHeader">
