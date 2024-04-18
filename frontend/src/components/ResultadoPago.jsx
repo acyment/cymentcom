@@ -19,7 +19,7 @@ const ResultadoPago = () => {
           <Dialog.Overlay className="DialogOverlay" />
           <Dialog.Content className="DialogContent">
             {statusIntentoDePago() === 'approved' ? (
-              <div>Status is approved.</div>
+              <div>Pago aprobado</div>
             ) : (
               <div>Status is not approved.</div>
             )}

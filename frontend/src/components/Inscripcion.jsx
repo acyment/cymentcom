@@ -64,6 +64,11 @@ const Inscripcion = () => {
       validationSchema: Yup.object({
         pais: Yup.string().required('No te olvides del país'),
         nombreCompleto: Yup.string().required('No te olvides del nombre'),
+        identificadorFiscal: Yup.string().when('pais', {
+          is: 'AR',
+          then: Yup.string().required('No te olvides del CUIT'),
+          otherwise: Yup.string(),
+        }),
       }),
       onSubmit: async (stepValues, allValues, actions) => {
         console.log('Por hacer submit');

@@ -1,7 +1,6 @@
-import React, { Fragment, useState } from 'react';
-import { Field, ErrorMessage } from 'formik';
+import React, { Fragment, useState, useEffect } from 'react';
+import { Field, ErrorMessage, useFormikContext } from 'formik';
 import { useWizard } from 'react-formik-step-wizard';
-import * as Yup from 'yup';
 import { Tooltip } from 'react-tooltip';
 import axios from 'axios';
 
@@ -793,23 +792,15 @@ const paises = [
 ];
 
 const StepFacturacion = () => {
+  const { values } = useFormikContext();
   const { goToPreviousStep, activeStep } = useWizard();
   const [paisEsArgentina, setPaisEsArgentina] = useState(null);
 
-  const countryWasSelected = (event) => {
-    const eligioArgentina = event.target.value === 'AR';
+  useEffect(() => {
+    const selectedPais = values.pais;
+    const eligioArgentina = selectedPais === 'AR';
     setPaisEsArgentina(eligioArgentina);
-    const validationSchema = activeStep.validationSchema;
-
-    if (eligioArgentina && !validationSchema.describe().fields['cuit']) {
-      activeStep.validationSchema = validationSchema.concat(
-        Yup.object().shape({
-          cuit: Yup.string().required('No te olvides del cuit'),
-        }),
-      );
-    } else if (!eligioArgentina && validationSchema.describe().fields.cuit)
-      activeStep.validationSchema = validationSchema.omit(['cuit']);
-  };
+  }, [values.pais]);
 
   const submitPagoStripe = () => {
     axios
@@ -829,12 +820,7 @@ const StepFacturacion = () => {
     <Fragment>
       <p className="TituloStep">Datos para facturación</p>
       <div className="Fieldset">
-        <Field
-          name="pais"
-          as="select"
-          onBlur={(e) => countryWasSelected(e)}
-          className="Input"
-        >
+        <Field name="pais" as="select" className="Input">
           <option value="">País*</option>
           {paises.map((pais) => (
             <option key={pais.value} value={pais.value}>
@@ -853,13 +839,13 @@ const StepFacturacion = () => {
 
         <Field
           name="identificadorFiscal"
-          placeholder={paisEsArgentina ? 'CUIT' : 'Identificación'}
+          placeholder={paisEsArgentina ? 'CUIT*' : 'Identificación'}
           type="text"
           data-tooltip-id="my-tooltip"
           data-tooltip-content="Ingrese identificador fiscal (RUT, RUC, etc) o personal (cédula, documento, pasaporte) tal como deseas que aparezca en la factura"
           className="Input"
         />
-
+        <ErrorMessage name="identificadorFiscal" />
         <Tooltip id="my-tooltip" />
         <Field
           name="direccion"
