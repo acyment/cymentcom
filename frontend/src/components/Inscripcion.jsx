@@ -84,6 +84,7 @@ const Inscripcion = () => {
 
           <Wizard steps={steps} />
         </div>
+        <img src="static/images/firulete-triple.svg"></img>
       </div>
 
       <Dialog.CloseTrigger asChild>
