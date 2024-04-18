@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create production .postgres
-        uses: SpicyPizza/create-envfile@v2.0
+        uses: SpicyPizza/create-envfile@v2.0.3
         with:
           envkey_POSTGRES_HOST: 'postgres'
           envkey_POSTGRES_PORT: 5432
@@ -41,9 +41,10 @@ jobs:
           directory: .envs/.production
           file_name: .django
       - name: Create production .webpack
-        uses: SpicyPizza/create-envfile@v2.0
+        uses: SpicyPizza/create-envfile@v2.0.3
         with:
           envkey_MP_PUBLIC_KEY: ${{ secrets.MP_PUBLIC_KEY }}
+          envkey_STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
           directory: .envs/.production
           file_name: .webpack
       - name: Rsync deployments

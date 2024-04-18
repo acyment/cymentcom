@@ -177,3 +177,4 @@ SPECTACULAR_SETTINGS["SERVERS"] = [
 # Your stuff...
 # ------------------------------------------------------------------------------
 WEBHOOKS_DOMAIN = "https://cyment.com/"
+REDIRECT_DOMAIN = "https://cyment.com/"

@@ -56,7 +56,7 @@ const HorarioCurso = () => {
         </Dialog.Trigger>
 
         <Portal>
-          <Dialog.Backdrop />
+          <Dialog.Backdrop className="DialogOverlay" />
           <Dialog.Positioner>
             <Dialog.Content className="DialogContent">
               <Inscripcion />

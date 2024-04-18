@@ -82,3 +82,4 @@ WEBPACK_LOADER["DEFAULT"]["CACHE"] = not DEBUG
 # ------------------------------------------------------------------------------
 
 WEBHOOKS_DOMAIN = "https://cymentcom.loca.lt/"
+REDIRECT_DOMAIN = "http://localhost:3000/"

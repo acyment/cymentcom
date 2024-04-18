@@ -19,6 +19,11 @@ $azul-violaceo: #7854fa;
   src: url('../fonts/Rubik-VariableFont_wght.ttf');
 }
 
+$navbar-height: 5vh;
+
+html {
+  scroll-behavior: smooth;
+}
 body {
   font-family: Rubik;
   padding-top: 5vh;
@@ -41,7 +46,7 @@ body {
   width: 100%;
   background-color: white; /* Optional: Add a background color */
   z-index: 2999;
-  height: 5vh;
+  height: $navbar-height;
 }
 
 .NavigationMenuRoot {
@@ -370,9 +375,10 @@ body {
 }
 .SubtituloDetalleCurso {
   color: $azul-violaceo;
-  font-size: 1.2vw;
+  font-size: 1.5vw;
   font-weight: 600;
   margin-bottom: 5vh;
+  margin-top: 3rem;
 }
 /* Buttons styles start */
 button {
@@ -702,7 +708,7 @@ h2 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 70rem;
+  width: 30rem;
 
   padding-left: 7rem;
   padding-right: 7rem;
@@ -828,11 +834,6 @@ select,
   }
 }
 
-.Input {
-  box-sizing: content-box;
-  padding: 0.6rem;
-}
-
 .Combobox__placeholder {
   color: #cccccc;
 }
@@ -857,7 +858,7 @@ select,
 
 .Input,
 .ContenedorCombobox {
-  width: 40rem;
+  width: 20rem;
   border-radius: 4px;
   line-height: 1;
   font-size: 0.7rem;
@@ -871,6 +872,8 @@ select,
   appearance: none;
   /* Optionally, remove border */
   border: none;
+  box-sizing: content-box;
+  padding: 0.6rem;
 }
 
 .Input:focus {
@@ -897,21 +900,43 @@ select,
   }
 }
 
-.BotonPagarConStripe {
+.TituloStep {
+  color: white;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+.BotonFormulario {
   background-color: $azul-violaceo;
   color: white;
-  border-radius: 16px;
-  font-size: 2rem;
-  padding: 1rem;
+  border-radius: 7px;
+  font-size: 1.1rem;
+  padding: 0.4rem;
   font-weight: 400;
   cursor: pointer;
+  flex: 1;
 }
 
-.BotonPagarConStripe[disabled] {
-  cursor: not-allowed; /* Change cursor to not-allowed */
-  background-color: #999;
+.BotonIzquierda {
+  margin-right: 1.8rem;
 }
 
+.BotonDerecha {
+  margin-left: 1.8rem;
+}
+
+.BotonFormulario:hover {
+  filter: brightness(1.5); /* Increase brightness by 50% */
+}
+
+.UnicoBotonSiguiente {
+  align-self: flex-end;
+}
+
+.DosBotonesFormulario {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
 .BotonPagarConMercadoPago {
   width: 3rem;
 }
@@ -919,6 +944,9 @@ select,
 .VideoPlayer {
   margin-top: 3rem;
   margin-bottom: 2rem;
+  border-radius: 16px;
+  width: 60rem;
+  overflow: hidden;
 }
 
 .CarouselCasos {
@@ -986,4 +1014,8 @@ select,
 .ContenedorCarousel {
   display: flex;
   justify-content: center;
+}
+
+.NavigationBarScrollOffset {
+  scroll-margin-top: 10vh;
 }

@@ -2,7 +2,7 @@
 import hashlib
 import hmac
 import time
-
+import uuid
 import environ
 import mercadopago
 import stripe
@@ -12,6 +12,7 @@ from django.shortcuts import redirect
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import status
 
 SUCCESSFUL_RESPONSE = 201
 FIVE_MINUTES_IN_MS = 300000
@@ -84,8 +85,8 @@ class CreateStripeCheckoutSessionView(APIView):
                     },
                 ],
                 mode="payment",
-                success_url=settings.WEBHOOKS_DOMAIN + "?status=approved",
-                cancel_url=settings.WEBHOOKS_DOMAIN + "?status=canceled",
+                success_url=settings.REDIRECT_DOMAIN + "?status=approved",
+                cancel_url=settings.REDIRECT_DOMAIN + "?status=canceled",
             )
         except Exception as e:  # noqa: BLE001
             # TODO: Manejar excepciones de Stripe https://docs.stripe.com/api/errors/handling
@@ -93,7 +94,77 @@ class CreateStripeCheckoutSessionView(APIView):
             return str(e)
 
         print("Stripe checkout URL:" + checkout_session.url)
-        return redirect(checkout_session.url, code=303)
+        return Response({"checkout_url": checkout_session.url})
+
+
+class CreateStripePaymentIntent(APIView):
+    # Disable authentication
+    authentication_classes = []
+    # Disable permission checks
+    permission_classes = [AllowAny]
+
+    def post(self, request, response_format=None):
+        product_id = request.data.get("product_id")
+        amount = request.data.get("amount")
+
+        if not product_id or not amount:
+            error_message = "No se encontró 'product_id' o 'amount' en el request body."
+            return Response(
+                {"error": error_message}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Retrieve the product price based on the product_id
+        try:
+            product_price = 100
+        except Exception as e:
+            error_message = f"No se encontró un producto con ID {product_id}."
+            return Response({"error": error_message}, status=status.HTTP_404_NOT_FOUND)
+
+        # Calculate the total amount
+        total_amount = product_price * amount
+
+        try:
+            stripe.api_key = env("STRIPE_API_KEY")
+            payment_intent = stripe.PaymentIntent.create(
+                amount=total_amount,
+                currency="usd",
+            )
+        except Exception as e:  # noqa: BLE001
+            # TODO: Manejar excepciones de Stripe https://docs.stripe.com/api/errors/handling
+            print("Excepcion Stripe:" + str(e))
+            return str(e)
+
+        return Response({"client_secret": payment_intent.client_secret})
+
+
+class ProcessMPPayment(APIView):
+    # Disable authentication
+    authentication_classes = []
+    # Disable permission checks
+    permission_classes = [AllowAny]
+
+    def post(self, request, response_format=None):
+        sdk = mercadopago.SDK(env("MP_ACCESS_TOKEN"))
+        request_options = mercadopago.config.RequestOptions()
+        request_options.custom_headers = {"x-idempotency-key": str(uuid.uuid4().int)}
+        payment_data = {
+            "transaction_amount": float(request.data["transaction_amount"]),
+            "token": request.data["token"],
+            "installments": int(request.data["installments"]),
+            "payment_method_id": request.data["payment_method_id"],
+            "issuer_id": request.data["issuer_id"],
+            "payer": {
+                "email": request.data["payer"]["email"],
+                "identification": {
+                    "type": request.data["payer"]["identification"]["type"],
+                    "number": request.data["payer"]["identification"]["number"],
+                },
+            },
+            "three_d_secure_mode": "optional",
+        }
+        payment_response = sdk.payment().create(payment_data, request_options)
+        payment = payment_response["response"]
+        return Response(payment)
 
 
 class MPPaymentConfirmationView(APIView):

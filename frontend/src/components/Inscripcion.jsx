@@ -1,10 +1,20 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Dialog, Portal } from '@ark-ui/react';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Wallet, initMercadoPago } from '@mercadopago/sdk-react';
 import axios from 'axios';
-import CountryDropdown from './CountryDropDown';
+
+import * as ScrollArea from '@radix-ui/react-scroll-area';
+
 import DisableableWallet from './DisableableWallet';
+import { Wizard, useWizard, BasicFooter } from 'react-formik-step-wizard';
+
+import StepParticipantes from './StepParticipantes';
+import StepFacturacion from './StepFacturacion';
+import StepPago from './StepPago';
+import * as Yup from 'yup';
+
+export const AppContext = React.createContext({});
 
 const Inscripcion = () => {
   const [preferenceId, setPreferenceId] = useState(null);
@@ -12,9 +22,6 @@ const Inscripcion = () => {
   const [mostrarStripe, setMostrarStripe] = useState(false);
   const [disablePayButton, setDisablePayButton] = useState(false);
 
-  const mercadopago = initMercadoPago(process.env.MP_PUBLIC_KEY, {
-    locale: 'es-AR',
-  });
   const [country, setCountry] = useState('');
 
   const countryWasSelected = (selectedCountry) => {
@@ -29,122 +36,62 @@ const Inscripcion = () => {
     handleInputChange();
   };
 
-  const areAllRequiredFieldsFilled = () => {
-    // Assuming the form has an id of 'myForm'
-    const formId = 'formulario-inscripcion';
-    const requiredInputs = document.querySelectorAll(
-      `#${formId} input[required]`,
-    );
-
-    for (let input of requiredInputs) {
-      if (input.value.trim() === '') {
-        return false;
-      }
-    }
-
-    return true;
-  };
-
   const handleInputChange = (event) => {
     setDisablePayButton(!areAllRequiredFieldsFilled());
   };
 
+  const validationSchema = Yup.object().shape({
+    emailParticipante: Yup.string()
+      .email('Invalid email')
+      .required('The email field is required'),
+  });
+
+  const steps = [
+    {
+      id: 'StepParticipantes',
+      component: <StepParticipantes />,
+
+      validationSchema: Yup.object({
+        nombre: Yup.string().required('No te olvides del nombre'),
+        apellido: Yup.string().required('No te olvides del apellido'),
+        email: Yup.string().required('No te olvides del e-mail'),
+      }),
+      hidePrevious: true,
+    },
+    {
+      id: 'StepFacturacion',
+      component: <StepFacturacion />,
+      validationSchema: Yup.object({
+        pais: Yup.string().required('No te olvides del país'),
+        nombreCompleto: Yup.string().required('No te olvides del nombre'),
+      }),
+      onSubmit: async (stepValues, allValues, actions) => {
+        console.log('Por hacer submit');
+        return stepValues;
+      },
+    },
+    {
+      id: 'StepPago',
+      component: <StepPago />,
+    },
+  ];
+
   return (
-    <form id="formulario-inscripcion">
+    <Fragment>
       <div className="ContenedorModal">
         <div>
-          <Dialog.Title className="DialogTitle">
-            Formulario de inscripción
-          </Dialog.Title>
-          <Dialog.Description className="DialogDescription"></Dialog.Description>
-          <h2>Datos de facturación</h2>
-          <fieldset className="Fieldset">
-            <CountryDropdown className="Input" onSelect={countryWasSelected} />
-            <input
-              className="Input"
-              id="NombreCompleto"
-              type="text"
-              required
-              placeholder="Nombre completo*"
-              onBlur={handleInputChange}
-            />
-            <input
-              className="Input"
-              id="IdentificadorFiscal"
-              placeholder="Identificador fiscal o documento"
-            />
-            <input className="Input" id="Direccion" placeholder="Dirección" />
-            <input className="Input" id="Teléfono" placeholder="Teléfono" />
-          </fieldset>
-          <hr className="SeparadorModal" />
-          <h2>Datos del participante</h2>
-          <fieldset className="Fieldset">
-            <input
-              className="Input"
-              type="text"
-              required
-              id="Nombre"
-              placeholder="Nombre*"
-              onBlur={handleInputChange}
-            />
-            <input
-              className="Input"
-              type="text"
-              required
-              id="Apellido"
-              placeholder="Apellido*"
-              onBlur={handleInputChange}
-            />
-            <input
-              className="Input"
-              type="email"
-              required
-              id="Email"
-              placeholder="E-mail*"
-              onBlur={handleInputChange}
-            />
-            <input
-              className="Input"
-              id="Organizacion"
-              placeholder="Organización"
-            />
-            <input className="Input" id="Rol" placeholder="Rol" />
-          </fieldset>
+          <Dialog.Title className="DialogTitle">Inscripción</Dialog.Title>
+
+          <Wizard steps={steps} />
         </div>
-        <img src="static/images/firulete-triple.svg"></img>
       </div>
-
-      <Dialog.CloseTrigger asChild>
-        <Fragment>
-          {mostrarStripe && (
-            <button
-              className="BotonPagarConStripe"
-              formAction="/api/create-stripe-checkoutsession/"
-              formMethod="post"
-              disabled={disablePayButton}
-            >
-              Pagar con Stripe
-            </button>
-          )}
-
-          {mostrarMercadoPago && (
-            <button
-              className="BotonPagarConStripe"
-              formAction="https://mpago.la/12tA6FH"
-              disabled={disablePayButton}
-            >
-              Pagar con Mercado Pago
-            </button>
-          )}
-        </Fragment>
-      </Dialog.CloseTrigger>
 
       <Dialog.CloseTrigger asChild>
         <button className="IconButton" aria-label="Close">
           <Cross2Icon />
         </button>
       </Dialog.CloseTrigger>
-    </form>
+    </Fragment>
   );
 };
 
