@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 const EllipsisNestedList = ({
   fullContents,
@@ -8,9 +8,13 @@ const EllipsisNestedList = ({
   seeLessText = 'Ver menos...',
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const refContenedor = useRef(null);
 
   const handleClick = () => {
     setExpanded(!expanded);
+    if (expanded) {
+      refContenedor.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const renderContent = () => {
@@ -22,7 +26,10 @@ const EllipsisNestedList = ({
   };
 
   return (
-    <div className="ContenidoCurso">
+    <div
+      className="ContenidoCurso NavigationBarScrollOffset"
+      ref={refContenedor}
+    >
       {renderContent()}
       <button onClick={handleClick} className="VerMasMenos">
         {expanded ? seeLessText : seeMoreText}
