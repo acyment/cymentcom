@@ -60,6 +60,7 @@
     "formik": "^2.2.9",
     "formik-wizard-form": "^2.1.0",
     "js-cookie": "^3.0.5",
+    "html-react-parser": "^5.1.10",
     "normalize.css": "8.0.1",
     "react": "^18.2.0",
     "react-country-region-selector": "^2.1.0",

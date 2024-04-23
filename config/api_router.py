@@ -3,13 +3,15 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from rest_framework.routers import SimpleRouter
 
+from cursos.api.views import CreateMpPreferenceView
+from cursos.api.views import CreateStripeCheckoutSessionView
+from cursos.api.views import CreateStripePaymentIntent
+from cursos.api.views import InscribirParticipanteEnCurso
+from cursos.api.views import MPPaymentConfirmationView
+from cursos.api.views import ProcessMPPayment
+from cursos.api.views import StripePaymentConfirmationView
+from cursos.api.views import TipoCursoList
 from cyment_com.users.api.views import UserViewSet
-from pagos.api.views import CreateMpPreferenceView
-from pagos.api.views import CreateStripeCheckoutSessionView
-from pagos.api.views import CreateStripePaymentIntent
-from pagos.api.views import MPPaymentConfirmationView
-from pagos.api.views import ProcessMPPayment
-from pagos.api.views import StripePaymentConfirmationView
 
 router = DefaultRouter() if settings.DEBUG else SimpleRouter()
 
@@ -48,5 +50,15 @@ urlpatterns += [
         "process-mp-payment/",
         ProcessMPPayment.as_view(),
         name="process-mp-payment",
+    ),
+    path(
+        "cursos/<int:curso_id>/inscripciones/",
+        InscribirParticipanteEnCurso.as_view(),
+        name="inscribir_participante",
+    ),
+    path(
+        "tipos-de-curso/",
+        TipoCursoList.as_view(),
+        name="tipo_curso_list",
     ),
 ]

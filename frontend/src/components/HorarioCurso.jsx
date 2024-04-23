@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Inscripcion from './Inscripcion';
 import { Dialog, Portal } from '@ark-ui/react';
 
-const HorarioCurso = () => {
+const HorarioCurso = ({ tipoCurso }) => {
   const header = document.querySelector('header');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [idCurso, setIdCurso] = useState(null);
+
+  useEffect(() => {
+    setIdCurso(1);
+  }, [tipoCurso]);
 
   const handleDialogOpenChange = (open) => {
     setIsDialogOpen(open);
@@ -59,7 +64,7 @@ const HorarioCurso = () => {
           <Dialog.Backdrop className="DialogOverlay" />
           <Dialog.Positioner>
             <Dialog.Content className="DialogContent">
-              <Inscripcion />
+              <Inscripcion idCurso={idCurso} />
             </Dialog.Content>
           </Dialog.Positioner>
         </Portal>

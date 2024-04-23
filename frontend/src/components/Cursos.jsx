@@ -4,8 +4,11 @@ import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import DetalleCurso from './DetalleCurso';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
+import axios from 'axios';
 
 const Cursos = () => {
+  const [tiposCurso, setTiposCurso] = useState([]);
+
   const refDetalleCurso = useRef(null);
   const refListaCursos = useRef(null);
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -21,6 +24,23 @@ const Cursos = () => {
       // add plugins here
     ],
   );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Replace 'your_api_endpoint' with the actual endpoint URL
+        const response = await axios.get('/api/tipos-de-curso');
+        const dictTiposCurso = response.data.reduce((acc, obj) => {
+          acc[obj.nombre_corto] = obj;
+          return acc;
+        }, {});
+        setTiposCurso(dictTiposCurso);
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const updateSelectedItem = (value) => {
     setSelectedCourse(value); // Update selected item
@@ -50,52 +70,41 @@ const Cursos = () => {
           onValueChange={updateSelectedItem}
           className="ResumenCursosCarousel"
         >
-          <ToggleGroup.Item className=" ToggleResumenCurso" value="CSM">
-            <img
-              src="static/images/resumen-CSM-colored.jpg"
-              className="ImagenResumenCurso"
-            />
-            <div className="TextoResumenCurso">
-              <h3 className="CursosTituloAcronimo">CSM</h3>
-              <h4 className="CursosTitulo">Certified ScrumMaster</h4>
-              <p className="CursosTituloBajada">
-                Introducción a la agilidad más profunda
-              </p>
-            </div>
-            <span className="CircleButton CircleButtonCursos" />
-          </ToggleGroup.Item>
-          <ToggleGroup.Item className="ToggleResumenCurso" value="CSPO">
-            <img
-              src="static/images/resumen-CSM-colored.jpg"
-              className="ImagenResumenCurso"
-            />
-            <div className="TextoResumenCurso">
-              <h3 className="CursosTituloAcronimo">CSPO</h3>
-              <h4 className="CursosTitulo">Certified Scrum Product Owner</h4>
-              <p className="CursosTituloBajada">
-                Introducción a la agilidad más profunda
-              </p>
-            </div>
-            <span className="CircleButton CircleButtonCursos" />
-          </ToggleGroup.Item>
-          <ToggleGroup.Item className=" ToggleResumenCurso" value="LeSS">
-            <img
-              src="static/images/resumen-CSM-colored.jpg"
-              className="ImagenResumenCurso"
-            />
-            <div className="TextoResumenCurso">
-              <h3 className="CursosTituloAcronimo">LeSS</h3>
-              <h4 className="CursosTitulo">Intro a LeSS</h4>
-              <p className="CursosTituloBajada">
-                Introducción a la agilidad más profunda
-              </p>
-            </div>
-            <span className="CircleButton CircleButtonCursos" />
-          </ToggleGroup.Item>
+          {Object.values(tiposCurso).map((tipoCurso) => (
+            <ToggleGroup.Item
+              className="ToggleResumenCurso"
+              value={tipoCurso.nombre_corto}
+            >
+              <div className="ContenedorImagenResumenCurso">
+                <img
+                  src={
+                    selectedCourse === tipoCurso.nombre_corto
+                      ? `static/images/${tipoCurso.foto}`
+                      : `static/images/${tipoCurso.foto_tint}`
+                  }
+                  className="ImagenResumenCurso"
+                />
+              </div>
+
+              <div className="TextoResumenCurso">
+                <h3 className="CursosTituloAcronimo">
+                  {tipoCurso.nombre_corto}
+                </h3>
+                <h4 className="CursosTitulo">{tipoCurso.nombre_largo}</h4>
+                <p className="CursosTituloBajada">
+                  {tipoCurso.resumen_una_linea}
+                </p>
+              </div>
+              <span className="CircleButton CircleButtonCursos" />
+            </ToggleGroup.Item>
+          ))}
         </ToggleGroup.Root>
       </div>
       {selectedCourse && (
-        <DetalleCurso ref={refDetalleCurso} type={selectedCourse} />
+        <DetalleCurso
+          ref={refDetalleCurso}
+          tipoCurso={tiposCurso[selectedCourse]}
+        />
       )}
     </div>
   );

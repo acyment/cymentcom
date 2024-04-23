@@ -16,7 +16,7 @@ import * as Yup from 'yup';
 
 export const AppContext = React.createContext({});
 
-const Inscripcion = () => {
+const Inscripcion = ({ idCurso }) => {
   const [preferenceId, setPreferenceId] = useState(null);
   const [mostrarMercadoPago, setMostrarMercadoPago] = useState(false);
   const [mostrarStripe, setMostrarStripe] = useState(false);
@@ -60,11 +60,11 @@ const Inscripcion = () => {
     },
     {
       id: 'StepFacturacion',
-      component: <StepFacturacion />,
+      component: <StepFacturacion idCurso={idCurso} />,
       validationSchema: Yup.object({
         pais: Yup.string().required('No te olvides del país'),
         nombreCompleto: Yup.string().required('No te olvides del nombre'),
-        identificadorFiscal: Yup.string().when('pais', {
+        identificacionFiscal: Yup.string().when('pais', {
           is: 'AR',
           then: Yup.string().required('No te olvides del CUIT'),
           otherwise: Yup.string(),

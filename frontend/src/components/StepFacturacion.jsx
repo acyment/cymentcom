@@ -791,29 +791,55 @@ const paises = [
   },
 ];
 
-const StepFacturacion = () => {
-  const { values } = useFormikContext();
-  const { goToPreviousStep, activeStep } = useWizard();
+const StepFacturacion = ({ idCurso }) => {
+  const { values: valuesCurrentStep } = useFormikContext();
+  const {
+    goToPreviousStep,
+    activeStep,
+    values: valuesPreviousSteps,
+  } = useWizard();
   const [paisEsArgentina, setPaisEsArgentina] = useState(null);
 
   useEffect(() => {
-    const selectedPais = values.pais;
+    const selectedPais = valuesCurrentStep.pais;
     const eligioArgentina = selectedPais === 'AR';
     setPaisEsArgentina(eligioArgentina);
-  }, [values.pais]);
+  }, [valuesCurrentStep.pais]);
 
   const submitPagoStripe = () => {
     axios
-      .post('/api/create-stripe-checkoutsession/')
+      .post('/api/cursos/' + idCurso + '/inscripciones/', {
+        procesador_pago: 'STRIPE',
+        nombre: valuesPreviousSteps.StepParticipantes.nombre,
+        apellido: valuesPreviousSteps.StepParticipantes.apellido,
+        email: valuesPreviousSteps.StepParticipantes.email,
+        organizacion: valuesPreviousSteps.StepParticipantes.organizacion,
+        rol: valuesPreviousSteps.StepParticipantes.rol,
+        pais: valuesCurrentStep.pais,
+        nombreCompleto: valuesCurrentStep.nombreCompleto,
+        identificacionFiscal: valuesCurrentStep.identificacionFiscal,
+        direccion: valuesCurrentStep.direccion,
+        telefono: valuesCurrentStep.telefono,
+      })
       .then((response) => {
-        window.location.href = response.data.checkout_url;
+        const idFactura = response.data.id_factura;
+        axios
+          .post('/api/create-stripe-checkoutsession/', {
+            id_factura: idFactura, // Pass the id_factura as a parameter
+          })
+          .then((response) => {
+            window.location.href = response.data.checkout_url;
+          })
+          .catch((error) => {
+            if (error.response && error.response.status === 302) {
+              window.location.href = error.response.headers.location;
+            } else {
+              console.error('Error:', error);
+            }
+          });
       })
       .catch((error) => {
-        if (error.response && error.response.status === 302) {
-          window.location.href = error.response.headers.location;
-        } else {
-          console.error('Error:', error);
-        }
+        console.error('Error:', error);
       });
   };
   return (
@@ -838,14 +864,14 @@ const StepFacturacion = () => {
         <ErrorMessage name="nombreCompleto" />
 
         <Field
-          name="identificadorFiscal"
+          name="identificacionFiscal"
           placeholder={paisEsArgentina ? 'CUIT*' : 'Identificación'}
           type="text"
           data-tooltip-id="my-tooltip"
-          data-tooltip-content="Ingrese identificador fiscal (RUT, RUC, etc) o personal (cédula, documento, pasaporte) tal como deseas que aparezca en la factura"
+          data-tooltip-content="Ingrese identificación fiscal (RUT, RUC, etc) o personal (cédula, documento, pasaporte) tal como deseas que aparezca en la factura"
           className="Input"
         />
-        <ErrorMessage name="identificadorFiscal" />
+        <ErrorMessage name="identificacionFiscal" />
         <Tooltip id="my-tooltip" />
         <Field
           name="direccion"

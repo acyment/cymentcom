@@ -23,7 +23,7 @@ DEBUG = env.bool("DJANGO_DEBUG", False)
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # though not all of them may be available with every OS.
 # In Windows, this must be set to your system time zone.
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Argentina/Buenos_Aires"
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = "es-AR"
 # https://docs.djangoproject.com/en/dev/ref/settings/#languages
@@ -81,8 +81,8 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "drf_spectacular",
     "webpack_loader",
-    "payments",
     "djmoney",
+    "mjml",
 ]
 
 LOCAL_APPS = [
@@ -355,5 +355,9 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
 }
-# Your stuff...
+# MJML
 # ------------------------------------------------------------------------------
+MJML_BACKEND_MODE = "tcpserver"
+MJML_TCPSERVERS = [
+    ("127.0.0.1", 28101),  # the host and port of MJML TCP-Server
+]
