@@ -12,23 +12,19 @@ from cursos.models import TipoCurso
 class FAQCursoSerializer(serializers.ModelSerializer):
     class Meta:
         model = FAQCurso
-        fields = ["pregunta", "respuesta"]
+        fields = "__all__"
 
 
 class CursoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Curso
-        fields = [
-            "fecha",
-            "cantidad_dias",
-            "hora_inicio",
-            "hora_fin",
-            "costo_usd",
-            "costo_ars",
-            "modalidad",
-            "url_videoconferencia",
-            "url_whiteboard",
-        ]
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["hora_fin"] = format(instance.hora_fin, "%H:%M")
+        representation["hora_inicio"] = format(instance.hora_inicio, "%H:%M")
+        return representation
 
 
 class TipoCursoSerializer(serializers.ModelSerializer):
@@ -37,19 +33,7 @@ class TipoCursoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TipoCurso
-        fields = [
-            "nombre_corto",
-            "nombre_completo",
-            "resumen_una_linea",
-            "resumen",
-            "contenido",
-            "contenido_corto",
-            "video",
-            "foto",
-            "foto_tint",
-            "faq_entries",
-            "upcoming_courses",
-        ]
+        fields = "__all__"
 
     def get_upcoming_courses(self, obj):
         # Filter the courses that have a future date

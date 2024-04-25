@@ -425,6 +425,13 @@ ul {
   border-radius: 2em 2em 0 0;
   width: 100%; /* Stretch the image to take the button's width */
   height: auto; /* Maintain aspect ratio */
+  display: block;
+}
+
+.ContenedorImagenResumenCurso {
+  position: relative;
+  display: inline-block;
+  width: 100%;
 }
 
 .ContenidoCurso {
@@ -473,10 +480,6 @@ ul {
   width: 100vw;
   margin-top: 3rem;
   margin-bottom: 3rem;
-}
-
-.ToggleResumenCurso[data-state='on'] .ImagenResumenCurso {
-  content: url('../images/resumen-CSM.jpg');
 }
 
 .CircleButtonCursos {
@@ -1017,5 +1020,5 @@ select,
 }
 
 .NavigationBarScrollOffset {
-  scroll-margin-top: 10vh;
+  scroll-margin-top: 11vh;
 }

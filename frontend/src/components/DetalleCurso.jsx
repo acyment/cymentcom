@@ -14,10 +14,7 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
       className="DetalleCurso NavigationBarScrollOffset"
     >
       <p className="SubtituloDetalleCurso">Próximos cursos</p>
-      <HorarioCurso tipoCurso={tipoCurso.upcoming_courses} />
-      <p className="ResumenDetalleCurso">
-        Lunes a viernes, en 5 sesiones diarias de 3,5 hs cada una
-      </p>
+      <HorarioCurso proximosCursos={tipoCurso.upcoming_courses} />
       <hr className="Separador" />
       <MuxPlayer
         streamType="on-demand"
@@ -46,7 +43,7 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
       <hr className="Separador" />
 
       <p className="SubtituloDetalleCurso">FAQ</p>
-      <FAQ />
+      <FAQ faqEntries={tipoCurso.faq_entries} />
     </div>
   );
 });

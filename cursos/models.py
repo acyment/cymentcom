@@ -1,3 +1,5 @@
+from datetime import time
+
 from django.db import models
 from djmoney.models.fields import MoneyField
 
@@ -37,23 +39,34 @@ class CursoModalidad(models.TextChoices):
 class Curso(models.Model):
     tipo = models.ForeignKey(TipoCurso, on_delete=models.CASCADE)
     fecha = models.DateField()
-    cantidad_dias = models.IntegerField()
-    hora_inicio = models.TimeField()
-    hora_fin = models.TimeField()
-    costo_usd = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
+    cantidad_dias = models.IntegerField(default=5)
+    hora_inicio = models.TimeField(default=time(10, 0))
+    hora_fin = models.TimeField(default=time(13, 30))
+    costo_usd = MoneyField(
+        max_digits=14,
+        decimal_places=2,
+        default_currency="USD",
+        default=855,
+    )
     costo_ars = MoneyField(max_digits=14, decimal_places=2, default_currency="ARS")
-    modalidad = models.CharField(max_length=10, choices=CursoModalidad.choices)
-    url_videoconferencia = models.URLField(blank=True)
-    url_whiteboard = models.URLField(blank=True)
+    modalidad = models.CharField(
+        max_length=10,
+        choices=CursoModalidad.choices,
+        default=CursoModalidad.VIRTUAL,
+    )
+    meeting_url = models.URLField(blank=True)
+    meeting_id = models.CharField(max_length=100, blank=True)
+    meeting_password = models.CharField(max_length=100, blank=True)
+    whiteboard_url = models.URLField(blank=True)
 
     def __str__(self):
         return f"{self.tipo} - {self.fecha}"
 
     def save(self, *args, **kwargs):
-        if self.url_videoconferencia is None:
-            self.url_videoconferencia = ""
-        if self.url_whiteboard is None:
-            self.url_whiteboard = ""
+        if self.meeting_url is None:
+            self.meeting_url = ""
+        if self.whiteboard_url is None:
+            self.whiteboard_url = ""
 
         # Call the "real" save() method
         super().save(*args, **kwargs)
@@ -94,9 +107,13 @@ class EstadoInscripcion(models.TextChoices):
 class Factura(models.Model):
     monto = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
     nombre = models.CharField(max_length=100)
-    pais = models.CharField(max_length=2)
+    organizacion = models.CharField(max_length=100, blank=True)
+    pais = models.CharField(max_length=40)
     identificacion_fiscal = models.CharField(max_length=100, blank=True)
     direccion = models.CharField(max_length=200, blank=True)
+    ciudad = models.CharField(max_length=100, blank=True)
+    estado = models.CharField(max_length=100, blank=True)
+    codigo_postal = models.CharField(max_length=15, blank=True)
     telefono = models.CharField(max_length=20, blank=True)
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
     confeccionada = models.BooleanField(default=False)
@@ -112,8 +129,16 @@ class Factura(models.Model):
     def save(self, *args, **kwargs):
         if self.identificacion_fiscal is None:
             self.identificacion_fiscal = ""
+        if self.organizacion is None:
+            self.organizacion = ""
         if self.direccion is None:
             self.direccion = ""
+        if self.ciudad is None:
+            self.ciudad = ""
+        if self.estado is None:
+            self.estado = ""
+        if self.codigo_postal is None:
+            self.codigo_postal = ""
         if self.telefono is None:
             self.telefono = ""
         if self.id_pago is None:
