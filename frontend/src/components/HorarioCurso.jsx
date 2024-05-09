@@ -6,20 +6,19 @@ import formatDate from 'intl-dateformat';
 
 const HorarioCurso = ({ proximosCursos }) => {
   const header = document.querySelector('header');
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [idCurso, setIdCurso] = useState(null);
   const [proximoCurso, setProximoCurso] = useState(null);
   const [fechaCurso, setFechaCurso] = useState(null);
 
   useEffect(() => {
     if (proximosCursos) {
       setProximoCurso(proximosCursos[0]);
+      // TODO: Manejar el caso en el que no hay próxima fecha
+      // TODO: Manejar el caso en el que hay muchas próximas fechas
       setFechaCurso(new Date(proximosCursos[0].fecha));
     }
   }, [proximosCursos]);
 
   const handleDialogOpenChange = (open) => {
-    setIsDialogOpen(open);
     if (open) {
       turnOffHeaderStickiness();
     } else {
@@ -134,7 +133,7 @@ const HorarioCurso = ({ proximosCursos }) => {
             <Dialog.Backdrop className="DialogOverlay" />
             <Dialog.Positioner>
               <Dialog.Content className="DialogContent">
-                <Inscripcion idCurso={idCurso} />
+                <Inscripcion idCurso={proximoCurso && proximoCurso.id} />
               </Dialog.Content>
             </Dialog.Positioner>
           </Portal>

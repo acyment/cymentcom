@@ -35,6 +35,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 import logging
+from cursos.emails import EmailSender
 
 env = environ.Env()
 logger = logging.getLogger(__name__)
@@ -171,6 +172,7 @@ class CreateStripeCheckoutSessionView(APIView):
 
     def post(self, request, response_format=None):
         try:
+            factura = Factura.objects.get(id=request.data.get("id_factura"))
             stripe.api_key = env("STRIPE_API_KEY")
             checkout_session = stripe.checkout.Session.create(
                 line_items=[
@@ -184,6 +186,8 @@ class CreateStripeCheckoutSessionView(APIView):
                 success_url=f"{settings.REDIRECT_DOMAIN}?status=approved",
                 cancel_url=f"{settings.REDIRECT_DOMAIN}?status=canceled",
             )
+            factura.id_pago = checkout_session.id
+            factura.save()
         except Exception as e:  # noqa: BLE001
             # TODO: Manejar excepciones de Stripe https://docs.stripe.com/api/errors/handling
             print(f"Excepcion Stripe:{str(e)}")
@@ -226,7 +230,7 @@ class CreateStripePaymentIntent(APIView):
             )
         except Exception as e:  # noqa: BLE001
             # TODO: Manejar excepciones de Stripe https://docs.stripe.com/api/errors/handling
-            print("Excepcion Stripe:" + str(e))
+            print(f"Excepcion Stripe:{str(e)}")
             return str(e)
 
         return Response({"client_secret": payment_intent.client_secret})
@@ -346,14 +350,15 @@ class StripePaymentConfirmationView(APIView):
             return HttpResponse(status=400)
 
         # Handle the event
-        if event.type == "payment_intent.succeeded":
-            payment_intent = event["data"]["object"]
-            id_factura = payment_intent["metadata"]["id_factura"]
+        if event.type == "checkout.session.completed":
+            id_checkout_session = event["data"]["object"]["id"]
             try:
-                factura = Factura.objects.get(id=id_factura)
+                factura = Factura.objects.get(id_pago=id_checkout_session)
                 factura.pagada = True
                 factura.save()
 
+                inscripciones = Inscripcion.objects.filter(factura=factura)
+                EmailSender.send_welcome_email(inscripciones)
             except ObjectDoesNotExist:
                 mensaje_error = f"No se encontró la factura con ID: {id_factura}"
                 logger.error(mensaje_error)
@@ -361,4 +366,5 @@ class StripePaymentConfirmationView(APIView):
         else:
             print(f"Unhandled event type {event.type}")  # noqa: T201
 
+        # TODO: Manejar el evento checkout.session.expired
         return HttpResponse(status=200)

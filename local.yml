@@ -17,6 +17,7 @@ services:
       - postgres
       - redis
       - mailpit
+      - mjml
     volumes:
       - .:/app:z
     env_file:
@@ -104,3 +105,9 @@ services:
       - '9229:9229'
         # Expose browsersync UI: https://www.browsersync.io/docs/options/#option-ui
       - '3001:3001'
+
+  mjml:
+    image: liminspace/mjml-tcpserver:1
+    restart: always
+    ports:
+      - '28101:28101'

@@ -1,0 +1,52 @@
+{% load mjml %}
+
+{% mjml %}
+<mjml>
+<mj-head>
+<mj-font name="Rubik" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" />
+<mj-attributes>
+<mj-all font-family="Rubik, sans-serif" font-size="18px" font-weight="400" />
+</mj-attributes>
+<mj-attributes>
+<mj-text align="center" color="#555" />
+<mj-section background-color="#fff" />
+</mj-attributes>
+</mj-head>
+<mj-body background-color="#eee">
+<mj-section>
+<mj-column>
+<mj-text font-size="24px" font-weight="700">
+¡Te damos la bienvenida al Certified Scrum Product Owner !
+</mj-text>
+<mj-text>
+Las sesiones se realizarán los días
+<span>18, 19, 20, 21 y 22</span> de marzo de
+2024 en el siguiente horario:</mj-text>
+<mj-text font-size="14px">De 07:00am a 10:30am GMT-6 México, Costa Rica</mj-text>
+<mj-text font-size="14px">De 08:00am a 11:30am GMT-5 Colombia, Perú, Ecuador</mj-text>
+<mj-text font-size="14px">De 10:00am a 13:30pm GMT-3 Argentina, Uruguay, Chile,
+Paraguay</mj-text>
+<mj-divider></mj-divider>
+<mj-text>Aquí te dejamos el
+<a href="{{ inscripcion.curso.meeting_url }}">link de Zoom</a> para
+conectarte</mj-text>
+<mj-text>Meeting ID: {{ inscripcion.curso.meeting_id }}</mj-text>
+<mj-text>Passcode: {{ inscripcion.curso.meeting_password }}</mj-text>
+<mj-text>Aquí te dejamos el
+<a href="{{ inscripcion.curso.whiteboard_url }}">tablero de Miro</a>
+que vamos a utilizar</mj-text>
+<mj-divider></mj-divider>
+<mj-text>Para que puedas tomar notas durante las sesiones, te dejamos el
+Cuaderno de Notas</mj-text>
+<mj-text>Para ir entrando en tema te compartimos el libro "El espíritu de
+Scrum"</mj-text>
+<mj-divider></mj-divider>
+<mj-text>Para poder certificar en la Scrum Alliance no puedes ausentarte más
+de 1 hora en total y deberás realizar una participación activa en el
+curso. La certificación para CSPO no requiere instancia de
+examen.</mj-text>
+</mj-column>
+</mj-section>
+</mj-body>
+</mjml>
+{% endmjml %}

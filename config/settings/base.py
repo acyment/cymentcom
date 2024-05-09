@@ -359,5 +359,5 @@ SPECTACULAR_SETTINGS = {
 # ------------------------------------------------------------------------------
 MJML_BACKEND_MODE = "tcpserver"
 MJML_TCPSERVERS = [
-    ("127.0.0.1", 28101),  # the host and port of MJML TCP-Server
+    ("mjml", 28101),  # the host and port of MJML TCP-Server
 ]
