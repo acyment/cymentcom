@@ -121,7 +121,7 @@ class Factura(models.Model):
     id_pago = models.CharField(
         max_length=100,
         blank=True,
-    )  # ID de Mercado Pago o Stripe
+    )  # ID de Mercado Pago o Stripe (Session ID)
 
     def __str__(self):
         return f"{self.nombre} - {self.curso}"
