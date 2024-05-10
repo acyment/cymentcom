@@ -14,6 +14,7 @@ class TipoCurso(models.Model):
     video = models.CharField(max_length=50)
     foto = models.CharField(max_length=50)
     foto_tint = models.CharField(max_length=50)
+    orden = models.IntegerField(unique=True)
 
     class Meta:
         verbose_name_plural = "Tipos de curso"

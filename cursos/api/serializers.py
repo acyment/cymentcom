@@ -39,6 +39,6 @@ class TipoCursoSerializer(serializers.ModelSerializer):
         # Filter the courses that have a future date
         upcoming_courses = obj.curso_set.filter(
             fecha__gt=datetime.now(tz=pytz.timezone(settings.TIME_ZONE)),
-        )
+        ).order_by("tipo__orden")
         # Serialize the filtered courses
         return CursoSerializer(upcoming_courses, many=True).data
