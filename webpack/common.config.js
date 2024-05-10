@@ -1,7 +1,6 @@
 const path = require('path');
 const BundleTracker = require('webpack-bundle-tracker');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const UnoCSS = require('@unocss/webpack').default;
 
 module.exports = {
   target: 'web',
@@ -16,7 +15,6 @@ module.exports = {
     chunkFilename: 'js/[name]-[hash].js',
   },
   plugins: [
-    UnoCSS(),
     new BundleTracker({
       path: path.resolve(path.join(__dirname, '../')),
       filename: 'webpack-stats.json',
