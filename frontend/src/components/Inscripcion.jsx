@@ -77,27 +77,34 @@ const Inscripcion = ({ idCurso }) => {
     },
     {
       id: 'StepPago',
-      component: <StepPago />,
+      component: <StepPago idCurso={idCurso} />,
     },
   ];
 
   return (
-    <Fragment>
-      <div className="ContenedorModal">
-        <div>
-          <Dialog.Title className="DialogTitle">Inscripción</Dialog.Title>
+    <ScrollArea.Root>
+      <ScrollArea.Viewport>
+        <div className="ContenedorModal">
+          <div>
+            <Dialog.Title className="DialogTitle">Inscripción</Dialog.Title>
 
-          <Wizard steps={steps} />
+            <Wizard steps={steps} />
+          </div>
         </div>
-        <img src="static/images/firulete-triple.svg"></img>
-      </div>
 
-      <Dialog.CloseTrigger asChild>
-        <button className="IconButton" aria-label="Close">
-          <Cross2Icon />
-        </button>
-      </Dialog.CloseTrigger>
-    </Fragment>
+        <Dialog.CloseTrigger asChild>
+          <button className="IconButton" aria-label="Close">
+            <Cross2Icon />
+          </button>
+        </Dialog.CloseTrigger>
+      </ScrollArea.Viewport>
+      <ScrollArea.Scrollbar
+        className="ScrollAreaScrollbar"
+        orientation="vertical"
+      >
+        <ScrollArea.Thumb className="ScrollAreaThumb" />
+      </ScrollArea.Scrollbar>
+    </ScrollArea.Root>
   );
 };
 

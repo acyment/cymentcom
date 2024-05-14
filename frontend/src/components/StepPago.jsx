@@ -5,14 +5,7 @@ import {
   StatusScreen,
   initMercadoPago,
 } from '@mercadopago/sdk-react';
-import { loadStripe } from '@stripe/stripe-js';
 import { useWizard } from 'react-formik-step-wizard';
-import {
-  PaymentElement,
-  Elements,
-  useStripe,
-  useElements,
-} from '@stripe/react-stripe-js';
 
 const mercadopago = initMercadoPago(process.env.MP_PUBLIC_KEY, {
   locale: 'es-AR',
@@ -30,60 +23,77 @@ const customizacionMercadoPago = {
   },
 };
 
-const stripePromise = loadStripe(process.env.STRIPE_PUBLIC_KEY);
-
-const StepPago = () => {
+const StepPago = ({ idCurso }) => {
   const { values, goToPreviousStep } = useWizard();
   const pagoEnArgentina = values.StepFacturacion.pais === 'AR';
 
-  const [stripeClientSecret, setStripeClientSecret] = useState(null);
   const [mercadoPagoPaymentID, setMercadoPagoPaymentID] = useState(null);
 
-  const fetchStripeClientSecret = async () => {
-    try {
-      const paymentData = {
-        product_id: 123,
-        amount: 10,
-        // ...
-      };
-      const response = await axios.post(
-        '/api/create-stripe-payment-intent/',
-        paymentData,
-      );
-      const { client_secret: fetchedClientSecret } = response.data;
-      setStripeClientSecret(fetchedClientSecret);
-    } catch (error) {
-      console.error('Error fetching client secret:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (!pagoEnArgentina && !stripeClientSecret) fetchStripeClientSecret();
-  }, []);
-
-  const onMercadoPagoSubmit = async (formData) => {
-    // callback llamado al hacer clic en el botón enviar datos
+  const onMercadoPagoSubmit = async (param) => {
+    console.log(param);
     return new Promise((resolve, reject) => {
       axios
-        .post('/api/process-mp-payment/', formData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+        .post('/api/cursos/' + idCurso + '/inscripciones/', {
+          procesador_pago: 'MP',
+          nombre: values.StepParticipantes.nombre,
+          apellido: values.StepParticipantes.apellido,
+          email: values.StepParticipantes.email,
+          organizacion: values.StepParticipantes.organizacion,
+          rol: values.StepParticipantes.rol,
+          pais: values.StepFacturacion.pais,
+          nombreCompleto: values.StepFacturacion.nombreCompleto,
+          identificacionFiscal: values.StepFacturacion.identificacionFiscal,
+          direccion: values.StepFacturacion.direccion,
+          telefono: values.StepFacturacion.telefono,
         })
         .then((response) => {
-          setMercadoPagoPaymentID(response.data.id);
-          // Receive the payment result
-          resolve(response.data);
+          const idFactura = response.data.id_factura;
+          axios
+            .post(
+              '/api/process-mp-payment/',
+              {
+                id_factura: idFactura,
+                transaction_amount: param.transaction_amount,
+                payment_method_id: param.payment_method_id,
+                installments: param.installments,
+                issuer_id: param.issuer_id,
+                token: param.token,
+                payer: {
+                  email: param.payer.email,
+                  identification: {
+                    type: param.payer.identification.type,
+                    number: param.payer.identification.number,
+                  },
+                },
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              },
+            )
+            .then((response) => {
+              setMercadoPagoPaymentID(response.data.id);
+              // Receive the payment result
+              resolve(response.data);
+            })
+            .catch((error) => {
+              // TODO: Instalar framework de logging?
+              console.log(error);
+              // Handle the error response when attempting to create the payment
+              reject(error);
+            });
         })
         .catch((error) => {
-          // Handle the error response when attempting to create the payment
+          console.log(error);
+          // Handle the error response when attempting to create the inscription
           reject(error);
         });
     });
   };
 
   return (
-    <div>
+    <div style={{ flexShrink: 0 }}>
       <p className="TituloStep">Pago</p>
       {pagoEnArgentina && (
         <div>
@@ -100,17 +110,6 @@ const StepPago = () => {
             />
           )}
         </div>
-      )}
-      {!pagoEnArgentina && stripeClientSecret && (
-        <Elements
-          stripe={stripePromise}
-          options={{
-            clientSecret: stripeClientSecret,
-            appearance: {},
-          }}
-        >
-          <PaymentElement />
-        </Elements>
       )}
       <button
         type="button"

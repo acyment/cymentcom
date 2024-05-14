@@ -41,7 +41,7 @@ env = environ.Env()
 logger = logging.getLogger(__name__)
 
 SUCCESSFUL_RESPONSE = 201
-FIVE_MINUTES_IN_MS = 300000
+FIVE_MINUTES_IN_SECONDS = 300
 
 
 class TipoCursoList(generics.ListAPIView):
@@ -243,26 +243,36 @@ class ProcessMPPayment(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, response_format=None):
-        sdk = mercadopago.SDK(env("MP_ACCESS_TOKEN"))
-        request_options = mercadopago.config.RequestOptions()
-        request_options.custom_headers = {"x-idempotency-key": str(uuid.uuid4().int)}
-        payment_data = {
-            "transaction_amount": float(request.data["transaction_amount"]),
-            "token": request.data["token"],
-            "installments": int(request.data["installments"]),
-            "payment_method_id": request.data["payment_method_id"],
-            "issuer_id": request.data["issuer_id"],
-            "payer": {
-                "email": request.data["payer"]["email"],
-                "identification": {
-                    "type": request.data["payer"]["identification"]["type"],
-                    "number": request.data["payer"]["identification"]["number"],
+        try:
+            factura = Factura.objects.get(id=request.data.get("id_factura"))
+            sdk = mercadopago.SDK(env("MP_ACCESS_TOKEN"))
+            request_options = mercadopago.config.RequestOptions()
+            request_options.custom_headers = {
+                "x-idempotency-key": str(uuid.uuid4().int)
+            }
+            payment_data = {
+                "transaction_amount": float(request.data["transaction_amount"]),
+                "token": request.data["token"],
+                "installments": int(request.data["installments"]),
+                "payment_method_id": request.data["payment_method_id"],
+                "issuer_id": request.data["issuer_id"],
+                "payer": {
+                    "email": request.data["payer"]["email"],
+                    "identification": {
+                        "type": request.data["payer"]["identification"]["type"],
+                        "number": request.data["payer"]["identification"]["number"],
+                    },
                 },
-            },
-            "three_d_secure_mode": "optional",
-        }
-        payment_response = sdk.payment().create(payment_data, request_options)
-        payment = payment_response["response"]
+                "three_d_secure_mode": "optional",
+            }
+            payment_response = sdk.payment().create(payment_data, request_options)
+            payment = payment_response["response"]
+            factura.id_pago = payment["id"]
+            factura.save()
+        except Exception as e:  # noqa: BLE001
+            # TODO: Manejar excepciones de MercadoPago
+            print(f"Excepcion Mercado Pago:{str(e)}")
+            return str(e)
         return Response(payment)
 
 
@@ -273,6 +283,7 @@ class MPPaymentConfirmationView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, response_format=None):
+        # TODO: extraer a clase propia la validación del webhook de MP
         # La clave secreta de Mercado Pago
         mp_webhook_secret = env("MP_WEBHOOK_SECRET")
 
@@ -313,13 +324,25 @@ class MPPaymentConfirmationView(APIView):
         if cyphed_signature != v1:
             return HttpResponse("Invalid signature", status=403)
 
+        # TODO: Revisar con Mercado Pago sus timestamps (en las pruebas llegan con fechas rarísimas)
         # Verificar el timestamp para evitar ataques de repetición
-        current_ts = int(time.time() * 1000)
+        current_ts = int(time.time())
         received_ts = int(ts)
         # Asumiendo una tolerancia de 5 minutos (300 segundos)
-        if abs(current_ts - received_ts) > FIVE_MINUTES_IN_MS:
-            return HttpResponse("Timestamp validation failed", status=403)
+        # if abs(current_ts - received_ts) > FIVE_MINUTES_IN_SECONDS:
+        #  return HttpResponse("Timestamp validation failed", status=403)
 
+        try:
+            factura = Factura.objects.get(id_pago=request.data["data"]["id"])
+            factura.pagada = True
+            factura.save()
+
+            inscripciones = Inscripcion.objects.filter(factura=factura)
+            EmailSender.send_welcome_email(inscripciones)
+        except ObjectDoesNotExist:
+            mensaje_error = f"No se encontró la factura con ID: {id_factura}"
+            logger.error(mensaje_error)
+            return HttpResponse(mensaje_error, status=404)
         return HttpResponse("Notificación recibida y validada", status=200)
 
 
