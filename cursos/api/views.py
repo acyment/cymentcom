@@ -48,7 +48,7 @@ class TipoCursoList(generics.ListAPIView):
     authentication_classes = []
     # Disable permission checks
     permission_classes = [AllowAny]
-    queryset = TipoCurso.objects.all()
+    queryset = TipoCurso.objects.order_by("orden")
     serializer_class = TipoCursoSerializer
 
 
