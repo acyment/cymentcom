@@ -71,7 +71,10 @@ const HorarioCurso = ({ proximosCursos }) => {
     <Fragment>
       <div className="HorarioCurso">
         <div className="ContenedorFechaCurso">
-          <img src="static/images/noun-calendar-6641614.svg" />
+          <img
+            src="static/images/noun-calendar-6641614.svg"
+            className="ImagenCalendarioHorarioCurso"
+          />
           <div className="FechaCurso">
             <p className="MesFechaCurso">
               {proximoCurso &&

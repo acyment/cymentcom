@@ -43,34 +43,27 @@ const CustomLeftArrow = ({ onClick, ...rest }) => {
 const Intervenciones = () => {
   const videos = [
     {
-      videoURL: 'UxJyrVzp289RvfPfMeVNgGNlm01Fh9MDilKVV00zq4dKc',
-      titulo: 'Title 1', // Replace 'Title 1' with the actual title for the first video
-      descripcion: 'Description 1', // Replace 'Description 1' with the actual description for the first video
+      videoURL: 'UXN800rHbi9007028b902mPgfe3MkVY1doHR5b2UsvzgMmw',
+      titulo: 'Caso 1',
+      descripcion:
+        'Charla breve introductoria a la filosofía de la agilidad para todos los líderes de banco líder de Argentina',
     },
     {
-      videoURL: 'UxJyrVzp289RvfPfMeVNgGNlm01Fh9MDilKVV00zq4dKc',
-      titulo: 'Title 2', // Replace 'Title 2' with the actual title for the second video
-      descripcion: 'Description 2', // Replace 'Description 2' with the actual description for the second video
+      videoURL: 'UXN800rHbi9007028b902mPgfe3MkVY1doHR5b2UsvzgMmw',
+      titulo: 'Caso 2',
+      descripcion:
+        'Webinar sobre centricidad en cliente para líderes de cadena multinacional de supermercados', // Replace 'Description 2' with the actual description for the second video
     },
     {
-      videoURL: 'UxJyrVzp289RvfPfMeVNgGNlm01Fh9MDilKVV00zq4dKc',
-      titulo: 'Title 3', // Replace 'Title 3' with the actual title for the third video
-      descripcion: 'Description 3', // Replace 'Description 3' with the actual description for the third video
+      videoURL: 'UXN800rHbi9007028b902mPgfe3MkVY1doHR5b2UsvzgMmw',
+      titulo: 'Caso 3',
+      descripcion:
+        'Taller intensivo para profundizar transformación hacia la agilidad en el departamento de tecnología de universidad mexicana de renombre internacional', // Replace 'Description 3' with the actual description for the third video
     },
   ];
   const responsive = {
     desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 1,
-      slidesToSlide: 1, // optional, default to 1.
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
-      slidesToSlide: 2, // optional, default to 1.
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
+      breakpoint: { max: 3000, min: 0 },
       items: 1,
       slidesToSlide: 1, // optional, default to 1.
     },
@@ -173,12 +166,11 @@ const Intervenciones = () => {
           {videos.map((caso, index) => (
             <div className="CarouselCasosContenido">
               <div className="TextosCaso">
-                <p className="TituloSeccionAccordion">Título del caso</p>
+                <p className="TituloSeccionAccordion">{caso.titulo}</p>
                 <p className="IntervencionesContenidoPregunta">
-                  Evento anual de líderes de todo el país en formato híbrido.
-                  Más de 1000 asistentes en total. Aproximadamente mitad
-                  presenciales y mitad de manera virtual.
+                  {caso.descripcion}
                 </p>
+                {/* TODO: Agregar link a PDF con caso detallado */}
               </div>
               <MuxPlayer
                 className="VideoCaso"
