@@ -11,7 +11,8 @@
       "contenido_corto": "<ul><li>Filosofía de la agilidad<ul><li>Complejidad, el por qué de la agilidad<ul><li>Mapa de la complejidad</li><li>Complicado no es lo mismo que complejo</li><li>La niebla y el sol, otra analogía</li></ul></li></ul></li></ul>",
       "video": "UxJyrVzp289RvfPfMeVNgGNlm01Fh9MDilKVV00zq4dKc",
       "foto": "resumen-CSM.jpg",
-      "foto_tint": "resumen-CSM-tint.jpg"
+      "foto_tint": "resumen-CSM-tint.jpg",
+      "orden": 1
     }
   },
   {
@@ -26,7 +27,8 @@
       "contenido_corto": "<ul><li>Filosof&iacute;a de la agilidad</li></ul><ul><ul><li>Complejidad, el por qu&eacute; de la agilidad<ul><li>Complicado no es lo mismo que complejo</li><li>La niebla y el sol, otra analog&iacute;a</li><li>Predictibilidad versus aprendizaje</li></ul></li></ul></ul>",
       "video": "UxJyrVzp289RvfPfMeVNgGNlm01Fh9MDilKVV00zq4dKc",
       "foto": "resumen-CSPO.jpg",
-      "foto_tint": "resumen-CSPO-tint.jpg"
+      "foto_tint": "resumen-CSPO-tint.jpg",
+      "orden": 2
     }
   },
   {
