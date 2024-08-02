@@ -90,3 +90,9 @@ services:
     volumes:
       - './data:/opt/app/backend/data'
       - './data/images:/opt/app/frontend/public/img'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.pingvin.rule=Host(`pingvin.cyment.com`)'
+      - 'traefik.http.routers.pingvin.entrypoints=web-secure'
+      - 'traefik.http.routers.pingvin.tls.certresolver=letsencrypt'
+      - 'traefik.http.services.pingvin.loadbalancer.server.port=3000'

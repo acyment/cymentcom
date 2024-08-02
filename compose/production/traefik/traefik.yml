@@ -60,6 +60,19 @@ http:
       tls:
         certResolver: letsencrypt
 
+    pingvin-router:
+      rule: 'Host(`pingvin.cyment.com`)'
+      entryPoints:
+        - web-secure
+      service: pingvin-service
+      tls:
+        certResolver: letsencrypt
+
+    pingvin-service:
+      loadBalancer:
+      servers:
+        - url: http://pingvin-share:3000
+
   middlewares:
     csrf:
       # https://doc.traefik.io/traefik/master/middlewares/http/headers/#hostsproxyheaders
