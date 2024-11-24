@@ -18,7 +18,7 @@ function App() {
   return (
     <div>
       <header className="header">
-        <Logo className="logo" />
+        <Logo />
         <NavMenu className="nav-menu" />
       </header>
       <main>
