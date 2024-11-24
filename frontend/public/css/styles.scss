@@ -21,6 +21,7 @@ $azul-violaceo: #7854fa;
 
 $navbar-height: 6vw;
 $main-padding-left: 8vw;
+$negative-main-padding-left: -($main-padding-left);
 
 html {
   scroll-behavior: smooth;
@@ -42,13 +43,23 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2em 8em;
+  padding-top: 3vh;
+  padding-bottom: 3vh;
+  padding-left: 6vw;
+  padding-right: 3vw;
   position: sticky;
   top: 0;
   width: 100%;
   background-color: white; /* Optional: Add a background color */
   z-index: 2999;
   height: $navbar-height;
+}
+
+.Logo {
+  height: auto; /* Maintain aspect ratio */
+  max-width: 10vw; /* Set a maximum width based on viewport width for responsiveness */
+  width: auto; /* Let the browser calculate width based on aspect ratio */
+  object-fit: contain; /* Prevent distortion */
 }
 
 .NavigationMenuRoot {
@@ -61,17 +72,17 @@ body {
 
 .NavigationMenuList {
   display: flex;
-  justify-content: center;
+  justify-content: baseline;
   background-color: white;
-  padding: 4px;
   border-radius: 6px;
   list-style: none;
   margin: 0;
+  padding: 0;
 }
 
 .NavigationMenuTrigger,
 .NavigationMenuLink {
-  padding: 1vh 1.8vw;
+  padding: 0 1.8vw;
   outline: none;
   user-select: none;
   line-height: 1;
@@ -119,7 +130,6 @@ body {
   width: 100%;
   background-color: black;
   position: relative;
-  padding-left: $main-padding-left;
 }
 
 .HeroText {
@@ -129,6 +139,7 @@ body {
   color: white;
   width: 30%;
   padding-top: 7%;
+  padding-left: $main-padding-left;
 }
 
 .HeroTextBold {
@@ -137,7 +148,7 @@ body {
 
 .HeroImage {
   display: block;
-  margin-left: auto;
+  margin-left: $negative-main-padding-left;
   width: 100%;
 }
 
@@ -204,13 +215,14 @@ body {
 }
 
 .CircleButton {
-  width: 75px; /* Adjust as needed */
-  height: 75px; /* Adjust as needed */
-  background-size: contain; /* Adjust as needed */
+  --button-size: clamp(48px, min(12vw, 12vh), 80px);
+  width: var(--button-size);
+  height: var(--button-size);
   border: none;
   cursor: pointer;
   position: absolute;
   left: 50%;
+  transform: translateX(-50%);
   bottom: 1%;
   z-index: 199;
 }
@@ -218,18 +230,22 @@ body {
 .CircleButton[data-state='closed'],
 .ToggleResumenCurso[data-state='off'] .CircleButton {
   background: url('../images/plus-btn.svg') no-repeat center center;
+  background-size: contain;
 }
 
 .CircleButton[data-state='open'] {
   background: url('../images/minus-btn.svg') no-repeat center center;
+  background-size: contain;
 }
 
 .CircleButtonNegro[data-state='closed'] {
   background: url('../images/plus-btn-negro.svg') no-repeat center center;
+  background-size: contain;
 }
 
 .CircleButtonNegro[data-state='open'] {
   background: url('../images/minus-btn-negro.svg') no-repeat center center;
+  background-size: contain;
 }
 
 .ToggleResumenCurso[data-state='on'] .CircleButton {
@@ -237,10 +253,11 @@ body {
 }
 .HeroContent {
   background-color: white;
-  font-size: 1.7em;
+  font-size: 2.2vw;
   font-weight: 100;
   padding-left: 5%;
   padding-top: 1%;
+  margin-left: $negative-main-padding-left;
 }
 
 .HeroContentTitle {
@@ -271,10 +288,6 @@ body {
   padding-top: 2em;
 }
 
-.Logo {
-  margin-right: 7em;
-}
-
 .CursosAccordion {
   width: 100%;
   position: relative;
@@ -303,29 +316,30 @@ body {
   justify-content: flex-start;
   display: flex;
   flex-direction: column; /* Stack children vertically */
-  margin-left: 1em;
-  margin-top: 2em;
+  margin-left: 1vw;
+  margin-top: 2vw;
   position: relative;
   align-self: flex-start;
 }
 
 .CursosTituloAcronimo {
-  font-size: 1.75em;
+  font-size: 2.75vw;
   font-weight: 600;
   margin-top: 0.2em;
 }
 
 .CursosTitulo {
-  font-size: 1.5em;
+  font-size: 1.8vw;
   font-weight: 600;
   margin-top: 0.2em;
 }
 
 .CursosTituloBajada {
-  font-size: 1.25em;
+  font-size: 1.75vw;
   font-weight: 300;
   margin-top: 0.2em;
   margin-bottom: 4em;
+  text-align: left;
 }
 
 .ToggleResumenCurso[data-state='off'] .TextoResumenCurso .CursosTituloAcronimo {
@@ -488,12 +502,8 @@ ul {
 }
 
 .CircleButtonCursos {
-  position: absolute;
-  bottom: 0;
-  align-self: center;
-  left: auto;
+  left: 50%; /* Keep this to maintain centering */
   margin-top: 1.3em;
-  justify-self: end;
 }
 
 .HorarioCurso {
@@ -602,19 +612,19 @@ ul {
 .IntervencionesSeccionPregunta {
   flex-grow: 1;
   flex: 1;
-  padding-left: 3vw;
-  padding-right: 3vw;
+  padding-left: 4vw;
+  padding-right: 4vw;
 }
 
 .IntervencionesTituloPregunta {
-  font-size: 2.5em;
+  font-size: 8vw;
   font-weight: 700;
   padding-bottom: 2em;
   display: inline-block;
 }
 
 .IntervencionesContenidoPregunta {
-  font-size: 1.4em;
+  font-size: 2.4vw;
   font-weight: 100;
 }
 
