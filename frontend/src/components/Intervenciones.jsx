@@ -6,6 +6,7 @@ import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
 import MuxPlayer from '@mux/mux-player-react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import useViewportUnits from '../hooks/useViewportUnits';
 
 const CustomRightArrow = ({ onClick, ...rest }) => {
   const {
@@ -41,24 +42,25 @@ const CustomLeftArrow = ({ onClick, ...rest }) => {
 };
 
 const Intervenciones = () => {
+  const viewport = useViewportUnits();
   const videos = [
     {
-      videoURL: 'UXN800rHbi9007028b902mPgfe3MkVY1doHR5b2UsvzgMmw',
+      videoURL: 'iH01rVinOT5iOINLo026IY00KoOU00MEFHlHXBfK0100c21vg',
       titulo: 'Caso 1',
       descripcion:
         'Charla breve introductoria a la filosofía de la agilidad para todos los líderes de banco líder de Argentina',
     },
     {
-      videoURL: 'UXN800rHbi9007028b902mPgfe3MkVY1doHR5b2UsvzgMmw',
+      videoURL: 'Uwv6f00UdVR8s6HFeVP4RQFIl2BEY3QgzmcovYvG1Q004',
       titulo: 'Caso 2',
       descripcion:
-        'Webinar sobre centricidad en cliente para líderes de cadena multinacional de supermercados', // Replace 'Description 2' with the actual description for the second video
+        'Consultoría intensiva durante 2 meses para profundizar la transformación en área independiente dentro de multinacional', // Replace 'Description 2' with the actual description for the second video
     },
     {
-      videoURL: 'UXN800rHbi9007028b902mPgfe3MkVY1doHR5b2UsvzgMmw',
+      videoURL: '5JEBYRXpkpKbHv9AGIX84zh8LLUPDZjIxhwWjouTzok',
       titulo: 'Caso 3',
       descripcion:
-        'Taller intensivo para profundizar transformación hacia la agilidad en el departamento de tecnología de universidad mexicana de renombre internacional', // Replace 'Description 3' with the actual description for the third video
+        'Taller intensivo para profundizar transformación hacia la agilidad en el departamento de tecnología de universidad de renombre internacional', // Replace 'Description 3' with the actual description for the third video
     },
   ];
   const responsive = {
@@ -83,7 +85,7 @@ const Intervenciones = () => {
               color="#7b68ee"
               animate={true}
               show={true}
-              padding={[70, 25]}
+              padding={[viewport.vw(7), viewport.vw(3)]}
               strokeWidth={1}
               iterations={5}
             >
@@ -108,7 +110,7 @@ const Intervenciones = () => {
               color="#7b68ee"
               animate={true}
               show={true}
-              padding={[70, 25]}
+              padding={[viewport.vw(7), viewport.vw(3)]}
               strokeWidth={1}
               iterations={5}
             >
@@ -133,7 +135,7 @@ const Intervenciones = () => {
               color="#7b68ee"
               animate={true}
               show={true}
-              padding={[70, 25]}
+              padding={[viewport.vw(7), viewport.vw(3)]}
               strokeWidth={1}
               iterations={5}
             >
