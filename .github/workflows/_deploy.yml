@@ -48,7 +48,7 @@ jobs:
           directory: .envs/.production
           file_name: .webpack
       - name: Rsync deployments
-        uses: burnett01/rsync-deployments@6.0.0
+        uses: burnett01/rsync-deployments@7.0.1
         with:
           switches: -avzr --delete --mkpath
           path: ./
