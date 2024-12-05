@@ -1,42 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
+import { RoughNotation } from 'react-rough-notation';
 
 const NavMenu = () => {
+  const [activeItem, setActiveItem] = useState(null);
+
+  const menuItems = [
+    { href: '#hero', text: 'Alan' },
+    { href: '#cursos', text: 'Cursos' },
+    { href: '#intervenciones', text: 'Intervenciones' },
+    { href: '#agilidadProfunda', text: 'Agilidad profunda' },
+    { href: '#contacto', text: 'Contacto' },
+  ];
+
   return (
     <NavigationMenu.Root className="NavigationMenuRoot">
       <NavigationMenu.List className="NavigationMenuList">
-        <NavigationMenu.Item>
-          <NavigationMenu.Link className="NavigationMenuLink" href="#hero">
-            Alan
-          </NavigationMenu.Link>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item>
-          <NavigationMenu.Link className="NavigationMenuLink" href="#cursos">
-            Cursos
-          </NavigationMenu.Link>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item>
-          <NavigationMenu.Link
-            className="NavigationMenuLink"
-            href="#intervenciones"
-          >
-            Intervenciones
-          </NavigationMenu.Link>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item>
-          <NavigationMenu.Link
-            className="NavigationMenuLink"
-            href="#agilidadProfunda"
-          >
-            Agilidad profunda
-          </NavigationMenu.Link>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item>
-          <NavigationMenu.Link className="NavigationMenuLink" href="#contacto">
-            Contacto
-          </NavigationMenu.Link>
-        </NavigationMenu.Item>
-        <NavigationMenu.Indicator className="NavigationMenuIndicator"></NavigationMenu.Indicator>
+        {menuItems.map((item, index) => (
+          <NavigationMenu.Item key={index}>
+            <NavigationMenu.Link
+              className="NavigationMenuLink"
+              href={item.href}
+              onMouseEnter={() => setActiveItem(index)}
+              onMouseLeave={() => setActiveItem(null)}
+            >
+              <RoughNotation
+                type="circle"
+                show={activeItem === index}
+                color="#7b68ee"
+                strokeWidth={1}
+                padding={8}
+              >
+                {item.text}
+              </RoughNotation>
+            </NavigationMenu.Link>
+          </NavigationMenu.Item>
+        ))}
+        <NavigationMenu.Indicator className="NavigationMenuIndicator" />
       </NavigationMenu.List>
       <NavigationMenu.Viewport />
     </NavigationMenu.Root>
