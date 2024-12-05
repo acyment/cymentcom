@@ -7,14 +7,30 @@ import MuxPlayer from '@mux/mux-player-react';
 import parse from 'html-react-parser';
 
 const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
+  function hayProximasFechas() {
+    return tipoCurso.upcoming_courses.length > 0;
+  }
+
   return (
     <div
       ref={ref}
       id="detalle-curso"
       className="DetalleCurso NavigationBarScrollOffset"
     >
-      <p className="SubtituloDetalleCurso">Próximos cursos</p>
-      <HorarioCurso proximosCursos={tipoCurso.upcoming_courses} />
+      {hayProximasFechas() && (
+        <div>
+          <p className="SubtituloDetalleCurso">Próximos cursos</p>
+          <HorarioCurso proximosCursos={tipoCurso.upcoming_courses} />
+        </div>
+      )}
+      {!hayProximasFechas() && (
+        <div>
+          <p className="SubtituloDetalleCurso">
+            No hay próximas fechas de este curso
+          </p>
+          <a href="#contacto">¿Interesado en la versión in-company?</a>
+        </div>
+      )}
       <hr className="Separador" />
       <MuxPlayer
         streamType="on-demand"

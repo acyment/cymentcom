@@ -215,7 +215,7 @@ body {
 }
 
 .CircleButton {
-  --button-size: clamp(48px, min(12vw, 12vh), 80px);
+  --button-size: clamp(24px, 7vw, 80px);
   width: var(--button-size);
   height: var(--button-size);
   border: none;
@@ -250,14 +250,16 @@ body {
 
 .ToggleResumenCurso[data-state='on'] .CircleButton {
   background: url('../images/minus-btn-inv.svg') no-repeat center center;
+  background-size: contain;
 }
+
 .HeroContent {
   background-color: white;
   font-size: 2.2vw;
   font-weight: 100;
   padding-left: 5%;
   padding-top: 1%;
-  margin-left: $negative-main-padding-left;
+  // margin-left: $negative-main-padding-left;
 }
 
 .HeroContentTitle {
@@ -295,10 +297,8 @@ body {
 
 .CursosHeader {
   background-image: $fondo-violaceo;
-  padding-left: 4vw;
-  padding-right: 4vw;
-  padding-top: 1.5em;
-  padding-bottom: 9em;
+  padding-top: 5vw;
+  padding-bottom: 15vw;
   display: flex;
   flex-wrap: wrap;
 }
@@ -332,6 +332,7 @@ body {
   font-size: 1.8vw;
   font-weight: 600;
   margin-top: 0.2em;
+  text-align: start;
 }
 
 .CursosTituloBajada {
@@ -413,8 +414,8 @@ ul {
 /* Button styles end */
 
 .ToggleResumenCurso {
-  border-radius: 2em;
-  width: 30vw;
+  border-radius: 2vw;
+  width: 25vw;
   position: relative;
   display: flex;
   flex-direction: column; /* Stack children vertically */
@@ -432,7 +433,7 @@ ul {
 }
 
 .ImagenResumenCurso {
-  border-radius: 2em 2em 0 0;
+  border-radius: 2vw 2vw 0 0;
   width: 100%; /* Stretch the image to take the button's width */
   height: auto; /* Maintain aspect ratio */
   display: block;
@@ -637,12 +638,13 @@ ul {
 
 .TituloSeccionAccordion {
   font-size: 2.5vw;
-  font-weight: 500;
+  font-weight: 600;
+  margin-top: -0.7vw;
 }
 
 .AccordionHeader {
-  padding-top: 8vh;
-  padding-bottom: 8vh;
+  padding-top: 8vw;
+  padding-bottom: 8vw;
   padding-right: 6vw;
   display: flex;
   flex-direction: column;
@@ -650,8 +652,8 @@ ul {
 
 .ContenidoSeccionAgilidadProfunda {
   font-size: 1.9vw;
-  padding-top: 7vh;
-  padding-bottom: 15vh;
+  padding-top: 7vw;
+  padding-bottom: 15vw;
 }
 
 .FiruleteHorizontal {
@@ -659,37 +661,48 @@ ul {
 }
 
 .AreaContacto {
-  padding-top: 8vh;
-  padding-bottom: 8vh;
+  padding-top: 4vw;
+  padding-bottom: 4vw;
   padding-left: 6vw;
   padding-right: 6vw;
   display: flex;
-  position: relative;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.ContactoLeftSection {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 .LinksContacto {
   list-style: none;
   font-size: 1.5vw;
   font-weight: 100;
+  padding-left: 2vw;
 }
 
 .LinksContacto li {
-  padding-bottom: 3vh;
+  padding-bottom: 2vw;
 }
 .Copyright {
   font-size: 1.2vw;
-  position: absolute;
-  right: 0;
-  top: 0;
-  padding-right: 6vw;
-  padding-top: 8vh;
+  right: 6vw;
+  top: 4vw; /* Align with top padding */
   display: flex;
+  justify-content: space-between;
 }
 
 .CopyrightText {
   align-self: center;
   padding-left: 1.5vh;
   font-weight: 100;
+}
+
+.ImagenCopyright {
+  width: 2vw;
+  height: auto;
 }
 
 @import '@radix-ui/colors/black-alpha.css';

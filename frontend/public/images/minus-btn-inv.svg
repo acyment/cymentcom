@@ -23,7 +23,7 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="5.3472752"
-     inkscape:cx="46.752784"
+     inkscape:cx="46.752783"
      inkscape:cy="43.386583"
      inkscape:window-width="1312"
      inkscape:window-height="449"
@@ -36,17 +36,15 @@
      cx="50"
      cy="50"
      r="25"
-     fill="mediumslateblue"
-     id="circle1"
-     style="fill:#ffffff;fill-opacity:1" />
+     fill="white"
+     id="circle1" />
   <!-- Plus Sign -->
   <line
-     x1="35"
+     x1="42"
      y1="50"
-     x2="65"
+     x2="58"
      y2="50"
-     stroke="white"
+     stroke="mediumslateblue"
      stroke-width="2"
-     id="line1"
-     style="stroke:#7b68ee" />
+     id="line1" />
 </svg>

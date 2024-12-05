@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
 import { AccordionHeader } from '@radix-ui/react-accordion';
 import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
@@ -43,6 +43,9 @@ const CustomLeftArrow = ({ onClick, ...rest }) => {
 
 const Intervenciones = () => {
   const viewport = useViewportUnits();
+  const videoRefs = useRef([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   const videos = [
     {
       videoURL: 'iH01rVinOT5iOINLo026IY00KoOU00MEFHlHXBfK0100c21vg',
@@ -63,6 +66,7 @@ const Intervenciones = () => {
         'Taller intensivo para profundizar transformación hacia la agilidad en el departamento de tecnología de universidad de renombre internacional', // Replace 'Description 3' with the actual description for the third video
     },
   ];
+
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 0 },
@@ -70,6 +74,17 @@ const Intervenciones = () => {
       slidesToSlide: 1, // optional, default to 1.
     },
   };
+
+  const handleSlideChange = (nextSlide) => {
+    const muxPlayers = document.querySelectorAll('mux-player');
+    muxPlayers.forEach((player) => {
+      if (player && player.pause) {
+        player.pause();
+      }
+    });
+    setCurrentSlide(nextSlide);
+  };
+
   return (
     <Accordion.Item
       value="Intervencion"
@@ -164,9 +179,10 @@ const Intervenciones = () => {
           customRightArrow={<CustomRightArrow />}
           customLeftArrow={<CustomLeftArrow />}
           itemClass="ContenedorCarousel"
+          afterChange={handleSlideChange}
         >
           {videos.map((caso, index) => (
-            <div className="CarouselCasosContenido">
+            <div key={index} className="CarouselCasosContenido">
               <div className="TextosCaso">
                 <p className="TituloSeccionAccordion">{caso.titulo}</p>
                 <p className="IntervencionesContenidoPregunta">
@@ -175,10 +191,14 @@ const Intervenciones = () => {
                 {/* TODO: Agregar link a PDF con caso detallado */}
               </div>
               <MuxPlayer
+                ref={(ref) => {
+                  if (ref) {
+                    videoRefs.current[index] = ref;
+                  }
+                }}
                 className="VideoCaso"
                 playbackId={caso.videoURL}
                 streamType="on-demand"
-                muted
               />
             </div>
           ))}

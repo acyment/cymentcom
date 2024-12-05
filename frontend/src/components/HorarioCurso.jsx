@@ -12,7 +12,6 @@ const HorarioCurso = ({ proximosCursos }) => {
   useEffect(() => {
     if (proximosCursos) {
       setProximoCurso(proximosCursos[0]);
-      // TODO: Manejar el caso en el que no hay próxima fecha
       // TODO: Manejar el caso en el que hay muchas próximas fechas
       setFechaCurso(new Date(proximosCursos[0].fecha));
     }

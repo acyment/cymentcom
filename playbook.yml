@@ -96,5 +96,23 @@
         name: fish
         state: present
 
+    - name: Set Fish as default shell for the user
+      user:
+        name: '{{ created_username }}'
+        shell: /usr/bin/fish
+
+    - name: Change ownership of home directory
+      file:
+        path: /home/{{ created_username }}
+        owner: '{{ created_username }}'
+        group: '{{ created_username }}'
+        recurse: yes
+
+    - name: Change permissions of home directory
+      file:
+        path: /home/{{ created_username }}
+        mode: '0755'
+        recurse: yes
+
     - name: Unconditionally reboot the machine with all defaults
       ansible.builtin.reboot:

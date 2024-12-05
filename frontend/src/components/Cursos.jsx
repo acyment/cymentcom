@@ -90,7 +90,7 @@ const Cursos = () => {
                 <h3 className="CursosTituloAcronimo">
                   {tipoCurso.nombre_corto}
                 </h3>
-                <h4 className="CursosTitulo">{tipoCurso.nombre_largo}</h4>
+                <h4 className="CursosTitulo">{tipoCurso.nombre_completo}</h4>
                 <p className="CursosTituloBajada">
                   {tipoCurso.resumen_una_linea}
                 </p>

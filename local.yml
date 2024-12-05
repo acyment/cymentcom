@@ -1,5 +1,3 @@
-version: '3'
-
 volumes:
   cyment_com_local_postgres_data: {}
   cyment_com_local_postgres_data_backups: {}
@@ -108,6 +106,7 @@ services:
 
   mjml:
     image: liminspace/mjml-tcpserver:1
+    platform: linux/amd64
     restart: always
     ports:
       - '28101:28101'

@@ -93,3 +93,17 @@ The following details how to deploy this application.
 ### Docker
 
 See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+
+### Hetzner
+
+Actualizar /etc/ansible/hosts con la nueva IP
+Actualizar DNS de Hetzner
+Correr `ansible-playbook playbook.yml -l server1 -u root`
+Correr workflow `initial deploy` en Github Actions
+Borrar todas las entradas existentes de la IP anterior en `/Users/acyment/.ssh/known_hosts`
+Correr `ssh acyment@cyment.com`
+Ejecutar `docker compose -f production.yml up -d`
+Ejecutar `docker compose -f production.yml run --rm django python manage.py createsuperuser`
+Ejecutar `docker compose -f production.yml run --rm django python manage.py migrate`
+Ejecutar `docker compose -f production.yml run --rm django python manage.py loaddata fixture_cursos.json`
+Leer path de admin en `.envs/.production/.django`

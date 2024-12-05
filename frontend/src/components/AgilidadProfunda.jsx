@@ -29,7 +29,7 @@ const AgilidadProfunda = () => {
       <Accordion.Content className="AccordionContent AgilidadProfundaContent">
         <MuxPlayer
           className="VideoAgilidadProfunda"
-          playbackId="UxJyrVzp289RvfPfMeVNgGNlm01Fh9MDilKVV00zq4dKc"
+          playbackId="01jQAtccLD74At5jA5J02gU1cDkgacdF2v9jA400HeqxGI"
           streamType="on-demand"
           muted
         />
