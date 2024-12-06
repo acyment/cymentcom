@@ -1,12 +1,13 @@
 import React, { useRef, useState } from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
 import { AccordionHeader } from '@radix-ui/react-accordion';
-import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
+import { RoughNotation } from 'react-rough-notation';
 
 import MuxPlayer from '@mux/mux-player-react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import useViewportUnits from '../hooks/useViewportUnits';
+import { useAccordionScroll } from '../hooks/useAccordionScroll';
 
 const CustomRightArrow = ({ onClick, ...rest }) => {
   const {
@@ -45,6 +46,7 @@ const Intervenciones = () => {
   const viewport = useViewportUnits();
   const videoRefs = useRef([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { contentRef, headerRef } = useAccordionScroll();
 
   const videos = [
     {
@@ -91,7 +93,7 @@ const Intervenciones = () => {
       className="IntervencionesAccordion NavigationBarScrollOffset"
       id="intervenciones"
     >
-      <AccordionHeader>
+      <AccordionHeader ref={headerRef} className="NavigationBarScrollOffset">
         <p className="IntervencionesTitulo">Intervenciones</p>
         <div className="IntervencionesAreaPreguntas">
           <div className="IntervencionesSeccionPregunta">
@@ -172,7 +174,7 @@ const Intervenciones = () => {
         </div>
       </AccordionHeader>
       <Accordion.Trigger className="CircleButton"></Accordion.Trigger>
-      <Accordion.Content>
+      <Accordion.Content className="NavigationBarScrollOffset" ref={contentRef}>
         <Carousel
           responsive={responsive}
           infinite={true}

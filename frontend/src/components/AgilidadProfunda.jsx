@@ -3,15 +3,21 @@ import * as Accordion from '@radix-ui/react-accordion';
 import { AccordionHeader } from '@radix-ui/react-accordion';
 import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
 import MuxPlayer from '@mux/mux-player-react';
+import { useAccordionScroll } from '../hooks/useAccordionScroll';
 
 const AgilidadProfunda = () => {
+  const { contentRef, headerRef } = useAccordionScroll();
+
   return (
     <Accordion.Item
       value="AgilidadProfunda"
       className="AgilidadProfundaAccordion NavigationBarScrollOffset"
       id="agilidadProfunda"
     >
-      <AccordionHeader className="AccordionHeader">
+      <AccordionHeader
+        className="AccordionHeader NavigationBarScrollOffset"
+        ref={headerRef}
+      >
         <p className="TituloSeccionAccordion">Agilidad profunda</p>
         <p className="ContenidoSeccionAgilidadProfunda">
           La definición de agilidad y de marcos de trabajo asociados como Scrum
@@ -26,7 +32,10 @@ const AgilidadProfunda = () => {
         />
       </AccordionHeader>
       <Accordion.Trigger className="CircleButton CircleButtonNegro"></Accordion.Trigger>
-      <Accordion.Content className="AccordionContent AgilidadProfundaContent">
+      <Accordion.Content
+        ref={contentRef}
+        className="AccordionContent AgilidadProfundaContent NavigationBarScrollOffset"
+      >
         <MuxPlayer
           className="VideoAgilidadProfunda"
           playbackId="01jQAtccLD74At5jA5J02gU1cDkgacdF2v9jA400HeqxGI"

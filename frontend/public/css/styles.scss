@@ -60,6 +60,7 @@ body {
   max-width: 10vw; /* Set a maximum width based on viewport width for responsiveness */
   width: auto; /* Let the browser calculate width based on aspect ratio */
   object-fit: contain; /* Prevent distortion */
+  margin-right: 2vw;
 }
 
 .NavigationMenuRoot {
@@ -270,6 +271,8 @@ body {
 
 .HeroContentList {
   width: 55%;
+  list-style: none; /* Remove default bullets */
+  list-style-image: url('../images/bullet.svg');
 }
 
 .Firulete {
@@ -653,7 +656,7 @@ ul {
 .ContenidoSeccionAgilidadProfunda {
   font-size: 1.9vw;
   padding-top: 7vw;
-  padding-bottom: 15vw;
+  padding-bottom: 9vw;
 }
 
 .FiruleteHorizontal {
