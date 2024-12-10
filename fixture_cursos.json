@@ -39,8 +39,8 @@
       "nombre_completo": "Certified LeSS Basics",
       "resumen_una_linea": "Aprendé sobre el framework de escalado ágil más minimalista",
       "resumen": "Introducción al framework de escalado LeSS ",
-      "contenido": "<ul><li>Filosofía de la agilidad<ul><li>Complejidad, el por qué de la agilidad<ul><li>Mapa de la complejidad</li><li>Complicado no es lo mismo que complejo</li><li>La niebla y el sol, otra analogía</li><li>Predictibilidad versus aprendizaje</li><li>Velocidad versus adaptabilidad</li></ul></li><li>La propuesta de la agilidad<ul><li>Desarrollo orgánico versus mecánico<ul><li>Corte orgánico</li><li>Velocidad de aprendizaje</li></ul></li><li>Foco y flujo<ul><li>Una mini-simulación</li><li>Dolores y causas del multitasking</li></ul></li><li>Una nueva definición de éxito<ul><li>Output y outcome</li><li>Éxito en términos de output</li><li>Éxito para escenarios complejos</li></ul></li></ul></li></ul></li><li>Scrum<ul><li>Scrum, output, outcome, foco y desarrollo orgánico</li><li>Roles<ul><li>Taxonomía de Product Owners<ul><li>El tapón</li><li>El Steve Jobs</li><li>El facilitador</li></ul></li><li>De ScrumMasters y abejorros<ul><li>Su lógica diaria</li><li>Antipatrones usuales</li><li>ScrumMaster versus Project Manager</li></ul></li><li>Especialización versus diversificación en equipos</li></ul></li><li>Sprint<ul><li>Pronóstico versus objetivo de Sprint</li><li>Dailies dolorosas</li><li>Ordenando el Refinamiento</li><li>Revisiones maduras</li></ul></li></ul></li><li>ScrumMastering en acción (temas optativos)<ul><li>Teoría de facilitación<ul><li>Conflicto y colaboración</li></ul></li><li>Retrospectivas más profundas<ul><li>Esqueleto de una buena retrospectiva</li></ul></li><li>Cambio organizacional<ul><li>Consejos estratégicos</li><li>Un proceso para el día a día</li></ul></li><li>Introducción al escalado<ul><li>Eliminar dependencias versus administrarlas</li><li>La propuesta de LeSS</li></ul></li></ul></li></ul>",
-      "contenido_corto": "<ul><li>Filosofía de la agilidad<ul><li>Complejidad, el por qué de la agilidad<ul><li>Mapa de la complejidad</li><li>Complicado no es lo mismo que complejo</li><li>La niebla y el sol, otra analogía</li></ul></li></ul></li></ul>",
+      "contenido": "<ul><li>Filosof&iacute;a de la agilidad<ul><li>Complejidad, el por qu&eacute; de la agilidad<ul><li>Mapa de la complejidad</li><li>Predictibilidad versus aprendizaje</li><li>Velocidad versus adaptabilidad</li></ul></li><li>La propuesta de la agilidad<ul><li>Desarrollo org&aacute;nico versus mec&aacute;nico</li></ul></li></ul></li><li>Dolores del escalado<br><ul><li>Gesti&oacute;n de dependencias<br><ul><li>An&aacute;lisis de dependencias</li></ul></li><li>Balanceo de carga<br><ul><li>El backlog &uacute;nico, una lupa estrat&eacute;gica</li></ul></li></ul></li><li>Criterios para divisi&oacute;n en equipos<br><ul><li>Una taxonom&iacute;a</li><li>Back-me-up</li></ul></li><li>Product Owner<ul><li>Taxonom&iacute;a de Product Owners</li><li>El PO en LeSS</li></ul></li><li>El framework LeSS<ul><li>Planning</li><li>Refinamiento</li><li>Review y Retrospectiva</li><li>LeSS Huge</li></ul></li><li>Contexto<ul><li>&iquest;Cu&aacute;l es tu producto?</li><li>&iquest;D&oacute;nde har&iacute;as el cambio?</li></ul></li><li>LeSS Adoption Canvas<ul><li>Pr&aacute;ctica</li></ul></li></ul>",
+      "contenido_corto": "<ul><li>Filosof&iacute;a de la agilidad<ul><li>Complejidad, el por qu&eacute; de la agilidad<ul><li>Mapa de la complejidad</li><li>Predictibilidad versus aprendizaje</li><li>Velocidad versus adaptabilidad</li></ul></li></ul><ul></ul></li></ul>",
       "video": "WkzL014mBoN7yBlZWrcgNMaWWsma6tcq9La6P64ZuM3Q",
       "foto": "resumen-CLB.jpg",
       "foto_tint": "resumen-CLB-tint.jpg",
@@ -135,6 +135,33 @@
       "tipo_curso": 5,
       "pregunta": "¿Quién otorga la certificación?",
       "respuesta": "La certificación es otorgada por la Scrum Alliance. Fundada en 2001, es la organización profesional con mayor trayectoria, establecida e influyente de la comunidad ágil a nivel internacional. Sus certificaciones, incluido el CSM, son las más reconocidas por las empresas de la industria a la hora de contratar profesionales con competencias de Scrum."
+    }
+  },
+  {
+    "model": "cursos.faqcurso",
+    "pk": 11,
+    "fields": {
+      "tipo_curso": 6,
+      "pregunta": "¿Quién otorga la certificación?",
+      "respuesta": "La certificación es otorgada por la LeSS Company. Fundada en 2014 por Craig Larman y Bas Vodde, los creadores del framework LeSS."
+    }
+  },
+  {
+    "model": "cursos.faqcurso",
+    "pk": 12,
+    "fields": {
+      "tipo_curso": 6,
+      "pregunta": "¿Debo presentar un examen para certificarme?",
+      "respuesta": "No. El curso de CLB incluye la certificación internacional de la LeSS Company. Aquellos alumnos que finalicen el curso (y no cuenten con más de 1 hora de ausencia) recibirán la certificación oficial Certified LeSS Basics de la LeSS Company. No es necesario realizar un examen de certificación."
+    }
+  },
+  {
+    "model": "cursos.faqcurso",
+    "pk": 13,
+    "fields": {
+      "tipo_curso": 6,
+      "pregunta": "¿Debo renovar esta certificación?",
+      "respuesta": "No. La certificación Certified LeSS Basics no requiere renovación."
     }
   }
 ]
