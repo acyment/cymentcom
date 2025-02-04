@@ -19,13 +19,13 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
       className="DetalleCurso NavigationBarScrollOffset"
     >
       {hayProximasFechas() && (
-        <div>
+        <div id="calendario-curso">
           <p className="SubtituloDetalleCurso">Próximos cursos</p>
           <HorarioCurso proximosCursos={tipoCurso.upcoming_courses} />
         </div>
       )}
       {!hayProximasFechas() && (
-        <div>
+        <div id="calendario-curso" className="NavigationBarScrollOffset">
           <p className="SubtituloDetalleCurso">
             No hay próximas fechas de este curso
           </p>

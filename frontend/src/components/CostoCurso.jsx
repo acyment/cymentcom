@@ -22,7 +22,16 @@ const CostoCurso = ({ costoUSD, costoARS }) => {
             <li>Pagá con tarjeta crédito, débito o dinero en cuenta</li>
             <li>Escribínos si quieres hacer transferencia bancaria</li>
           </ul>
-          <button className="BotonPago">Calendario</button>
+          <button
+            onClick={() =>
+              document
+                .getElementById('calendario-curso')
+                ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }
+            className="BotonPago"
+          >
+            Calendario
+          </button>
           <p className="Nota">
             NOTA: Aplica exclusivamente si resides actualmente en Argentina,
             para pagos con tarjetas emitidas en Argentina y/o cuentas radicadas
@@ -45,7 +54,16 @@ const CostoCurso = ({ costoUSD, costoARS }) => {
             <li>Válido solamente para pagos fuera de Argentina</li>
             <li>Puedes pagar con cualquier tarjeta de crédito</li>
           </ul>
-          <button className="BotonPago">Calendario</button>
+          <button
+            onClick={() =>
+              document
+                .getElementById('calendario-curso')
+                ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }
+            className="BotonPago"
+          >
+            Calendario
+          </button>
           <p className="Nota">
             NOTA: Aplica si no resides actualmente en Argentina y cuentas con
             una dirección de residencia de un país diferente a Argentina para
