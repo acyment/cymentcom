@@ -15,6 +15,13 @@ class TipoCurso(models.Model):
     foto = models.CharField(max_length=50)
     foto_tint = models.CharField(max_length=50)
     orden = models.IntegerField(unique=True)
+    costo_usd = MoneyField(
+        max_digits=14,
+        decimal_places=2,
+        default_currency="USD",
+        default=855,
+    )
+    costo_ars = MoneyField(max_digits=14, decimal_places=2, default_currency="ARS")
 
     class Meta:
         verbose_name_plural = "Tipos de curso"
@@ -43,13 +50,6 @@ class Curso(models.Model):
     cantidad_dias = models.IntegerField(default=5)
     hora_inicio = models.TimeField(default=time(10, 0))
     hora_fin = models.TimeField(default=time(13, 30))
-    costo_usd = MoneyField(
-        max_digits=14,
-        decimal_places=2,
-        default_currency="USD",
-        default=855,
-    )
-    costo_ars = MoneyField(max_digits=14, decimal_places=2, default_currency="ARS")
     modalidad = models.CharField(
         max_length=10,
         choices=CursoModalidad.choices,

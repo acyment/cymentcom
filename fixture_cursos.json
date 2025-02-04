@@ -12,7 +12,11 @@
       "video": "f7IVc2XFKvII1yvu00pMlb8VJy1WgD6Fb3U4qAd00Y2s8",
       "foto": "resumen-CSM.jpg",
       "foto_tint": "resumen-CSM-tint.jpg",
-      "orden": 1
+      "orden": 1,
+      "costo_usd": "855.00",
+      "costo_usd_currency": "USD",
+      "costo_ars": "940000.00",
+      "costo_ars_currency": "ARS"
     }
   },
   {
@@ -28,7 +32,11 @@
       "video": "k4AGjXE9RrHv00wVAnw3mA8z5HPrQQG8zGnv4wIywNDk",
       "foto": "resumen-CSPO.jpg",
       "foto_tint": "resumen-CSPO-tint.jpg",
-      "orden": 2
+      "orden": 2,
+      "costo_usd": "855.00",
+      "costo_usd_currency": "USD",
+      "costo_ars": "940000.00",
+      "costo_ars_currency": "ARS"
     }
   },
   {
@@ -44,7 +52,11 @@
       "video": "WkzL014mBoN7yBlZWrcgNMaWWsma6tcq9La6P64ZuM3Q",
       "foto": "resumen-CLB.jpg",
       "foto_tint": "resumen-CLB-tint.jpg",
-      "orden": 3
+      "orden": 3,
+      "costo_usd": "490.00",
+      "costo_usd_currency": "USD",
+      "costo_ars": "499999.00",
+      "costo_ars_currency": "ARS"
     }
   },
   {

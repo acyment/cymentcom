@@ -372,3 +372,7 @@ MJML_BACKEND_MODE = "tcpserver"
 MJML_TCPSERVERS = [
     ("mjml", 28101),  # the host and port of MJML TCP-Server
 ]
+
+# MoneyField
+# ------------------------------------------------------------------------------
+SERIALIZATION_MODULES = {"json": "djmoney.serializers"}

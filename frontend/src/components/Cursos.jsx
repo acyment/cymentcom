@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import * as Accordion from '@radix-ui/react-accordion';
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import DetalleCurso from './DetalleCurso';
 import 'keen-slider/keen-slider.min.css';

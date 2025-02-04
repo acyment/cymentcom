@@ -215,6 +215,153 @@ body {
   }
 }
 
+.ContenedorPagos {
+  display: flex;
+  justify-content: center;
+  gap: 2vw; // Espaciado proporcional
+
+  background-color: #cccccc;
+  margin-left: -6vw;
+  width: calc(100% + 12vw);
+  padding-bottom: 9vw;
+  padding-top: 9vw;
+
+  .TarjetaPago {
+    background-color: white; // Fondo blanco de las tarjetas
+    border-radius: 1.5vw; // Bordes redondeados
+    box-shadow: 0 0.4vw 1vw rgba(0, 0, 0, 0.1); // Sombra suave
+
+    width: 100%;
+    max-width: 30vw; // Ancho máximo relativo
+    display: flex;
+    flex-direction: column;
+    align-items: center; // Centrar contenido
+    text-align: center; // Centrar texto
+
+    .TarjetaEncabezado {
+      background: $azul-violaceo;
+      color: white;
+      border-top-left-radius: 1.5vw;
+      border-top-right-radius: 1.5vw;
+      text-align: center;
+      width: 100%;
+      box-sizing: border-box;
+      padding-top: 1vw;
+      min-height: 6vw;
+
+      h2 {
+        margin: 0;
+        font-size: 1.6vw;
+        font-weight: bold;
+      }
+
+      .Descargo {
+        font-size: 1.1vw;
+        font-weight: 100;
+        padding-top: 0.4vw;
+      }
+    }
+
+    .ContenedorPrecio {
+      min-height: 6.5vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .ContenedorOferta {
+      display: flex;
+      justify-content: center;
+    }
+
+    .PrecioTachado {
+      font-size: 1vw;
+      color: #999;
+      text-decoration: line-through;
+    }
+    .Oferta {
+      font-size: 1vw;
+      font-weight: bold;
+      text-decoration: none;
+      color: black;
+    }
+    .Precio {
+      font-size: 2.5vw; // Tamaño mayor
+      font-weight: bold;
+      color: $azul-violaceo; // Slate blue
+      margin: 0.1vw 0;
+    }
+    .IVA {
+      font-size: 0.8vw;
+      color: #666;
+    }
+
+    .MetodosPago {
+      list-style: none;
+      padding: 0;
+      margin: 1vw 0;
+      font-size: 0.95vw;
+      list-style-position: inside;
+      font-weight: 100;
+
+      li {
+        margin-bottom: 1vw;
+
+        position: relative;
+        padding-left: 1.5em;
+      }
+
+      li::before {
+        content: '+'; /* Replace with desired marker */
+        color: $azul-violaceo; /* Style the custom marker */
+        font-size: 1vw; /* Adjust size of the marker */
+        font-weight: bold; /* Make it bold */
+
+        position: absolute;
+        left: 4vw;
+        height: 100%;
+        line-height: 1.1vw;
+      }
+
+      li:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        bottom: -0.6vw;
+        left: 50%;
+        transform: translateX(-50%);
+
+        width: 30%;
+        border-bottom: 1px solid $azul-violaceo;
+      }
+    }
+
+    .BotonPago {
+      background-color: $azul-violaceo; // Slate blue
+      color: white;
+      font-size: 1.8vw; // Botón más grande
+      font-weight: bold;
+      border: none;
+      border-radius: 1vw; // Bordes redondeados
+      padding: 1vw 2vw; // Tamaño del botón más grande
+      cursor: pointer;
+      text-align: center;
+      margin-top: 1vw;
+
+      &:hover {
+        background-color: #584bdb; // Color más oscuro en hover
+      }
+    }
+
+    .Nota {
+      font-size: 0.8vw;
+      color: #888;
+      margin-top: 0.2vw;
+      text-align: justify;
+      padding: 1vw;
+    }
+  }
+}
+
 .CircleButton {
   --button-size: clamp(24px, 7vw, 80px);
   width: var(--button-size);
@@ -686,9 +833,39 @@ ul {
   padding-left: 2vw;
 }
 
-.LinksContacto li {
-  padding-bottom: 2vw;
+.ContenedorEmailContacto {
+  position: relative;
+  display: inline-block;
 }
+.OvaloEmail {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%; /* Match the container width */
+  height: auto;
+  z-index: 0; /* Behind the link */
+  pointer-events: none;
+}
+
+.RoughNotation {
+  width: 20px;
+  height: 20px;
+}
+.EmailContacto {
+  /* Remove absolute positioning so it flows naturally */
+  position: relative;
+  z-index: 1; /* Above the oval */
+  display: inline-block; /* Ensures the link has its own width */
+  padding: 0.25rem 1rem;
+  text-decoration: none;
+  color: #000;
+}
+
+.LinksContacto li {
+  margin-bottom: 1vw;
+}
+
 .Copyright {
   font-size: 1.2vw;
   right: 6vw;
@@ -1056,4 +1233,20 @@ select,
 
 .NavigationBarScrollOffset {
   scroll-margin-top: 11vh;
+}
+
+.libutton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 7px;
+  text-align: center;
+  outline: none;
+  text-decoration: none !important;
+  color: #ffffff !important;
+  width: 200px;
+  height: 32px;
+  border-radius: 16px;
+  background-color: #0a66c2;
+  font-family: 'SF Pro Text', Helvetica, sans-serif;
 }

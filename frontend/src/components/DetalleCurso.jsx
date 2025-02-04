@@ -3,6 +3,7 @@ import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
 import EllipsisNestedList from './EllipsisNestedList';
 import HorarioCurso from './HorarioCurso';
 import FAQ from './FAQ';
+import CostoCurso from './CostoCurso';
 import MuxPlayer from '@mux/mux-player-react';
 import parse from 'html-react-parser';
 
@@ -60,6 +61,10 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
 
       <p className="SubtituloDetalleCurso">FAQ</p>
       <FAQ faqEntries={tipoCurso.faq_entries} />
+      <CostoCurso
+        costoUSD={tipoCurso.costo_usd}
+        costoARS={tipoCurso.costo_ars}
+      />
     </div>
   );
 });
