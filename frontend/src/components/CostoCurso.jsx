@@ -1,6 +1,7 @@
 import React from 'react';
+import { formatPrice } from '../utils/formatPrice';
 
-const CostoCurso = ({ costoUSD, costoARS }) => {
+const CostoCurso = ({ costoUSD, costoARS, costoSinDescuentoARS }) => {
   return (
     <div className="ContenedorPagos">
       <div className="TarjetaPago">
@@ -11,10 +12,13 @@ const CostoCurso = ({ costoUSD, costoARS }) => {
         <div className="TarjetaContenido">
           <div className="ContenedorPrecio">
             <div className="ContenedorOferta">
-              <span className="PrecioTachado">500.170,- </span>
+              <span className="PrecioTachado">
+                AR$
+                {formatPrice(costoSinDescuentoARS)}{' '}
+              </span>
               <span className="Oferta">OFERTA</span>
             </div>
-            <p className="Precio">AR$ 421.300,-</p>
+            <p className="Precio">AR$ {formatPrice(costoARS)}</p>
             <p className="IVA">(+IVA)</p>
           </div>
 
@@ -48,7 +52,7 @@ const CostoCurso = ({ costoUSD, costoARS }) => {
         </div>
         <div className="TarjetaContenido">
           <div className="ContenedorPrecio">
-            <p className="Precio">USD 858,-</p>
+            <p className="Precio">USD {formatPrice(costoUSD)}</p>
           </div>
           <ul className="MetodosPago">
             <li>Válido solamente para pagos fuera de Argentina</li>

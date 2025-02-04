@@ -16,7 +16,9 @@
       "costo_usd": "855.00",
       "costo_usd_currency": "USD",
       "costo_ars": "940000.00",
-      "costo_ars_currency": "ARS"
+      "costo_ars_currency": "ARS",
+      "costo_sin_descuento_ars": "1038825.00",
+      "costo_sin_descuento_ars_currency": "ARS"
     }
   },
   {
@@ -36,7 +38,9 @@
       "costo_usd": "855.00",
       "costo_usd_currency": "USD",
       "costo_ars": "940000.00",
-      "costo_ars_currency": "ARS"
+      "costo_ars_currency": "ARS",
+      "costo_sin_descuento_ars": "1038825.00",
+      "costo_sin_descuento_ars_currency": "ARS"
     }
   },
   {
@@ -56,7 +60,9 @@
       "costo_usd": "490.00",
       "costo_usd_currency": "USD",
       "costo_ars": "499999.00",
-      "costo_ars_currency": "ARS"
+      "costo_ars_currency": "ARS",
+      "costo_sin_descuento_ars": "595350.00",
+      "costo_sin_descuento_ars_currency": "ARS"
     }
   },
   {

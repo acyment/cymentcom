@@ -64,6 +64,7 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
       <CostoCurso
         costoUSD={tipoCurso.costo_usd}
         costoARS={tipoCurso.costo_ars}
+        costoSinDescuentoARS={tipoCurso.costo_sin_descuento_ars}
       />
     </div>
   );

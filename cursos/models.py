@@ -22,6 +22,11 @@ class TipoCurso(models.Model):
         default=855,
     )
     costo_ars = MoneyField(max_digits=14, decimal_places=2, default_currency="ARS")
+    costo_sin_descuento_ars = MoneyField(
+        max_digits=14,
+        decimal_places=2,
+        default_currency="ARS",
+    )
 
     class Meta:
         verbose_name_plural = "Tipos de curso"
