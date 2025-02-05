@@ -2,6 +2,7 @@ const { merge } = require('webpack-merge');
 const commonConfig = require('./common.config');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = merge(commonConfig, {
   mode: 'development',
@@ -30,6 +31,7 @@ module.exports = merge(commonConfig, {
       path: path.resolve(__dirname, '../.envs/.local/.webpack'),
       // load this
     }),
+    new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"development"' }),
   ],
 });
 
