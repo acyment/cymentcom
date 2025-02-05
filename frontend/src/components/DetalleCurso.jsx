@@ -4,7 +4,7 @@ import EllipsisNestedList from './EllipsisNestedList';
 import HorarioCurso from './HorarioCurso';
 import FAQ from './FAQ';
 import CostoCurso from './CostoCurso';
-import MuxPlayer from '@mux/mux-player-react';
+import ResilientMuxPlayer from './ResilientMuxPlayer';
 import parse from 'html-react-parser';
 
 const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
@@ -33,11 +33,9 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
         </div>
       )}
       <hr className="Separador" />
-      <MuxPlayer
+      <ResilientMuxPlayer
         streamType="on-demand"
         playbackId={tipoCurso.video}
-        metadataVideoTitle="Placeholder (optional)"
-        metadataViewerUserId="Placeholder (optional)"
         primaryColor="#FFFFFF"
         secondaryColor="#000000"
         className="VideoPlayer"

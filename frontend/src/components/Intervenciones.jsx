@@ -3,7 +3,7 @@ import * as Accordion from '@radix-ui/react-accordion';
 import { AccordionHeader } from '@radix-ui/react-accordion';
 import { RoughNotation } from 'react-rough-notation';
 
-import MuxPlayer from '@mux/mux-player-react';
+import ResilientMuxPlayer from './ResilientMuxPlayer';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import useViewportUnits from '../hooks/useViewportUnits';
@@ -192,7 +192,7 @@ const Intervenciones = () => {
                 </p>
                 {/* TODO: Agregar link a PDF con caso detallado */}
               </div>
-              <MuxPlayer
+              <ResilientMuxPlayer
                 ref={(ref) => {
                   if (ref) {
                     videoRefs.current[index] = ref;

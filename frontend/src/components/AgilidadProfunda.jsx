@@ -2,7 +2,7 @@ import React from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
 import { AccordionHeader } from '@radix-ui/react-accordion';
 import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
-import MuxPlayer from '@mux/mux-player-react';
+import ResilientMuxPlayer from './ResilientMuxPlayer';
 import { useAccordionScroll } from '../hooks/useAccordionScroll';
 
 const AgilidadProfunda = () => {
@@ -36,7 +36,7 @@ const AgilidadProfunda = () => {
         ref={contentRef}
         className="AccordionContent AgilidadProfundaContent NavigationBarScrollOffset"
       >
-        <MuxPlayer
+        <ResilientMuxPlayer
           className="VideoAgilidadProfunda"
           playbackId="01jQAtccLD74At5jA5J02gU1cDkgacdF2v9jA400HeqxGI"
           streamType="on-demand"
