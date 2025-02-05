@@ -13,7 +13,9 @@ const HorarioCurso = ({ proximosCursos }) => {
     if (proximosCursos) {
       setProximoCurso(proximosCursos[0]);
       // TODO: Manejar el caso en el que hay muchas próximas fechas
-      setFechaCurso(new Date(proximosCursos[0].fecha));
+      let _fechaCurso = new Date(proximosCursos[0].fecha);
+      _fechaCurso.setUTCHours(12); // Permite que el día no cambie para UTC-3
+      setFechaCurso(_fechaCurso);
     }
   }, [proximosCursos]);
 
@@ -66,6 +68,13 @@ const HorarioCurso = ({ proximosCursos }) => {
     return `${adjustedHours}:${adjustedMinutes}`;
   };
 
+  function capitalizeFirstLetter(str) {
+    if (str.length === 0) {
+      return str; // Handle empty string case
+    }
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   return (
     <Fragment>
       <div className="HorarioCurso">
@@ -95,9 +104,7 @@ const HorarioCurso = ({ proximosCursos }) => {
             al{' '}
             {proximoCurso &&
               formatDate(
-                fechaCurso.setDate(
-                  fechaCurso.getDate() + proximoCurso.cantidad_dias - 1,
-                ),
+                fechaCurso.getDate() + proximoCurso.cantidad_dias - 1,
                 'dddd DD',
                 {
                   locale: 'es-AR',
@@ -142,7 +149,11 @@ const HorarioCurso = ({ proximosCursos }) => {
         </Dialog.Root>
       </div>
       <p className="ResumenDetalleCurso">
-        {proximoCurso && formatDate(fechaCurso, 'dddd', { locale: 'es-AR' })} a{' '}
+        {proximoCurso &&
+          capitalizeFirstLetter(
+            formatDate(fechaCurso, 'dddd', { locale: 'es-AR' }),
+          )}{' '}
+        a{' '}
         {proximoCurso &&
           formatDate(
             fechaCurso.setDate(
@@ -152,8 +163,8 @@ const HorarioCurso = ({ proximosCursos }) => {
             {
               locale: 'es-AR',
             },
-          )}
-        , en {proximoCurso && proximoCurso.cantidad_dias} sesiones diarias de{' '}
+          )}{' '}
+        en {proximoCurso && proximoCurso.cantidad_dias} sesiones diarias de{' '}
         {proximoCurso &&
           calculateTimeDifference(
             proximoCurso.hora_inicio,
