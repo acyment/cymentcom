@@ -732,6 +732,10 @@ ul {
   transform: translateY(-50%);
 }
 
+.BotonInscripcion:hover {
+  background-color: #584bdb; // Color más oscuro en hover
+}
+
 .NavigationMenuIndicator {
   background-color: grey;
   height: 3px;
