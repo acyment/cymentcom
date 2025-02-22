@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY ./package.json /app
 
-RUN corepack prepare pnpm@9.15.4 --activate && \
+RUN corepack prepare pnpm@10.4.1 --activate && \
     corepack enable pnpm
 RUN pnpm fetch
 RUN pnpm install
