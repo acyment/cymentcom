@@ -17,5 +17,5 @@ jobs:
 
   deploy:
     uses: ./.github/workflows/_deploy.yml
-    needs: [test, lint]
+    needs: [test]
     secrets: inherit
