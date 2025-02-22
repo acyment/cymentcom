@@ -5,7 +5,6 @@ WORKDIR /app
 COPY ./package.json /app
 
 RUN npm install -g corepack
-RUN corepack clear
 
 RUN corepack prepare pnpm@10.4.1 --activate && \
     corepack enable pnpm
