@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { RoughNotation } from 'react-rough-notation';
+import ReactGA from 'react-ga4';
 
 const NavMenu = () => {
   const [activeItem, setActiveItem] = useState(null);
@@ -13,6 +14,14 @@ const NavMenu = () => {
     { href: '#contacto', text: 'Contacto' },
   ];
 
+  const trackSectionView = (section) => {
+    ReactGA.event({
+      category: 'Navigation',
+      action: 'Section View',
+      label: section
+    });
+  };
+
   return (
     <NavigationMenu.Root className="NavigationMenuRoot">
       <NavigationMenu.List className="NavigationMenuList">
@@ -23,6 +32,7 @@ const NavMenu = () => {
               href={item.href}
               onMouseEnter={() => setActiveItem(index)}
               onMouseLeave={() => setActiveItem(null)}
+              onClick={() => trackSectionView(item.text)}
             >
               <RoughNotation
                 type="circle"
