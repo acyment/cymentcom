@@ -7,21 +7,12 @@ import 'normalize.css';
 import '../../public/css/styles.scss';
 import Contacto from './Contacto';
 import ResultadoPago from './ResultadoPago';
-import ReactGA from 'react-ga4';
-
 function App() {
   const isFontListLoaded = useFontFaceObserver([
     {
       family: `Rubik`,
     },
   ]);
-
-  // Initialize GA
-  useEffect(() => {
-    if (process.env.GA_MEASUREMENT_ID) {
-      ReactGA.initialize(process.env.GA_MEASUREMENT_ID);
-    }
-  }, []);
 
   return (
     <div>

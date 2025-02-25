@@ -366,6 +366,10 @@ SPECTACULAR_SETTINGS = {
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
     "SCHEMA_PATH_PREFIX": "/api/",
 }
+# Google Analytics
+# ------------------------------------------------------------------------------
+GA_MEASUREMENT_ID = env("GA_MEASUREMENT_ID", default="")
+
 # MJML
 # ------------------------------------------------------------------------------
 MJML_BACKEND_MODE = "tcpserver"
