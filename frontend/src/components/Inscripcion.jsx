@@ -20,19 +20,21 @@ const Inscripcion = ({ idCurso }) => {
 
   // Track funnel start
   useEffect(() => {
-    ReactGA.event({
-      category: 'Funnel',
-      action: 'Started',
-      label: 'Course Registration',
-    });
+    if (window.gtag) {
+      window.gtag('event', 'funnel_start', {
+        'event_category': 'Funnel',
+        'event_label': 'Course Registration'
+      });
+    }
   }, []);
 
   const trackFunnelStep = (step) => {
-    ReactGA.event({
-      category: 'Funnel',
-      action: 'Step Completed',
-      label: step,
-    });
+    if (window.gtag) {
+      window.gtag('event', `funnel_${step.toLowerCase()}`, {
+        'event_category': 'Funnel',
+        'event_label': 'Course Registration'
+      });
+    }
   };
 
   const countryWasSelected = (selectedCountry) => {
@@ -40,19 +42,21 @@ const Inscripcion = ({ idCurso }) => {
     if (selectedCountry === 'AR') {
       setMostrarMercadoPago(true);
       setMostrarStripe(false);
-      ReactGA.event({
-        category: 'Payment',
-        action: 'Method Selected',
-        label: 'MercadoPago',
-      });
+      if (window.gtag) {
+        window.gtag('event', 'payment_method_selected', {
+          'event_category': 'Payment',
+          'event_label': 'MercadoPago'
+        });
+      }
     } else {
       setMostrarMercadoPago(false);
       setMostrarStripe(true);
-      ReactGA.event({
-        category: 'Payment',
-        action: 'Method Selected',
-        label: 'Stripe',
-      });
+      if (window.gtag) {
+        window.gtag('event', 'payment_method_selected', {
+          'event_category': 'Payment',
+          'event_label': 'Stripe'
+        });
+      }
     }
     handleInputChange();
   };

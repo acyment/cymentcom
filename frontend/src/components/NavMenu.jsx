@@ -15,11 +15,12 @@ const NavMenu = () => {
   ];
 
   const trackSectionView = (section) => {
-    ReactGA.event({
-      category: 'Navigation',
-      action: 'Section View',
-      label: section
-    });
+    if (window.gtag) {
+      window.gtag('event', 'section_view', {
+        'event_category': 'Navigation',
+        'event_label': section
+      });
+    }
   };
 
   return (
