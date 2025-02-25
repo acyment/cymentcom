@@ -1,11 +1,8 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import { Dialog, Portal } from '@ark-ui/react';
+import React, { useState, useEffect } from 'react';
+import { Dialog } from '@ark-ui/react';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { Wallet, initMercadoPago } from '@mercadopago/sdk-react';
-import axios from 'axios';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
-import DisableableWallet from './DisableableWallet';
-import { Wizard, useWizard, BasicFooter } from 'react-formik-step-wizard';
+import { Wizard } from 'react-formik-step-wizard';
 import StepParticipantes from './StepParticipantes';
 import StepFacturacion from './StepFacturacion';
 import StepPago from './StepPago';
@@ -26,7 +23,7 @@ const Inscripcion = ({ idCurso }) => {
     ReactGA.event({
       category: 'Funnel',
       action: 'Started',
-      label: 'Course Registration'
+      label: 'Course Registration',
     });
   }, []);
 
@@ -34,7 +31,7 @@ const Inscripcion = ({ idCurso }) => {
     ReactGA.event({
       category: 'Funnel',
       action: 'Step Completed',
-      label: step
+      label: step,
     });
   };
 
@@ -46,7 +43,7 @@ const Inscripcion = ({ idCurso }) => {
       ReactGA.event({
         category: 'Payment',
         action: 'Method Selected',
-        label: 'MercadoPago'
+        label: 'MercadoPago',
       });
     } else {
       setMostrarMercadoPago(false);
@@ -54,7 +51,7 @@ const Inscripcion = ({ idCurso }) => {
       ReactGA.event({
         category: 'Payment',
         action: 'Method Selected',
-        label: 'Stripe'
+        label: 'Stripe',
       });
     }
     handleInputChange();
@@ -70,7 +67,7 @@ const Inscripcion = ({ idCurso }) => {
         email: Yup.string().required('No te olvides del e-mail'),
       }),
       hidePrevious: true,
-      onSubmit: () => trackFunnelStep('Participant Info')
+      onSubmit: () => trackFunnelStep('Participant Info'),
     },
     {
       id: 'StepFacturacion',
@@ -84,12 +81,12 @@ const Inscripcion = ({ idCurso }) => {
           otherwise: Yup.string(),
         }),
       }),
-      onSubmit: () => trackFunnelStep('Billing Info')
+      onSubmit: () => trackFunnelStep('Billing Info'),
     },
     {
       id: 'StepPago',
       component: <StepPago idCurso={idCurso} />,
-      onSubmit: () => trackFunnelStep('Payment')
+      onSubmit: () => trackFunnelStep('Payment'),
     },
   ];
 
