@@ -1,0 +1,1 @@
+- Everything is run from Docker, so no local running of npm, but rather modify package.json directly
