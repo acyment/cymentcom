@@ -366,9 +366,9 @@ SPECTACULAR_SETTINGS = {
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
     "SCHEMA_PATH_PREFIX": "/api/",
 }
-# Umami Analytics
+# OpenReplay Analytics
 # ------------------------------------------------------------------------------
-UMAMI_WEBSITE_ID = env("UMAMI_WEBSITE_ID", default="")
+OPENREPLAY_PROJECT_KEY = env("OPENREPLAY_PROJECT_KEY", default="")
 
 # MJML
 # ------------------------------------------------------------------------------
