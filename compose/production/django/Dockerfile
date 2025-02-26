@@ -1,4 +1,4 @@
-FROM docker.io/node:22.13-bookworm-slim AS client-builder
+FROM docker.io/node:22.14-bookworm-slim AS client-builder
 
 ARG APP_HOME=/app
 WORKDIR ${APP_HOME}
@@ -11,7 +11,7 @@ COPY . ${APP_HOME}
 RUN pnpm run build
 
 # define an alias for the specific python version used in this file.
-FROM docker.io/python:3.12.8-slim-bookworm AS python
+FROM docker.io/python:3.12.9-slim-bookworm AS python
 
 # Python build stage
 FROM python AS python-build-stage
