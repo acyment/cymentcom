@@ -35,7 +35,11 @@ const StepParticipantes = () => {
           className="Input"
         />
         <Field name="rol" placeholder="Rol" type="text" className="Input" />
-        <button className="BotonFormulario UnicoBotonSiguiente" type="submit">
+        <button 
+          className="BotonFormulario UnicoBotonSiguiente" 
+          type="submit"
+          data-umami-event="next-to-billing"
+        >
           Facturación
         </button>
       </div>

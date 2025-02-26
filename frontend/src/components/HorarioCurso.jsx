@@ -135,7 +135,12 @@ const HorarioCurso = ({ proximosCursos }) => {
           closeOnInteractOutside={false}
         >
           <Dialog.Trigger asChild>
-            <button className="BotonInscripcion">Inscribirme</button>
+            <button 
+              className="BotonInscripcion"
+              data-umami-event="start-registration"
+            >
+              Inscribirme
+            </button>
           </Dialog.Trigger>
 
           <Portal>

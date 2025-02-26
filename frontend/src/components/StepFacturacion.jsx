@@ -891,6 +891,7 @@ const StepFacturacion = ({ idCurso }) => {
             type="button"
             onClick={goToPreviousStep}
             className="BotonFormulario BotonIzquierda"
+            data-umami-event="back-to-participants"
           >
             Participantes
           </button>
@@ -898,6 +899,7 @@ const StepFacturacion = ({ idCurso }) => {
             type={paisEsArgentina ? 'submit' : 'button'}
             className="BotonFormulario BotonDerecha"
             onClick={paisEsArgentina ? () => {} : submitPagoStripe}
+            data-umami-event={paisEsArgentina ? "submit-payment" : "stripe-payment"}
           >
             Pago
           </button>
