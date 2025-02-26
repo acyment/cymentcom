@@ -3,6 +3,7 @@ import { Field, ErrorMessage, useFormikContext } from 'formik';
 import { useWizard } from 'react-formik-step-wizard';
 import { Tooltip } from 'react-tooltip';
 import axios from 'axios';
+import CustomErrorMessage from './CustomErrorMessage';
 
 const paises = [
   {
@@ -846,7 +847,7 @@ const StepFacturacion = ({ idCurso }) => {
     <Fragment>
       <p className="TituloStep">Datos para facturación</p>
       <div className="Fieldset">
-        <Field name="pais" as="select" className="Input">
+        <Field name="pais" as="select" className="Input" autofocus>
           <option value="">País*</option>
           {paises.map((pais) => (
             <option key={pais.value} value={pais.value}>
@@ -854,14 +855,14 @@ const StepFacturacion = ({ idCurso }) => {
             </option>
           ))}
         </Field>
-        <ErrorMessage name="pais" />
+        <ErrorMessage name="pais" className="FieldErrorMsg" />
         <Field
           name="nombreCompleto"
           placeholder="Nombre Completo*"
           type="text"
           className="Input"
         />
-        <ErrorMessage name="nombreCompleto" />
+        <ErrorMessage name="nombreCompleto" className="FieldErrorMsg" />
 
         <Field
           name="identificacionFiscal"
@@ -871,7 +872,7 @@ const StepFacturacion = ({ idCurso }) => {
           data-tooltip-content="Ingrese identificación fiscal (RUT, RUC, etc) o personal (cédula, documento, pasaporte) tal como deseas que aparezca en la factura"
           className="Input"
         />
-        <ErrorMessage name="identificacionFiscal" />
+        <ErrorMessage name="identificacionFiscal" className="FieldErrorMsg" />
         <Tooltip id="my-tooltip" />
         <Field
           name="direccion"

@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { Field, ErrorMessage } from 'formik';
+import CustomErrorMessage from './CustomErrorMessage';
 
 const StepParticipantes = () => {
   return (
@@ -12,21 +13,21 @@ const StepParticipantes = () => {
           type="text"
           className="Input"
         />
-        <ErrorMessage name="nombre" />
+        <CustomErrorMessage name="nombre" />
         <Field
           name="apellido"
           placeholder="Apellido*"
           type="text"
           className="Input"
         />
-        <ErrorMessage name="apellido" />
+        <CustomErrorMessage name="apellido" />
         <Field
           name="email"
           placeholder="E-mail*"
           type="email"
           className="Input"
         />
-        <ErrorMessage name="email" />
+        <CustomErrorMessage name="email" />
         <Field
           name="organizacion"
           placeholder="Organización"
