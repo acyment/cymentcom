@@ -891,7 +891,11 @@ const StepFacturacion = ({ idCurso }) => {
             type="button"
             onClick={goToPreviousStep}
             className="BotonFormulario BotonIzquierda"
-            data-umami-event="back-to-participants"
+            onClick={() => {
+              if (window.posthog) {
+                window.posthog.capture('back_to_participants');
+              }
+            }}
           >
             Participantes
           </button>

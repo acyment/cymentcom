@@ -366,9 +366,10 @@ SPECTACULAR_SETTINGS = {
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
     "SCHEMA_PATH_PREFIX": "/api/",
 }
-# OpenReplay Analytics
+# PostHog Analytics
 # ------------------------------------------------------------------------------
-OPENREPLAY_PROJECT_KEY = env("OPENREPLAY_PROJECT_KEY", default="")
+POSTHOG_API_KEY = env("POSTHOG_API_KEY", default="")
+POSTHOG_HOST = env("POSTHOG_HOST", default="https://app.posthog.com")
 
 # MJML
 # ------------------------------------------------------------------------------

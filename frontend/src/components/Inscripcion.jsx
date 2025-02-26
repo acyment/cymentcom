@@ -19,8 +19,10 @@ const Inscripcion = ({ idCurso }) => {
 
   // Track funnel start
   useEffect(() => {
-    // Umami will track this automatically via data-umami-event attributes
-  }, []);
+    if (window.posthog) {
+      window.posthog.capture('funnel_start', { course_id: idCurso });
+    }
+  }, [idCurso]);
 
   const trackFunnelStep = (step) => {
     // Umami will track this automatically via data-umami-event attributes

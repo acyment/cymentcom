@@ -14,7 +14,9 @@ const NavMenu = () => {
   ];
 
   const trackSectionView = (section) => {
-    // Umami tracks clicks automatically via data-umami-event attributes
+    if (window.posthog) {
+      window.posthog.capture('nav_click', { section });
+    }
   };
 
   return (

@@ -38,7 +38,11 @@ const StepParticipantes = () => {
         <button 
           className="BotonFormulario UnicoBotonSiguiente" 
           type="submit"
-          data-umami-event="next-to-billing"
+          onClick={() => {
+            if (window.posthog) {
+              window.posthog.capture('next_to_billing');
+            }
+          }}
         >
           Facturación
         </button>
