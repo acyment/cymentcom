@@ -366,9 +366,9 @@ SPECTACULAR_SETTINGS = {
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
     "SCHEMA_PATH_PREFIX": "/api/",
 }
-# Google Analytics
+# Umami Analytics
 # ------------------------------------------------------------------------------
-GA_MEASUREMENT_ID = env("GA_MEASUREMENT_ID", default="")
+UMAMI_WEBSITE_ID = env("UMAMI_WEBSITE_ID", default="")
 
 # MJML
 # ------------------------------------------------------------------------------

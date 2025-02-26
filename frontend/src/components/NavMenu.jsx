@@ -14,12 +14,7 @@ const NavMenu = () => {
   ];
 
   const trackSectionView = (section) => {
-    if (window.gtag) {
-      window.gtag('event', 'section_view', {
-        event_category: 'Navigation',
-        event_label: section,
-      });
-    }
+    // Umami tracks clicks automatically via data-umami-event attributes
   };
 
   return (
@@ -32,7 +27,7 @@ const NavMenu = () => {
               href={item.href}
               onMouseEnter={() => setActiveItem(index)}
               onMouseLeave={() => setActiveItem(null)}
-              onClick={() => trackSectionView(item.text)}
+              data-umami-event={`nav-${item.text.toLowerCase().replace(' ', '-')}`}
             >
               <RoughNotation
                 type="circle"

@@ -29,7 +29,6 @@ module.exports = merge(commonConfig, {
   plugins: [
     new Dotenv({
       path: path.resolve(__dirname, '../.envs/.local/.webpack'),
-      // load this
     }),
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"development"' }),
   ],

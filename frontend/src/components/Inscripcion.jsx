@@ -19,21 +19,11 @@ const Inscripcion = ({ idCurso }) => {
 
   // Track funnel start
   useEffect(() => {
-    if (window.gtag) {
-      window.gtag('event', 'funnel_start', {
-        event_category: 'Funnel',
-        event_label: 'Course Registration',
-      });
-    }
+    // Umami will track this automatically via data-umami-event attributes
   }, []);
 
   const trackFunnelStep = (step) => {
-    if (window.gtag) {
-      window.gtag('event', `funnel_${step.toLowerCase()}`, {
-        event_category: 'Funnel',
-        event_label: 'Course Registration',
-      });
-    }
+    // Umami will track this automatically via data-umami-event attributes
   };
 
   const countryWasSelected = (selectedCountry) => {
@@ -41,21 +31,11 @@ const Inscripcion = ({ idCurso }) => {
     if (selectedCountry === 'AR') {
       setMostrarMercadoPago(true);
       setMostrarStripe(false);
-      if (window.gtag) {
-        window.gtag('event', 'payment_method_selected', {
-          event_category: 'Payment',
-          event_label: 'MercadoPago',
-        });
-      }
+      // Umami will track this automatically via data-umami-event attributes
     } else {
       setMostrarMercadoPago(false);
       setMostrarStripe(true);
-      if (window.gtag) {
-        window.gtag('event', 'payment_method_selected', {
-          event_category: 'Payment',
-          event_label: 'Stripe',
-        });
-      }
+      // Umami will track this automatically via data-umami-event attributes
     }
     handleInputChange();
   };

@@ -15,14 +15,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Agilidad profunda" />
     <meta name="author" content="Alan Cyment" />
-    <!-- Google Tag Manager (GTM for GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ GA_MEASUREMENT_ID }}"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '{{ GA_MEASUREMENT_ID }}');
-    </script>
+    <!-- Umami Analytics -->
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="{{ UMAMI_WEBSITE_ID }}"></script>
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
     <link rel="apple-touch-icon"
           sizes="180x180"
