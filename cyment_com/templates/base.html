@@ -30,6 +30,8 @@
           sizes="16x16"
           href="{% static 'images/favicons/favicon-16x16.png' %}" />
     <link rel="manifest" href="{% static 'images/favicons/site.webmanifest' %}" />
+    <!-- Umami Analytics -->
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="{{ UMAMI_WEBSITE_ID }}"></script>
     {% render_bundle 'main' 'css' 'DEFAULT' %}
     {% block css %}
       <!-- Your stuff: Third-party CSS libraries go here -->
