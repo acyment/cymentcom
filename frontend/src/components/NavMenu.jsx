@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { RoughNotation } from 'react-rough-notation';
-import ReactGA from 'react-ga4';
 
 const NavMenu = () => {
   const [activeItem, setActiveItem] = useState(null);
@@ -17,8 +16,8 @@ const NavMenu = () => {
   const trackSectionView = (section) => {
     if (window.gtag) {
       window.gtag('event', 'section_view', {
-        'event_category': 'Navigation',
-        'event_label': section
+        event_category: 'Navigation',
+        event_label: section,
       });
     }
   };

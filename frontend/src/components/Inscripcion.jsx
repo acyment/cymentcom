@@ -7,7 +7,6 @@ import StepParticipantes from './StepParticipantes';
 import StepFacturacion from './StepFacturacion';
 import StepPago from './StepPago';
 import * as Yup from 'yup';
-import ReactGA from 'react-ga4';
 
 export const AppContext = React.createContext({});
 
@@ -22,8 +21,8 @@ const Inscripcion = ({ idCurso }) => {
   useEffect(() => {
     if (window.gtag) {
       window.gtag('event', 'funnel_start', {
-        'event_category': 'Funnel',
-        'event_label': 'Course Registration'
+        event_category: 'Funnel',
+        event_label: 'Course Registration',
       });
     }
   }, []);
@@ -31,8 +30,8 @@ const Inscripcion = ({ idCurso }) => {
   const trackFunnelStep = (step) => {
     if (window.gtag) {
       window.gtag('event', `funnel_${step.toLowerCase()}`, {
-        'event_category': 'Funnel',
-        'event_label': 'Course Registration'
+        event_category: 'Funnel',
+        event_label: 'Course Registration',
       });
     }
   };
@@ -44,8 +43,8 @@ const Inscripcion = ({ idCurso }) => {
       setMostrarStripe(false);
       if (window.gtag) {
         window.gtag('event', 'payment_method_selected', {
-          'event_category': 'Payment',
-          'event_label': 'MercadoPago'
+          event_category: 'Payment',
+          event_label: 'MercadoPago',
         });
       }
     } else {
@@ -53,8 +52,8 @@ const Inscripcion = ({ idCurso }) => {
       setMostrarStripe(true);
       if (window.gtag) {
         window.gtag('event', 'payment_method_selected', {
-          'event_category': 'Payment',
-          'event_label': 'Stripe'
+          event_category: 'Payment',
+          event_label: 'Stripe',
         });
       }
     }

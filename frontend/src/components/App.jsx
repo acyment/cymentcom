@@ -7,6 +7,7 @@ import 'normalize.css';
 import '../../public/css/styles.scss';
 import Contacto from './Contacto';
 import ResultadoPago from './ResultadoPago';
+
 function App() {
   const isFontListLoaded = useFontFaceObserver([
     {
