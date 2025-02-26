@@ -65,7 +65,7 @@
     "react-tooltip": "^5.26.3",
     "use-font-face-observer": "^1.2.2",
     "keen-slider": "^6.8.6",
-    "yup": "^1.6.1",
+    "yup": "^1.6.1"
   },
   "engines": {
     "node": "22.12"
