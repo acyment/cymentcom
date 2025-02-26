@@ -281,3 +281,7 @@ webpack-stats.json
 .env
 *.min.js
 *.min.js.map
+.aider*
+
+# Ignore Ansible lock files
+*.lock
