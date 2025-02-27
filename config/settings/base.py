@@ -7,6 +7,11 @@ from pathlib import Path
 import environ
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
+
+# PostHog Analytics
+# ------------------------------------------------------------------------------
+POSTHOG_API_KEY = env("POSTHOG_API_KEY", default="")
+POSTHOG_HOST = env("POSTHOG_HOST", default="https://app.posthog.com")
 # cyment_com/
 APPS_DIR = BASE_DIR / "cyment_com"
 env = environ.Env()
