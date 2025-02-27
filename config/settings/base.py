@@ -213,6 +213,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "cyment_com.users.context_processors.allauth_settings",
+                "cyment_com.users.context_processors.posthog_settings",
             ],
         },
     },
