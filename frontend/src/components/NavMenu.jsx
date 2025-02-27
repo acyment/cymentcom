@@ -29,7 +29,6 @@ const NavMenu = () => {
               href={item.href}
               onMouseEnter={() => setActiveItem(index)}
               onMouseLeave={() => setActiveItem(null)}
-              data-umami-event={`nav-${item.text.toLowerCase().replace(' ', '-')}`}
             >
               <RoughNotation
                 type="circle"

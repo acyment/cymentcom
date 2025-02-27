@@ -903,7 +903,6 @@ const StepFacturacion = ({ idCurso }) => {
             type={paisEsArgentina ? 'submit' : 'button'}
             className="BotonFormulario BotonDerecha"
             onClick={paisEsArgentina ? () => {} : submitPagoStripe}
-            data-umami-event={paisEsArgentina ? "submit-payment" : "stripe-payment"}
           >
             Pago
           </button>

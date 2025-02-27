@@ -33,7 +33,6 @@ const CostoCurso = ({ costoUSD, costoARS, costoSinDescuentoARS }) => {
                 ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
             }
             className="BotonPago"
-            data-umami-event="view-calendar"
           >
             Calendario
           </button>
