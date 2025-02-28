@@ -891,10 +891,10 @@ const StepFacturacion = ({ idCurso }) => {
         <div className="DosBotonesFormulario">
           <button
             type="button"
-            onClick={goToPreviousStep}
             className="BotonFormulario BotonIzquierda"
             onClick={() => {
               posthog?.capture('back_to_participants');
+              goToPreviousStep();
             }}
           >
             Participantes
