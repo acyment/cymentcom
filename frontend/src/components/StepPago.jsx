@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import { usePostHog } from 'posthog-js/react';
 import axios from 'axios';
 import {
   CardPayment,
@@ -24,6 +25,7 @@ const customizacionMercadoPago = {
 };
 
 const StepPago = ({ idCurso }) => {
+  const posthog = usePostHog();
   const { values, goToPreviousStep } = useWizard();
   const pagoEnArgentina = values.StepFacturacion.pais === 'AR';
 

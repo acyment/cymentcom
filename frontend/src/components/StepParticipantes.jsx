@@ -1,8 +1,10 @@
 import React, { Fragment } from 'react';
+import { usePostHog } from 'posthog-js/react';
 import { Field, ErrorMessage } from 'formik';
 import CustomErrorMessage from './CustomErrorMessage';
 
 const StepParticipantes = () => {
+  const posthog = usePostHog();
   return (
     <Fragment>
       <p className="TituloStep">Datos del participante</p>
