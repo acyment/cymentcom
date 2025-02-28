@@ -12,6 +12,7 @@ import * as Yup from 'yup';
 export const AppContext = React.createContext({});
 
 const Inscripcion = ({ idCurso }) => {
+  const posthog = usePostHog();
   const [preferenceId, setPreferenceId] = useState(null);
   const [mostrarMercadoPago, setMostrarMercadoPago] = useState(false);
   const [mostrarStripe, setMostrarStripe] = useState(false);
