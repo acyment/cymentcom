@@ -892,9 +892,7 @@ const StepFacturacion = ({ idCurso }) => {
             onClick={goToPreviousStep}
             className="BotonFormulario BotonIzquierda"
             onClick={() => {
-              if (window.posthog) {
-                window.posthog.capture('back_to_participants');
-              }
+              posthog?.capture('back_to_participants');
             }}
           >
             Participantes

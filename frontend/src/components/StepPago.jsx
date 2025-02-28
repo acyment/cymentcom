@@ -114,9 +114,7 @@ const StepPago = ({ idCurso }) => {
       <button
         type="button"
         onClick={() => {
-          if (window.posthog) {
-            window.posthog.capture('back_to_billing');
-          }
+          posthog?.capture('back_to_billing');
           goToPreviousStep();
         }}
         className="BotonFormulario"

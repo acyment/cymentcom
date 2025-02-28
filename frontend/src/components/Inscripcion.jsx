@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { usePostHog } from 'posthog-js/react';
 import { Dialog } from '@ark-ui/react';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
@@ -19,9 +20,7 @@ const Inscripcion = ({ idCurso }) => {
 
   // Track funnel start
   useEffect(() => {
-    if (window.posthog) {
-      window.posthog.capture('funnel_start', { course_id: idCurso });
-    }
+    posthog?.capture('funnel_start', { course_id: idCurso });
   }, [idCurso]);
 
   const trackFunnelStep = (step) => {

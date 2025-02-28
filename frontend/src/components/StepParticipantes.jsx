@@ -39,9 +39,7 @@ const StepParticipantes = () => {
           className="BotonFormulario UnicoBotonSiguiente" 
           type="submit"
           onClick={() => {
-            if (window.posthog) {
-              window.posthog.capture('next_to_billing');
-            }
+            posthog?.capture('next_to_billing');
           }}
         >
           Facturación
