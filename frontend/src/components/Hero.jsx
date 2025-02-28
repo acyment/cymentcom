@@ -2,10 +2,12 @@ import React, { useRef } from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
 import { AccordionHeader } from '@radix-ui/react-accordion';
 import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
+import { usePostHog } from 'posthog-js/react';
 import Clientes from './Clientes';
 import { useAccordionScroll } from '../hooks/useAccordionScroll';
 
 const Hero = () => {
+  const posthog = usePostHog();
   const { contentRef, headerRef } = useAccordionScroll();
 
   return (
@@ -13,6 +15,13 @@ const Hero = () => {
       value="Hero"
       className="HeroAccordion NavigationBarScrollOffset"
       id="hero"
+      onValueChange={(open) => {
+        if (open) {
+          posthog?.capture('hero_expand');
+        } else {
+          posthog?.capture('hero_collapse');
+        }
+      }}
     >
       <AccordionHeader ref={headerRef} className="NavigationBarScrollOffset">
         <section>
