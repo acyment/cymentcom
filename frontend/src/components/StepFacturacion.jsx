@@ -3,6 +3,7 @@ import { Field, ErrorMessage, useFormikContext } from 'formik';
 import { useWizard } from 'react-formik-step-wizard';
 import { Tooltip } from 'react-tooltip';
 import axios from 'axios';
+import { usePostHog } from 'posthog-js/react';
 import CustomErrorMessage from './CustomErrorMessage';
 
 const paises = [
@@ -793,6 +794,7 @@ const paises = [
 ];
 
 const StepFacturacion = ({ idCurso }) => {
+  const posthog = usePostHog();
   const { values: valuesCurrentStep } = useFormikContext();
   const {
     goToPreviousStep,
