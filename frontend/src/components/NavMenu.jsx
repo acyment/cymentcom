@@ -29,6 +29,7 @@ const NavMenu = () => {
               href={item.href}
               onMouseEnter={() => setActiveItem(index)}
               onMouseLeave={() => setActiveItem(null)}
+              onClick={() => trackSectionView(item.text.toLowerCase())}
             >
               <RoughNotation
                 type="circle"
