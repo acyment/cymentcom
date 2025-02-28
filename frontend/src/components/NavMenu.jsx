@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { usePostHog } from 'posthog-js/react';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { RoughNotation } from 'react-rough-notation';
 
 const NavMenu = () => {
+  const posthog = usePostHog();
   const [activeItem, setActiveItem] = useState(null);
 
   const menuItems = [
@@ -14,9 +16,7 @@ const NavMenu = () => {
   ];
 
   const trackSectionView = (section) => {
-    if (window.posthog) {
-      window.posthog.capture('nav_click', { section });
-    }
+    posthog?.capture('nav_click', { section });
   };
 
   return (
