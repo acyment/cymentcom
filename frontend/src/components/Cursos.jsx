@@ -94,7 +94,17 @@ const Cursos = () => {
                   {tipoCurso.resumen_una_linea}
                 </p>
               </div>
-              <span className="CircleButton CircleButtonCursos" />
+              <span 
+                className="CircleButton CircleButtonCursos" 
+                onClick={(e) => {
+                  // Only send event if we're expanding (not collapsing)
+                  if (selectedCourse !== tipoCurso.nombre_corto) {
+                    window.posthog?.capture('More info on training', {
+                      training: tipoCurso.nombre_completo
+                    });
+                  }
+                }}
+              />
             </ToggleGroup.Item>
           ))}
         </ToggleGroup.Root>
