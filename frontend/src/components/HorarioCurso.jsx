@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
+import { usePostHog } from 'posthog-js/react';
 
 import Inscripcion from './Inscripcion';
 import { Dialog, Portal } from '@ark-ui/react';
@@ -8,6 +9,7 @@ const HorarioCurso = ({ proximosCursos }) => {
   const header = document.querySelector('header');
   const [proximoCurso, setProximoCurso] = useState(null);
   const [fechaCurso, setFechaCurso] = useState(null);
+  const posthog = usePostHog();
 
   useEffect(() => {
     if (proximosCursos) {
@@ -137,6 +139,11 @@ const HorarioCurso = ({ proximosCursos }) => {
           <Dialog.Trigger asChild>
             <button 
               className="BotonInscripcion"
+              onClick={() => {
+                if (proximoCurso?.id) {
+                  posthog.capture('Boton inscripcion ' + proximoCurso.id);
+                }
+              }}
             >
               Inscribirme
             </button>
