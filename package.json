@@ -48,6 +48,7 @@
     "axios": "^1.7.9",
     "formik": "^2.4.6",
     "formik-wizard-form": "^2.1.0",
+    "framer-motion": "^10.16.4",
     "js-cookie": "^3.0.5",
     "html-react-parser": "^5.2.2",
     "intl-dateformat": "^0.1.4",

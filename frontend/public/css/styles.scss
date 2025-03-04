@@ -1014,8 +1014,24 @@ h2 {
   padding: 0;
 }
 
-.FieldErrorMessage {
-  color: red;
+.FieldErrorMsg {
+  color: #ff6b6b;
+  font-size: 0.9vw;
+  margin-top: -8px;
+  margin-bottom: 4px;
+  font-weight: 400;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 // Define a variable for the placeholder color
 $placeholder-color: #cccccc;
