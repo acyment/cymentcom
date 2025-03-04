@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { usePostHog } from 'posthog-js/react';
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import DetalleCurso from './DetalleCurso';
 import 'keen-slider/keen-slider.min.css';
@@ -12,6 +13,7 @@ const Cursos = () => {
   const refListaCursos = useRef(null);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [triggerScroll, setTriggerScroll] = useState(false);
+  const posthog = usePostHog();
   const [sliderRef, instanceRef] = useKeenSlider(
     {
       slideChanged() {},
@@ -42,6 +44,12 @@ const Cursos = () => {
   }, []);
 
   const updateSelectedItem = (value) => {
+    // Track expansion only when changing from null or different course
+    if (value && value !== selectedCourse) {
+      const courseName = tiposCurso[value]?.nombre_completo || '';
+      posthog.capture('More info on training ' + courseName);
+    }
+    
     setSelectedCourse(value); // Update selected item
     setTriggerScroll(true); // Set trigger to true to initiate scroll in useEffect
   };
@@ -97,12 +105,8 @@ const Cursos = () => {
               <span 
                 className="CircleButton CircleButtonCursos" 
                 onClick={(e) => {
-                  // Only send event if we're expanding (not collapsing)
-                  if (selectedCourse !== tipoCurso.nombre_corto) {
-                    window.posthog?.capture('More info on training', {
-                      training: tipoCurso.nombre_completo
-                    });
-                  }
+                  // Prevent event bubbling to ToggleGroup.Item
+                  e.stopPropagation();
                 }}
               />
             </ToggleGroup.Item>
