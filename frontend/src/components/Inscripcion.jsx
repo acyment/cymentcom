@@ -43,9 +43,8 @@ const Inscripcion = ({ idCurso }) => {
         pais: Yup.string().required('No te olvides del país'),
         nombreCompleto: Yup.string().required('No te olvides del nombre'),
         identificacionFiscal: Yup.string().when('pais', {
-          is: 'AR',
-          then: Yup.string().required('No te olvides del CUIT'),
-          otherwise: Yup.string(),
+          is: (pais) => pais === 'AR',
+          then: (schema) => schema.required('No te olvides del CUIT'),
         }),
       }),
       // onSubmit: () => trackFunnelStep('Billing Info'),
@@ -64,7 +63,7 @@ const Inscripcion = ({ idCurso }) => {
       <div className="HeaderModal">
         <FormStepper activeStep={stepNumber} labels={stepLabels} />
         <Dialog.CloseTrigger asChild>
-          <button className="close-button" aria-label="Close">
+          <button className="close-button" aria-label="Close" tabIndex={-1}>
             ×
           </button>
         </Dialog.CloseTrigger>

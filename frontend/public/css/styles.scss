@@ -950,8 +950,8 @@ h2 {
 /* Desktops and larger screens */
 @media only screen and (min-width: 1024px) {
   .DialogContent {
-    width: 55vw;
-    max-width: 55vw;
+    width: 65vw;
+    max-width: 65vw;
   }
 }
 
@@ -1050,11 +1050,30 @@ h2 {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
+  outline: none; /* Remove default focus outline */
 }
 
 .close-button:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* Focus state styling */
+.close-button:focus {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 0 0 2px white,
+    0 0 0 4px rgba(111, 76, 255, 0.5);
+  transform: scale(1.1);
+}
+
+/* Focus-visible for better accessibility */
+.close-button:focus-visible {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 0 0 2px white,
+    0 0 0 4px rgba(111, 76, 255, 0.5);
+  transform: scale(1.1);
 }
 
 .DialogDescription {
@@ -1096,17 +1115,21 @@ form {
 
 label {
   display: block;
-  margin-bottom: 6px;
-  font-size: 1.2vw;
-  color: #555;
+  margin-bottom: 8px;
+  font-size: 0.8vw;
+  color: #333;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .form-control {
   width: 100%;
   padding: 12px 15px;
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1.2vw;
+  background-color: #f9f9f9;
   transition:
     border 0.2s,
     box-shadow 0.2s;
@@ -1388,12 +1411,24 @@ select,
   font-size: 1.125rem;
 }
 
-.BotonFormulario:hover {
+.BotonFormulario:hover:not(:focus) {
   background-color: #5b42d5; /* A slightly darker purple that complements your brand color */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
-  transform: translateY(
-    -2px
-  ); /* Subtle lift effect *
+  transform: translateY(-2px); /* Subtle lift effect */
+}
+
+.BotonFormulario:focus {
+  /* Add a distinct outline for keyboard focus */
+  outline: 3px solid #4d90fe; /* Use a color that contrasts well with your button */
+  outline-offset: 2px; /* Give some space between the button and the outline */
+  box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.5); /* Optional: add a subtle glow effect */
+}
+
+/* Make sure the focus state is visible even if there are other styles */
+.BotonFormulario:focus-visible {
+  outline: 3px solid #4d90fe;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.5);
 }
 
 .BotonIzquierda {
