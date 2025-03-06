@@ -3,21 +3,17 @@ import { usePostHog } from 'posthog-js/react';
 import { Dialog } from '@ark-ui/react';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
-import { Wizard } from 'react-formik-step-wizard';
+import { useWizard, Wizard } from 'react-formik-step-wizard';
 import StepParticipantes from './StepParticipantes';
 import StepFacturacion from './StepFacturacion';
 import StepPago from './StepPago';
 import * as Yup from 'yup';
+import FormStepper from './FormStepper';
 
 export const AppContext = React.createContext({});
 
 const Inscripcion = ({ idCurso }) => {
   const posthog = usePostHog();
-  const [preferenceId, setPreferenceId] = useState(null);
-  const [mostrarMercadoPago, setMostrarMercadoPago] = useState(false);
-  const [mostrarStripe, setMostrarStripe] = useState(false);
-  const [disablePayButton, setDisablePayButton] = useState(false);
-  const [country, setCountry] = useState('');
 
   // Track funnel start
   useEffect(() => {
@@ -25,21 +21,7 @@ const Inscripcion = ({ idCurso }) => {
   }, [idCurso]);
 
   const trackFunnelStep = (step) => {
-    // Umami will track this automatically via data-umami-event attributes
-  };
-
-  const countryWasSelected = (selectedCountry) => {
-    setCountry(selectedCountry);
-    if (selectedCountry === 'AR') {
-      setMostrarMercadoPago(true);
-      setMostrarStripe(false);
-      // Umami will track this automatically via data-umami-event attributes
-    } else {
-      setMostrarMercadoPago(false);
-      setMostrarStripe(true);
-      // Umami will track this automatically via data-umami-event attributes
-    }
-    handleInputChange();
+    posthog?.capture(step);
   };
 
   const steps = [
@@ -52,7 +34,7 @@ const Inscripcion = ({ idCurso }) => {
         email: Yup.string().required('No te olvides del e-mail'),
       }),
       hidePrevious: true,
-      onSubmit: () => trackFunnelStep('Participant Info'),
+      // onSubmit: () => trackFunnelStep('Participant Info'),
     },
     {
       id: 'StepFacturacion',
@@ -66,29 +48,36 @@ const Inscripcion = ({ idCurso }) => {
           otherwise: Yup.string(),
         }),
       }),
-      onSubmit: () => trackFunnelStep('Billing Info'),
+      // onSubmit: () => trackFunnelStep('Billing Info'),
     },
     {
       id: 'StepPago',
       component: <StepPago idCurso={idCurso} />,
-      onSubmit: () => trackFunnelStep('Payment'),
+      // onSubmit: () => trackFunnelStep('Payment'),
     },
   ];
+
+  function Header() {
+    const { stepNumber } = useWizard();
+    const stepLabels = ['Participante', 'Facturación', 'Pago'];
+    return (
+      <div className="HeaderModal">
+        <FormStepper activeStep={stepNumber} labels={stepLabels} />
+        <Dialog.CloseTrigger asChild>
+          <button className="close-button" aria-label="Close">
+            ×
+          </button>
+        </Dialog.CloseTrigger>
+      </div>
+    );
+  }
 
   return (
     <ScrollArea.Root>
       <ScrollArea.Viewport>
         <div className="ContenedorModal">
-          <div>
-            <Dialog.Title className="DialogTitle">Inscripción</Dialog.Title>
-            <Wizard steps={steps} />
-          </div>
+          <Wizard steps={steps} header={<Header />} />
         </div>
-        <Dialog.CloseTrigger asChild>
-          <button className="IconButton" aria-label="Close">
-            <Cross2Icon />
-          </button>
-        </Dialog.CloseTrigger>
       </ScrollArea.Viewport>
       <ScrollArea.Scrollbar
         className="ScrollAreaScrollbar"
