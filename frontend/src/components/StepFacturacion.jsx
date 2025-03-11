@@ -5,6 +5,7 @@ import { Tooltip } from 'react-tooltip';
 import axios from 'axios';
 import { usePostHog } from 'posthog-js/react';
 import CustomErrorMessage from './CustomErrorMessage';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 
 const paises = [
   {
@@ -846,69 +847,113 @@ const StepFacturacion = ({ idCurso }) => {
       });
   };
   return (
-    <Fragment>
-      <p className="TituloStep">Datos para facturación</p>
-      <div className="Fieldset">
-        <Field name="pais" as="select" className="Input" autofocus>
-          <option value="">País*</option>
-          {paises.map((pais) => (
-            <option key={pais.value} value={pais.value}>
-              {pais.label}
-            </option>
-          ))}
-        </Field>
-        <ErrorMessage name="pais" className="FieldErrorMsg" />
-        <Field
-          name="nombreCompleto"
-          placeholder="Nombre Completo*"
-          type="text"
-          className="Input"
-        />
-        <ErrorMessage name="nombreCompleto" className="FieldErrorMsg" />
-
-        <Field
-          name="identificacionFiscal"
-          placeholder={paisEsArgentina ? 'CUIT*' : 'Identificación'}
-          type="text"
-          data-tooltip-id="my-tooltip"
-          data-tooltip-content="Ingrese identificación fiscal (RUT, RUC, etc) o personal (cédula, documento, pasaporte) tal como deseas que aparezca en la factura"
-          className="Input"
-        />
-        <ErrorMessage name="identificacionFiscal" className="FieldErrorMsg" />
-        <Tooltip id="my-tooltip" />
-        <Field
-          name="direccion"
-          placeholder="Dirección"
-          type="text"
-          className="Input"
-        />
-        <Field
-          name="telefono"
-          placeholder="Teléfono"
-          type="text"
-          className="Input"
-        />
-        <div className="DosBotonesFormulario">
-          <button
-            type="button"
-            className="BotonFormulario BotonIzquierda"
-            onClick={() => {
-              posthog?.capture('back_to_participants');
-              goToPreviousStep();
-            }}
-          >
-            Participantes
-          </button>
-          <button
-            type={paisEsArgentina ? 'submit' : 'button'}
-            className="BotonFormulario BotonDerecha"
-            onClick={paisEsArgentina ? () => {} : submitPagoStripe}
-          >
-            Pago
-          </button>
+    <div className="form-container">
+      <h3 className="form-title">Datos para facturación</h3>
+      <div className="form-row">
+        <div className="form-group full-width">
+          <label htmlFor="NombreCompleto">Nombre completo*</label>
+          <Field
+            id="nombreCompleto"
+            name="nombreCompleto"
+            type="text"
+            className="form-control"
+            autoFocus={true}
+          />
+          <CustomErrorMessage name="nombreCompleto" />
         </div>
       </div>
-    </Fragment>
+      <div className="form-row">
+        <div className="form-group">
+          <label htmlFor="Pais">País*</label>
+          <Field id="pais" name="pais" as="select" className="form-control">
+            <option value="">País*</option>
+            {paises.map((pais) => (
+              <option key={pais.value} value={pais.value}>
+                {pais.label}
+              </option>
+            ))}
+          </Field>
+          <CustomErrorMessage name="pais" />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Estado">Estado/Región</label>
+          <Field
+            id="estado"
+            name="estado"
+            type="text"
+            className="form-control"
+          />
+        </div>
+      </div>
+      <div className="form-row">
+        <div className="form-group">
+          <label htmlFor="Ciudad">Ciudad</label>
+          <Field
+            id="ciudad"
+            name="ciudad"
+            type="text"
+            className="form-control"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Direccion">Dirección</label>
+          <Field
+            id="direccion"
+            name="direccion"
+            type="text"
+            className="form-control"
+          />
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label htmlFor="IdentificacionFiscal">
+            {paisEsArgentina ? 'CUIT*' : 'Identificación'}
+          </label>
+          <Field
+            id="identificacionFiscal"
+            name="identificacionFiscal"
+            type="text"
+            data-tooltip-id="my-tooltip"
+            data-tooltip-content="Ingrese identificación fiscal (RUT, RUC, etc) o personal (cédula, documento, pasaporte) tal como deseas que aparezca en la factura"
+            className="form-control"
+          />
+          <ErrorMessage name="identificacionFiscal" className="FieldErrorMsg" />
+          <Tooltip id="my-tooltip" />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Telefono">Teléfono</label>
+          <Field
+            id="telefono"
+            name="telefono"
+            type="text"
+            className="form-control"
+          />
+        </div>
+      </div>
+      <div className="DosBotonesFormulario">
+        <button
+          type="button"
+          className="BotonFormulario BotonVolver"
+          onClick={() => {
+            posthog?.capture('back_to_participants');
+            goToPreviousStep();
+          }}
+        >
+          <ArrowLeft />
+          Volver{'  '}
+        </button>
+        <button
+          type={paisEsArgentina ? 'submit' : 'button'}
+          className="BotonFormulario BotonContinuar"
+          onClick={paisEsArgentina ? () => {} : submitPagoStripe}
+        >
+          Continuar
+          <ArrowRight />
+        </button>
+      </div>
+    </div>
   );
 };
 

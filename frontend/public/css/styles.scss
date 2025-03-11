@@ -1149,10 +1149,6 @@ label {
 @media (orientation: portrait) {
   .form-row {
     display: block;
-    width: 100%;
-  }
-  .BotonFormulario.UnicoBotonSiguiente {
-    width: 100%;
   }
 }
 
@@ -1385,74 +1381,93 @@ select,
 }
 
 .BotonFormulario {
-  background-color: $azul-violaceo;
-  color: white;
   border-radius: 12px; /* Increased roundness */
   font-size: 1rem; /* Fixed size instead of viewport-based */
   padding: 0.8rem 1.2rem; /* More padding for better touch target */
   font-weight: 500; /* Slightly bolder */
   cursor: pointer;
-  flex: 0 0 auto; /* Don't stretch the button */
   transition:
     background-color 0.2s,
     transform 0.1s; /* Smooth hover effects */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px; /* Space between text and icon */
-  width: 100%;
   display: flex;
-  justify-content: space-between; /* Text on left, arrow on right */
   padding-left: 2rem;
   padding-right: 2rem;
   letter-spacing: 0.5px;
   font-weight: 500;
   font-size: 1.125rem;
+  min-width: 12rem; /* Set a minimum width */
+  width: auto; /* Allow natural width based on content */
+}
+
+.BotonVolver {
+  background-color: transparent;
+  color: #6c5ce7;
+  border: 1px solid #6c5ce7;
+}
+
+.BotonContinuar {
+  background-color: $azul-violaceo;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.BotonVolver:hover:not(:focus) {
+  background-color: rgba(108, 92, 231, 0.1);
+}
+
+.BotonContinuar:hover:not(:focus) {
+  background-color: #5b42d5; /* A slightly darker purple that complements your brand color */
 }
 
 .BotonFormulario:hover:not(:focus) {
-  background-color: #5b42d5; /* A slightly darker purple that complements your brand color */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
   transform: translateY(-2px); /* Subtle lift effect */
 }
 
 .BotonFormulario:focus {
   /* Add a distinct outline for keyboard focus */
-  outline: 3px solid #4d90fe; /* Use a color that contrasts well with your button */
   outline-offset: 2px; /* Give some space between the button and the outline */
+}
+
+.BotonContinuar:focus {
+  /* Add a distinct outline for keyboard focus */
+  outline: 3px solid #4d90fe; /* Use a color that contrasts well with your button */
   box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.5); /* Optional: add a subtle glow effect */
 }
 
 /* Make sure the focus state is visible even if there are other styles */
 .BotonFormulario:focus-visible {
-  outline: 3px solid #4d90fe;
   outline-offset: 2px;
+}
+
+/* Make sure the focus state is visible even if there are other styles */
+.BotonFormulario:focus-visible {
+  outline: 3px solid #4d90fe;
   box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.5);
-}
-
-.BotonIzquierda {
-  margin-right: 1.8vw;
-}
-
-.BotonDerecha {
-  margin-left: 1.8vw;
 }
 
 .BotonFormulario:hover {
   filter: brightness(1.5); /* Increase brightness by 50% */
 }
 
-.UnicoBotonSiguiente {
-  align-self: flex-end;
+.UnicoBotonSiguiente,
+.DosBotonesFormulario {
+  margin-left: auto;
+  margin-right: 0;
+  width: auto;
   margin-top: 20px; /* Add some space above the button */
 }
 
 .DosBotonesFormulario {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: flex-end;
+  gap: 1.8vw;
 }
+
 .BotonPagarConMercadoPago {
   width: 3vw;
 }
@@ -1551,4 +1566,8 @@ select,
   border-radius: 16px;
   background-color: #0a66c2;
   font-family: 'SF Pro Text', Helvetica, sans-serif;
+}
+
+.hidden {
+  visibility: hidden;
 }

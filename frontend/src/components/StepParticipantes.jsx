@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { usePostHog } from 'posthog-js/react';
 import { Field, useFormikContext } from 'formik'; // Import useFormikContext
 import CustomErrorMessage from './CustomErrorMessage';
+import { ArrowRight } from 'lucide-react';
 
 const StepParticipantes = () => {
   const posthog = usePostHog();
@@ -83,25 +84,20 @@ const StepParticipantes = () => {
         </div>
       </div>
 
+      <div className="form-row hidden">
+        <div className="form-group">
+          <label>Hidden</label>
+          <span className="form-control" />
+        </div>
+      </div>
       <button
-        className="BotonFormulario UnicoBotonSiguiente"
+        className="BotonFormulario UnicoBotonSiguiente BotonContinuar"
         type="button" // Changed from "submit" to "button"
         disabled={isSubmitting}
         onClick={handleSubmit} // Use our custom handler
       >
         Continuar
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M8 0L6.59 1.41L12.17 7H0V9H12.17L6.59 14.59L8 16L16 8L8 0Z"
-            fill="white"
-          />
-        </svg>
+        <ArrowRight />
       </button>
     </div>
   );
