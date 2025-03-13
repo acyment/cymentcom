@@ -90,7 +90,7 @@ class InscribirParticipanteEnCurso(APIView):
                 rol=rol,
             )
 
-            monto = curso.costo_usd if pago_en_dolares else curso.costo_ars
+            monto = curso.tipo.costo_usd if pago_en_dolares else curso.tipo.costo_ars
 
             factura = Factura.objects.create(
                 monto=monto,
