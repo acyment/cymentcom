@@ -797,11 +797,7 @@ const paises = [
 const StepFacturacion = ({ idCurso }) => {
   const posthog = usePostHog();
   const { values: valuesCurrentStep } = useFormikContext();
-  const {
-    goToPreviousStep,
-    activeStep,
-    values: valuesPreviousSteps,
-  } = useWizard();
+  const { goToPreviousStep, values: valuesPreviousSteps } = useWizard();
   const [paisEsArgentina, setPaisEsArgentina] = useState(null);
 
   useEffect(() => {
@@ -829,6 +825,7 @@ const StepFacturacion = ({ idCurso }) => {
         const idFactura = response.data.id_factura;
         axios
           .post('/api/create-stripe-checkoutsession/', {
+            allow_promotion_codes: true,
             id_factura: idFactura, // Pass the id_factura as a parameter
           })
           .then((response) => {
@@ -919,7 +916,7 @@ const StepFacturacion = ({ idCurso }) => {
             data-tooltip-content="Ingrese identificación fiscal (RUT, RUC, etc) o personal (cédula, documento, pasaporte) tal como deseas que aparezca en la factura"
             className="form-control"
           />
-          <ErrorMessage name="identificacionFiscal" className="FieldErrorMsg" />
+          <CustomErrorMessage name="identificacionFiscal" />
           <Tooltip id="my-tooltip" />
         </div>
         <div className="form-group">
