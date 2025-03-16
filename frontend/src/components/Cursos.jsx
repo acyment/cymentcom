@@ -46,10 +46,10 @@ const Cursos = () => {
   const updateSelectedItem = (value) => {
     // Track expansion only when changing from null or different course
     if (value && value !== selectedCourse) {
-      const courseName = tiposCurso[value]?.nombre_completo || '';
+      const courseName = tiposCurso[value]?.nombre_corto || '';
       posthog.capture('More info on training ' + courseName);
     }
-    
+
     setSelectedCourse(value); // Update selected item
     setTriggerScroll(true); // Set trigger to true to initiate scroll in useEffect
   };
@@ -102,13 +102,7 @@ const Cursos = () => {
                   {tipoCurso.resumen_una_linea}
                 </p>
               </div>
-              <span 
-                className="CircleButton CircleButtonCursos" 
-                onClick={(e) => {
-                  // Prevent event bubbling to ToggleGroup.Item
-                  e.stopPropagation();
-                }}
-              />
+              <span className="CircleButton CircleButtonCursos" />
             </ToggleGroup.Item>
           ))}
         </ToggleGroup.Root>
