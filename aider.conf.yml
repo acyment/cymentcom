@@ -147,7 +147,7 @@
 # Cache settings:
 
 ## Enable caching of prompts (default: False)
-#cache-prompts: false
+cache-prompts: true
 
 ## Number of times to ping at 5min intervals to keep prompt cache warm (default: 0)
 #cache-keepalive-pings: false
@@ -174,7 +174,7 @@
 #chat-history-file: .aider.chat.history.md
 
 ## Restore the previous chat history messages (default: False)
-#restore-chat-history: false
+restore-chat-history: true
 
 ## Log the conversation with the LLM to this file (for example, .aider.llm.history)
 #llm-history-file: xxx
@@ -224,9 +224,6 @@
 ## Set the markdown code theme (default: default, other options include monokai, solarized-dark, solarized-light, or a Pygments builtin style, see https://pygments.org/styles for available themes)
 #code-theme: default
 
-## Show diffs when committing changes (default: False)
-#show-diffs: false
-
 ###############
 # Git settings:
 
@@ -243,7 +240,6 @@
 #subtree-only: false
 
 ## Enable/disable auto commit of LLM changes (default: True)
-#auto-commits: true
 
 ## Enable/disable commits when repo is found dirty (default: True)
 #dirty-commits: true
@@ -347,7 +343,7 @@
 #gui: false
 
 ## Enable automatic copy/paste of chat between aider and web UI (default: False)
-#copy-paste: false
+copy-paste: true
 
 ## Apply the changes from the given file instead of running the chat (debug)
 #apply: xxx
