@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePostHog } from 'posthog-js/react';
 import { Dialog } from '@ark-ui/react';
-import { Cross2Icon } from '@radix-ui/react-icons';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
 import { useWizard, Wizard } from 'react-formik-step-wizard';
 import StepParticipantes from './StepParticipantes';
