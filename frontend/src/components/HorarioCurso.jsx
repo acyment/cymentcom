@@ -105,13 +105,13 @@ const HorarioCurso = ({ proximosCursos }) => {
             <br />
             al{' '}
             {proximoCurso &&
-              formatDate(
-                fechaCurso.getDate() + proximoCurso.cantidad_dias - 1,
-                'dddd DD',
-                {
-                  locale: 'es-AR',
-                },
-              )}{' '}
+              (() => {
+                const endDate = new Date(fechaCurso);
+                endDate.setDate(
+                  fechaCurso.getDate() + proximoCurso.cantidad_dias - 1,
+                );
+                return formatDate(endDate, 'dddd DD', { locale: 'es-AR' });
+              })()}{' '}
             de{' '}
             {proximoCurso &&
               formatDate(fechaCurso, 'MMMM', { locale: 'es-AR' }) +
@@ -137,7 +137,7 @@ const HorarioCurso = ({ proximosCursos }) => {
           closeOnInteractOutside={false}
         >
           <Dialog.Trigger asChild>
-            <button 
+            <button
               className="BotonInscripcion"
               onClick={() => {
                 if (proximoCurso?.id) {
@@ -167,13 +167,11 @@ const HorarioCurso = ({ proximosCursos }) => {
         a{' '}
         {proximoCurso &&
           formatDate(
-            fechaCurso.setDate(
+            new Date(fechaCurso.getTime()).setDate(
               fechaCurso.getDate() + proximoCurso.cantidad_dias - 1,
             ),
             'dddd',
-            {
-              locale: 'es-AR',
-            },
+            { locale: 'es-AR' },
           )}{' '}
         en {proximoCurso && proximoCurso.cantidad_dias} sesiones diarias de{' '}
         {proximoCurso &&
