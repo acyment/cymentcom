@@ -1,11 +1,12 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Field, ErrorMessage, useFormikContext } from 'formik';
 import { useWizard } from 'react-formik-step-wizard';
-import { Tooltip } from 'react-tooltip';
 import axios from 'axios';
 import { usePostHog } from 'posthog-js/react';
 import CustomErrorMessage from './CustomErrorMessage';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Info } from 'lucide-react';
+import FieldWithInfo from './FieldWithInfo';
+import CircleLoader from 'react-spinners/ClipLoader';
 
 const paises = [
   {
@@ -796,7 +797,7 @@ const paises = [
 
 const StepFacturacion = ({ idCurso }) => {
   const posthog = usePostHog();
-  const { values: valuesCurrentStep } = useFormikContext();
+  const { values: valuesCurrentStep, touched, errors } = useFormikContext();
   const { goToPreviousStep, values: valuesPreviousSteps } = useWizard();
   const [paisEsArgentina, setPaisEsArgentina] = useState(null);
 
@@ -849,12 +850,12 @@ const StepFacturacion = ({ idCurso }) => {
       <div className="form-row">
         <div className="form-group full-width">
           <label htmlFor="NombreCompleto">Nombre completo*</label>
-          <Field
-            id="nombreCompleto"
+          <FieldWithInfo
             name="nombreCompleto"
             type="text"
             className="form-control"
             autoFocus={true}
+            tooltip="Nombre de la persona jurídica para organizaciones o el nombre completo del participante en el caso de individuos"
           />
           <CustomErrorMessage name="nombreCompleto" />
         </div>
@@ -908,16 +909,23 @@ const StepFacturacion = ({ idCurso }) => {
           <label htmlFor="IdentificacionFiscal">
             {paisEsArgentina ? 'CUIT*' : 'Identificación'}
           </label>
-          <Field
-            id="identificacionFiscal"
-            name="identificacionFiscal"
-            type="text"
-            data-tooltip-id="my-tooltip"
-            data-tooltip-content="Ingrese identificación fiscal (RUT, RUC, etc) o personal (cédula, documento, pasaporte) tal como deseas que aparezca en la factura"
-            className="form-control"
-          />
+          {paisEsArgentina ? (
+            <Field
+              id="identificacionFiscal"
+              name="identificacionFiscal"
+              type="text"
+              className="form-control"
+            />
+          ) : (
+            <FieldWithInfo
+              id="identificacionFiscal"
+              name="identificacionFiscal"
+              type="text"
+              className="form-control"
+              tooltip="Identificación fiscal (RUC, RUT, etc. según corresponda) o identificación personal"
+            />
+          )}
           <CustomErrorMessage name="identificacionFiscal" />
-          <Tooltip id="my-tooltip" />
         </div>
         <div className="form-group">
           <label htmlFor="Telefono">Teléfono</label>

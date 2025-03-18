@@ -5,6 +5,7 @@ import DetalleCurso from './DetalleCurso';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
 import axios from 'axios';
+import CircleLoader from 'react-spinners/ClipLoader';
 
 const Cursos = () => {
   const [tiposCurso, setTiposCurso] = useState([]);
