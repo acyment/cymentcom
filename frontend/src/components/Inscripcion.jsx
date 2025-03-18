@@ -74,12 +74,14 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
     const { activeStep } = useWizard();
     return (
       <div className="form-container">
-        <div className="form-row">
-          Curso elegido: {nombreCorto}
-          <br />
-          Costo USD: {costoUSD}
-          <br />
-          Costo ARS: {costoARS}
+        <div className="CursoInfo">
+          <span>Curso elegido: {nombreCorto}</span>
+
+          <div className="CostoCursoInfo">
+            <span>Costo USD: {costoUSD}</span>
+
+            <span>Costo ARS: {costoARS}</span>
+          </div>
         </div>
         {activeStep.component}
       </div>
