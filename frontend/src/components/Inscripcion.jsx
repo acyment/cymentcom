@@ -26,7 +26,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
   const steps = [
     {
       id: 'StepParticipantes',
-      component: <StepParticipantes curso={curso} />,
+      component: <StepParticipantes idCurso={idCurso} />,
       validationSchema: Yup.object({
         nombre: Yup.string().required('No te olvides del nombre'),
         apellido: Yup.string().required('No te olvides del apellido'),
@@ -37,7 +37,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
     },
     {
       id: 'StepFacturacion',
-      component: <StepFacturacion curso={curso} />,
+      component: <StepFacturacion idCurso={idCurso} />,
       validationSchema: Yup.object({
         pais: Yup.string().required('No te olvides del país'),
         nombreCompleto: Yup.string().required('No te olvides del nombre'),
@@ -50,7 +50,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
     },
     {
       id: 'StepPago',
-      component: <StepPago curso={curso} />,
+      component: <StepPago idCurso={idCurso} />,
       // onSubmit: () => trackFunnelStep('Payment'),
     },
   ];
@@ -75,8 +75,10 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
     return (
       <div className="form-container">
         <div className="form-row">
-          Curso elegido: {nombreCorto}<br />
-          Costo USD: {costoUSD}<br />
+          Curso elegido: {nombreCorto}
+          <br />
+          Costo USD: {costoUSD}
+          <br />
           Costo ARS: {costoARS}
         </div>
         {activeStep.component}
@@ -90,11 +92,13 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
         <div className="ContenedorModal">
           <Wizard
             steps={steps}
-            wrapper={<StepWrapper 
-              nombreCorto={nombreCorto}
-              costoUSD={costoUSD}
-              costoARS={costoARS}
-            />}
+            wrapper={
+              <StepWrapper
+                nombreCorto={nombreCorto}
+                costoUSD={costoUSD}
+                costoARS={costoARS}
+              />
+            }
             header={<Header />}
           />
         </div>
