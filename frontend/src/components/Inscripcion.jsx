@@ -77,10 +77,10 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
     const [paisEsArgentina, setPaisEsArgentina] = useState(null);
 
     useEffect(() => {
-      // Use optional chaining and nullish coalescing for cleaner code
-      const selectedPais = values.StepFacturacion?.pais ?? null;
+      // Get country value directly from form state
+      const selectedPais = values.pais ?? null;
       setPaisEsArgentina(selectedPais === 'AR');
-    }, [values.StepFacturacion?.pais]); // Track direct dependency
+    }, [values.pais]); // Track pais field changes
 
     return (
       <div className="form-container">
