@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Field, ErrorMessage, useFormikContext } from 'formik';
 import { useWizard } from 'react-formik-step-wizard';
 import axios from 'axios';
@@ -845,7 +845,7 @@ const StepFacturacion = ({ curso }) => {
       });
   };
   return (
-    <div className="form-container">
+    <Fragment>
       <h3 className="form-title">Datos para facturación</h3>
       <div className="form-row">
         <div className="form-group full-width">
@@ -958,7 +958,7 @@ const StepFacturacion = ({ curso }) => {
           <ArrowRight />
         </button>
       </div>
-    </div>
+    </Fragment>
   );
 };
 
