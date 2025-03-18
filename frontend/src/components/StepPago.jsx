@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { usePostHog } from 'posthog-js/react';
 import axios from 'axios';
 import {
@@ -15,6 +15,7 @@ const mercadopago = initMercadoPago(process.env.MP_PUBLIC_KEY, {
 const inicializacionMercadoPago = {
   amount: 100,
 };
+
 const customizacionMercadoPago = {
   visual: {
     hideFormTitle: true,
@@ -28,11 +29,13 @@ const StepPago = ({ idCurso }) => {
   const posthog = usePostHog();
   const { values, goToPreviousStep } = useWizard();
   const pagoEnArgentina = values.StepFacturacion.pais === 'AR';
-
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [mercadoPagoPaymentID, setMercadoPagoPaymentID] = useState(null);
 
   const onMercadoPagoSubmit = async (param) => {
-    console.log(param);
+    setIsLoading(true);
+    setErrorMessage(null);
     return new Promise((resolve, reject) => {
       axios
         .post('/api/cursos/' + idCurso + '/inscripciones/', {
@@ -72,34 +75,91 @@ const StepPago = ({ idCurso }) => {
                 headers: {
                   'Content-Type': 'application/json',
                 },
-              },
+              }
             )
             .then((response) => {
               setMercadoPagoPaymentID(response.data.id);
+              setIsLoading(false);
               // Receive the payment result
               resolve(response.data);
             })
             .catch((error) => {
-              // TODO: Instalar framework de logging?
-              console.log(error);
+              setIsLoading(false);
+              // Extract error message from response
+              const errorMsg =
+                error.response?.data?.message ||
+                error.response?.data?.error ||
+                'Error al procesar el pago. Por favor, intente nuevamente.';
+              setErrorMessage(errorMsg);
+              console.error('Error processing payment:', error);
               // Handle the error response when attempting to create the payment
               reject(error);
             });
         })
         .catch((error) => {
-          console.log(error);
-          // Handle the error response when attempting to create the inscription
+          setIsLoading(false);
+          // Extract error message from response
+          console.log('Error response data:', error.response?.data);
+          const errorMsg =
+            error.response?.data?.error ||
+            error.response?.data?.message ||
+            error.response?.data ||
+            'Error al crear la inscripción. Por favor, intente nuevamente.';
+          setErrorMessage(errorMsg);
+          console.error('Error processing payment:', error);
           reject(error);
         });
     });
   };
 
+  const retryPayment = () => {
+    setErrorMessage(null);
+    // Reset any necessary state to allow the user to try again
+  };
+
   return (
     <div style={{ flexShrink: 0 }}>
       <p className="TituloStep">Pago</p>
-      {pagoEnArgentina && (
+      {errorMessage && (
+        <div
+          className="ErrorMessage"
+          style={{
+            backgroundColor: '#FFF1F0',
+            color: '#CF1322',
+            padding: '12px 16px',
+            borderRadius: '4px',
+            marginBottom: '16px',
+            border: '1px solid #FFA39E',
+          }}
+        >
+          <p>
+            <strong>Error:</strong> {errorMessage}
+          </p>
+          <button
+            onClick={retryPayment}
+            style={{
+              backgroundColor: '#ffffff',
+              border: '1px solid #CF1322',
+              color: '#CF1322',
+              padding: '4px 12px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginTop: '8px',
+            }}
+          >
+            Intentar nuevamente
+          </button>
+        </div>
+      )}
+      {isLoading && (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <p>Procesando su pago...</p>
+          {/* You could add a spinner here */}
+        </div>
+      )}
+      {pagoEnArgentina && !isLoading && (
         <div>
-          {!mercadoPagoPaymentID && (
+          {!mercadoPagoPaymentID && !errorMessage && (
             <CardPayment
               onSubmit={onMercadoPagoSubmit}
               initialization={inicializacionMercadoPago}
@@ -120,6 +180,7 @@ const StepPago = ({ idCurso }) => {
           goToPreviousStep();
         }}
         className="BotonFormulario"
+        disabled={isLoading}
       >
         Facturación
       </button>
