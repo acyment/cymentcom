@@ -76,8 +76,19 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
     const [paisEsArgentina, setPaisEsArgentina] = useState(null);
 
     useEffect(() => {
-      const selectedPais = values?.StepFacturacion?.pais;
-      setPaisEsArgentina(selectedPais === 'AR');
+      // First check if any part of the path is undefined or null
+      if (
+        values &&
+        values.StepFacturacion &&
+        values.StepFacturacion.pais !== undefined
+      ) {
+        // Only if the full path exists, check if it's Argentina
+        const selectedPais = values.StepFacturacion.pais;
+        setPaisEsArgentina(selectedPais === 'AR');
+      } else {
+        // If any part is null/undefined, set paisEsArgentina to null
+        setPaisEsArgentina(null);
+      }
     }, [values?.StepFacturacion?.pais]);
 
     return (
