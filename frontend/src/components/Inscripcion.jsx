@@ -26,7 +26,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
   const steps = [
     {
       id: 'StepParticipantes',
-      component: <StepParticipantes />,
+      component: <StepParticipantes idCurso={idCurso} />,
       validationSchema: Yup.object({
         nombre: Yup.string().required('No te olvides del nombre'),
         apellido: Yup.string().required('No te olvides del apellido'),
@@ -37,7 +37,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
     },
     {
       id: 'StepFacturacion',
-      component: <StepFacturacion />,
+      component: <StepFacturacion idCurso={idCurso} />,
       validationSchema: Yup.object({
         pais: Yup.string().required('No te olvides del país'),
         nombreCompleto: Yup.string().required('No te olvides del nombre'),

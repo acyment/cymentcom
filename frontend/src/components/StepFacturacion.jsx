@@ -795,7 +795,7 @@ const paises = [
   },
 ];
 
-const StepFacturacion = ({ curso }) => {
+const StepFacturacion = ({ idCurso }) => {
   const posthog = usePostHog();
   const { values: valuesCurrentStep, touched, errors } = useFormikContext();
   const { goToPreviousStep, values: valuesPreviousSteps } = useWizard();
@@ -809,7 +809,7 @@ const StepFacturacion = ({ curso }) => {
 
   const submitPagoStripe = () => {
     axios
-      .post('/api/cursos/' + curso.id + '/inscripciones/', {
+      .post('/api/cursos/' + idCurso + '/inscripciones/', {
         procesador_pago: 'STRIPE',
         nombre: valuesPreviousSteps.StepParticipantes.nombre,
         apellido: valuesPreviousSteps.StepParticipantes.apellido,
