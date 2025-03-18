@@ -70,11 +70,25 @@ const Inscripcion = ({ curso }) => {
     );
   }
 
+  function StepWrapper({ curso }) {
+    const { activeStep } = useWizard();
+    return (
+      <div className="form-container">
+        <div className="form-row">Curso elegido: {curso.nombre_corto}</div>
+        {activeStep.component}
+      </div>
+    );
+  }
+
   return (
     <ScrollArea.Root>
       <ScrollArea.Viewport>
         <div className="ContenedorModal">
-          <Wizard steps={steps} header={<Header />} />
+          <Wizard
+            steps={steps}
+            wrapper={<StepWrapper curso={curso} />}
+            header={<Header />}
+          />
         </div>
       </ScrollArea.Viewport>
       <ScrollArea.Scrollbar
