@@ -79,7 +79,8 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
     useEffect(() => {
       // Get country value directly from form state
       const selectedPais = values.pais ?? null;
-      setPaisEsArgentina(selectedPais === 'AR');
+      // Only set Argentina flag if country is selected, otherwise keep null
+      setPaisEsArgentina(selectedPais ? selectedPais === 'AR' : null);
     }, [values.pais]); // Track pais field changes
 
     return (
