@@ -21,7 +21,12 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
       {hayProximasFechas() && (
         <div id="calendario-curso">
           <p className="SubtituloDetalleCurso">Próximos cursos</p>
-          <HorarioCurso proximosCursos={tipoCurso.upcoming_courses} />
+          <HorarioCurso 
+            proximosCursos={tipoCurso.upcoming_courses}
+            nombreCorto={tipoCurso.nombre_corto}
+            costoUSD={tipoCurso.costo_usd}
+            costoARS={tipoCurso.costo_ars}
+          />
         </div>
       )}
       {!hayProximasFechas() && (

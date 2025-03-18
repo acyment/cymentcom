@@ -11,13 +11,13 @@ import FormStepper from './FormStepper';
 
 export const AppContext = React.createContext({});
 
-const Inscripcion = ({ curso }) => {
+const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
   const posthog = usePostHog();
 
   // Track funnel start
   useEffect(() => {
-    posthog?.capture('funnel_start', { course_id: curso.id });
-  }, [curso]);
+    posthog?.capture('funnel_start', { course_id: idCurso });
+  }, [idCurso]);
 
   const trackFunnelStep = (step) => {
     posthog?.capture(step);
@@ -70,11 +70,15 @@ const Inscripcion = ({ curso }) => {
     );
   }
 
-  function StepWrapper({ curso }) {
+  function StepWrapper({ nombreCorto, costoUSD, costoARS }) {
     const { activeStep } = useWizard();
     return (
       <div className="form-container">
-        <div className="form-row">Curso elegido: {curso.nombre_corto}</div>
+        <div className="form-row">
+          Curso elegido: {nombreCorto}<br />
+          Costo USD: {costoUSD}<br />
+          Costo ARS: {costoARS}
+        </div>
         {activeStep.component}
       </div>
     );
@@ -86,7 +90,11 @@ const Inscripcion = ({ curso }) => {
         <div className="ContenedorModal">
           <Wizard
             steps={steps}
-            wrapper={<StepWrapper curso={curso} />}
+            wrapper={<StepWrapper 
+              nombreCorto={nombreCorto}
+              costoUSD={costoUSD}
+              costoARS={costoARS}
+            />}
             header={<Header />}
           />
         </div>

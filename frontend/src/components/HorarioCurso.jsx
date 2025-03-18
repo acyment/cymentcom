@@ -5,7 +5,7 @@ import Inscripcion from './Inscripcion';
 import { Dialog, Portal } from '@ark-ui/react';
 import formatDate from 'intl-dateformat';
 
-const HorarioCurso = ({ proximosCursos }) => {
+const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
   const header = document.querySelector('header');
   const [proximoCurso, setProximoCurso] = useState(null);
   const [fechaCurso, setFechaCurso] = useState(null);
@@ -153,7 +153,12 @@ const HorarioCurso = ({ proximosCursos }) => {
                 <Dialog.Backdrop className="DialogOverlay" />
                 <Dialog.Positioner>
                   <Dialog.Content className="DialogContent">
-                    <Inscripcion curso={proximoCurso} />
+                    <Inscripcion 
+                      idCurso={proximoCurso.id}
+                      nombreCorto={nombreCorto}
+                      costoUSD={costoUSD}
+                      costoARS={costoARS}
+                    />
                   </Dialog.Content>
                 </Dialog.Positioner>
               </Portal>
