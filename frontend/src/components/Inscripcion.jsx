@@ -72,10 +72,13 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
 
   function StepWrapper({ nombreCorto, costoUSD, costoARS }) {
     const { activeStep, values } = useWizard();
-    const paisEsArgentina =
-      values && values.StepFacturacion && values.StepFacturacion.pais
-        ? values.StepFacturacion.pais === 'AR'
-        : null;
+    // Use a separate state to force re-render when country changes
+    const [paisEsArgentina, setPaisEsArgentina] = useState(null);
+
+    useEffect(() => {
+      const selectedPais = values?.StepFacturacion?.pais;
+      setPaisEsArgentina(selectedPais === 'AR');
+    }, [values?.StepFacturacion?.pais]);
 
     return (
       <div className="form-container">
