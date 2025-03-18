@@ -3,6 +3,7 @@ import { usePostHog } from 'posthog-js/react';
 import { Dialog } from '@ark-ui/react';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
 import { useWizard, Wizard } from 'react-formik-step-wizard';
+import { useFormikContext } from 'formik';
 import StepParticipantes from './StepParticipantes';
 import StepFacturacion from './StepFacturacion';
 import StepPago from './StepPago';
@@ -71,25 +72,15 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
   }
 
   function StepWrapper({ nombreCorto, costoUSD, costoARS }) {
-    const { activeStep, values } = useWizard();
-    // Use a separate state to force re-render when country changes
+    const { activeStep } = useWizard();
+    const { values } = useFormikContext(); // Get formik context directly
     const [paisEsArgentina, setPaisEsArgentina] = useState(null);
 
     useEffect(() => {
-      // First check if any part of the path is undefined or null
-      if (
-        values &&
-        values.StepFacturacion &&
-        values.StepFacturacion.pais !== undefined
-      ) {
-        // Only if the full path exists, check if it's Argentina
-        const selectedPais = values.StepFacturacion.pais;
-        setPaisEsArgentina(selectedPais === 'AR');
-      } else {
-        // If any part is null/undefined, set paisEsArgentina to null
-        setPaisEsArgentina(null);
-      }
-    }, [values?.StepFacturacion?.pais]);
+      // Use optional chaining and nullish coalescing for cleaner code
+      const selectedPais = values.StepFacturacion?.pais ?? null;
+      setPaisEsArgentina(selectedPais === 'AR');
+    }, [values.StepFacturacion?.pais]); // Track direct dependency
 
     return (
       <div className="form-container">
