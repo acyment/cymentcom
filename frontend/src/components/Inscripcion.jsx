@@ -26,7 +26,7 @@ const Inscripcion = ({ curso }) => {
   const steps = [
     {
       id: 'StepParticipantes',
-      component: <StepParticipantes />,
+      component: <StepParticipantes curso={curso} />,
       validationSchema: Yup.object({
         nombre: Yup.string().required('No te olvides del nombre'),
         apellido: Yup.string().required('No te olvides del apellido'),

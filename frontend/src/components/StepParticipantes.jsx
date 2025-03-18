@@ -4,7 +4,7 @@ import { Field, useFormikContext } from 'formik'; // Import useFormikContext
 import CustomErrorMessage from './CustomErrorMessage';
 import { ArrowRight } from 'lucide-react';
 
-const StepParticipantes = () => {
+const StepParticipantes = ({ curso }) => {
   const posthog = usePostHog();
   const { submitForm, setTouched, isSubmitting, errors } = useFormikContext(); // Access Formik context
 
