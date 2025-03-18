@@ -25,7 +25,7 @@ const customizacionMercadoPago = {
   },
 };
 
-const StepPago = ({ idCurso }) => {
+const StepPago = ({ curso }) => {
   const posthog = usePostHog();
   const { values, goToPreviousStep } = useWizard();
   const pagoEnArgentina = values.StepFacturacion.pais === 'AR';
@@ -38,7 +38,7 @@ const StepPago = ({ idCurso }) => {
     setErrorMessage(null);
     return new Promise((resolve, reject) => {
       axios
-        .post('/api/cursos/' + idCurso + '/inscripciones/', {
+        .post('/api/cursos/' + curso.id + '/inscripciones/', {
           procesador_pago: 'MP',
           nombre: values.StepParticipantes.nombre,
           apellido: values.StepParticipantes.apellido,

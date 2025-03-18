@@ -11,13 +11,13 @@ import FormStepper from './FormStepper';
 
 export const AppContext = React.createContext({});
 
-const Inscripcion = ({ idCurso }) => {
+const Inscripcion = ({ curso }) => {
   const posthog = usePostHog();
 
   // Track funnel start
   useEffect(() => {
-    posthog?.capture('funnel_start', { course_id: idCurso });
-  }, [idCurso]);
+    posthog?.capture('funnel_start', { course_id: curso.id });
+  }, [curso]);
 
   const trackFunnelStep = (step) => {
     posthog?.capture(step);

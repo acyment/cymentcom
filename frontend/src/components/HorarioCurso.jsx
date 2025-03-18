@@ -153,7 +153,7 @@ const HorarioCurso = ({ proximosCursos }) => {
             <Dialog.Backdrop className="DialogOverlay" />
             <Dialog.Positioner>
               <Dialog.Content className="DialogContent">
-                <Inscripcion idCurso={proximoCurso && proximoCurso.id} />
+                <Inscripcion curso={proximoCurso} />
               </Dialog.Content>
             </Dialog.Positioner>
           </Portal>
