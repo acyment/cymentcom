@@ -136,50 +136,59 @@ const HorarioCurso = ({ proximosCursos }) => {
           modal={true}
           closeOnInteractOutside={false}
         >
-          <Dialog.Trigger asChild>
-            <button
-              className="BotonInscripcion"
-              onClick={() => {
-                if (proximoCurso?.id) {
-                  posthog.capture('Boton inscripcion ' + proximoCurso.id);
-                }
-              }}
-            >
-              Inscribirme
-            </button>
-          </Dialog.Trigger>
+          {proximoCurso ? (
+            <>
+              <Dialog.Trigger asChild>
+                <button
+                  className="BotonInscripcion"
+                  onClick={() => {
+                    posthog.capture('Boton inscripcion ' + proximoCurso.id);
+                  }}
+                >
+                  Inscribirme
+                </button>
+              </Dialog.Trigger>
 
-          <Portal>
-            <Dialog.Backdrop className="DialogOverlay" />
-            <Dialog.Positioner>
-              <Dialog.Content className="DialogContent">
-                <Inscripcion curso={proximoCurso} />
-              </Dialog.Content>
-            </Dialog.Positioner>
-          </Portal>
+              <Portal>
+                <Dialog.Backdrop className="DialogOverlay" />
+                <Dialog.Positioner>
+                  <Dialog.Content className="DialogContent">
+                    <Inscripcion curso={proximoCurso} />
+                  </Dialog.Content>
+                </Dialog.Positioner>
+              </Portal>
+            </>
+          ) : (
+            <button className="BotonInscripcion" disabled>
+              Cargando...
+            </button>
+          )}
         </Dialog.Root>
       </div>
       <p className="ResumenDetalleCurso">
-        {proximoCurso &&
-          capitalizeFirstLetter(
-            formatDate(fechaCurso, 'dddd', { locale: 'es-AR' }),
-          )}{' '}
-        a{' '}
-        {proximoCurso &&
-          formatDate(
-            new Date(fechaCurso.getTime()).setDate(
-              fechaCurso.getDate() + proximoCurso.cantidad_dias - 1,
-            ),
-            'dddd',
-            { locale: 'es-AR' },
-          )}{' '}
-        en {proximoCurso && proximoCurso.cantidad_dias} sesiones diarias de{' '}
-        {proximoCurso &&
-          calculateTimeDifference(
-            proximoCurso.hora_inicio,
-            proximoCurso.hora_fin,
-          )}{' '}
-        hs cada una
+        {proximoCurso ? (
+          <>
+            {capitalizeFirstLetter(
+              formatDate(fechaCurso, 'dddd', { locale: 'es-AR' })
+            )}{' '}
+            a{' '}
+            {formatDate(
+              new Date(fechaCurso.getTime()).setDate(
+                fechaCurso.getDate() + proximoCurso.cantidad_dias - 1
+              ),
+              'dddd',
+              { locale: 'es-AR' }
+            )}{' '}
+            en {proximoCurso.cantidad_dias} sesiones diarias de{' '}
+            {calculateTimeDifference(
+              proximoCurso.hora_inicio,
+              proximoCurso.hora_fin
+            )}{' '}
+            hs cada una
+          </>
+        ) : (
+          'Cargando detalles del curso...'
+        )}
       </p>
     </Fragment>
   );
