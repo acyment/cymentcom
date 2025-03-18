@@ -37,7 +37,7 @@ const Inscripcion = ({ curso }) => {
     },
     {
       id: 'StepFacturacion',
-      component: <StepFacturacion idCurso={idCurso} />,
+      component: <StepFacturacion curso={curso} />,
       validationSchema: Yup.object({
         pais: Yup.string().required('No te olvides del país'),
         nombreCompleto: Yup.string().required('No te olvides del nombre'),
@@ -50,7 +50,7 @@ const Inscripcion = ({ curso }) => {
     },
     {
       id: 'StepPago',
-      component: <StepPago idCurso={idCurso} />,
+      component: <StepPago curso={curso} />,
       // onSubmit: () => trackFunnelStep('Payment'),
     },
   ];
