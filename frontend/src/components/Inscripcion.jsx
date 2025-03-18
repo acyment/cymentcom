@@ -72,22 +72,27 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
 
   function StepWrapper({ nombreCorto, costoUSD, costoARS }) {
     const { activeStep, values } = useWizard();
-    const paisEsArgentina = values?.StepFacturacion?.pais === 'AR';
-    
+    const paisEsArgentina =
+      values && values.StepFacturacion && values.StepFacturacion.pais
+        ? values.StepFacturacion.pais === 'AR'
+        : null;
+
     return (
       <div className="form-container">
         <div className="CursoInfo">
           <span>Curso elegido: {nombreCorto}</span>
-
-          {paisEsArgentina !== null && (
-            <div className="CostoCursoInfo">
-              {paisEsArgentina ? (
+          <div className="CostoCursoInfo">
+            {paisEsArgentina === null ? (
+              <>
                 <span>Costo ARS: {costoARS}</span>
-              ) : (
                 <span>Costo USD: {costoUSD}</span>
-              )}
-            </div>
-          )}
+              </>
+            ) : paisEsArgentina ? (
+              <span>Costo ARS: {costoARS}</span>
+            ) : (
+              <span>Costo USD: {costoUSD}</span>
+            )}
+          </div>
         </div>
         {activeStep.component}
       </div>
