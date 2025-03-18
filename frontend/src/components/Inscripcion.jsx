@@ -51,7 +51,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
     },
     {
       id: 'StepPago',
-      component: <StepPago />,
+      component: <StepPago idCurso={idCurso} costoARS={costoARS} />,
       // onSubmit: () => trackFunnelStep('Payment'),
     },
   ];
@@ -86,17 +86,27 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
     return (
       <div className="form-container">
         <div className="CursoInfo">
-          <span>Curso elegido: {nombreCorto}</span>
+          <span>
+            Curso elegido: <b>{nombreCorto}</b>
+          </span>
           <div className="CostoCursoInfo">
             {paisEsArgentina === null ? (
               <>
-                <span>Costo ARS: {costoARS}</span>
-                <span>Costo USD: {costoUSD}</span>
+                <span>
+                  Costo para Argentina: <b>{costoARS} ARS</b>
+                </span>
+                <span>
+                  Costo otros países: <b>{costoUSD} USD</b>
+                </span>
               </>
             ) : paisEsArgentina ? (
-              <span>Costo ARS: {costoARS}</span>
+              <span>
+                Costo: <b>{costoARS} ARS</b>
+              </span>
             ) : (
-              <span>Costo USD: {costoUSD}</span>
+              <span>
+                Costo: <b>{costoUSD} USD</b>
+              </span>
             )}
           </div>
         </div>

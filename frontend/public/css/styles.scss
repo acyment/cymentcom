@@ -1105,6 +1105,21 @@ form {
   margin-bottom: 15px;
 }
 
+.CursoInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 300;
+  padding: 1rem;
+  border: 1px solid #a0a0a0;
+  margin-bottom: 1vw;
+}
+
+.CostoCursoInfo {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .form-group {
   margin-bottom: 15px;
 }

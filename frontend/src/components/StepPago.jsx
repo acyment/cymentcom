@@ -12,10 +12,6 @@ const mercadopago = initMercadoPago(process.env.MP_PUBLIC_KEY, {
   locale: 'es-AR',
 });
 
-const inicializacionMercadoPago = {
-  amount: 100,
-};
-
 const customizacionMercadoPago = {
   visual: {
     hideFormTitle: true,
@@ -25,7 +21,7 @@ const customizacionMercadoPago = {
   },
 };
 
-const StepPago = ({ curso }) => {
+const StepPago = ({ idCurso, costoARS }) => {
   const posthog = usePostHog();
   const { values, goToPreviousStep } = useWizard();
   const pagoEnArgentina = values.StepFacturacion.pais === 'AR';
@@ -38,7 +34,7 @@ const StepPago = ({ curso }) => {
     setErrorMessage(null);
     return new Promise((resolve, reject) => {
       axios
-        .post('/api/cursos/' + curso.id + '/inscripciones/', {
+        .post('/api/cursos/' + idCurso + '/inscripciones/', {
           procesador_pago: 'MP',
           nombre: values.StepParticipantes.nombre,
           apellido: values.StepParticipantes.apellido,
@@ -75,7 +71,7 @@ const StepPago = ({ curso }) => {
                 headers: {
                   'Content-Type': 'application/json',
                 },
-              }
+              },
             )
             .then((response) => {
               setMercadoPagoPaymentID(response.data.id);
@@ -162,7 +158,9 @@ const StepPago = ({ curso }) => {
           {!mercadoPagoPaymentID && !errorMessage && (
             <CardPayment
               onSubmit={onMercadoPagoSubmit}
-              initialization={inicializacionMercadoPago}
+              initialization={{
+                amount: costoARS,
+              }}
               customization={customizacionMercadoPago}
             />
           )}
