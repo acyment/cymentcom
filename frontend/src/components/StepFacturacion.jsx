@@ -807,6 +807,43 @@ const StepFacturacion = ({ idCurso }) => {
     setPaisEsArgentina(eligioArgentina);
   }, [valuesCurrentStep.pais]);
 
+  const submitPagoMP = () => {
+    axios
+      .post('/api/cursos/' + idCurso + '/inscripciones/', {
+        procesador_pago: 'MP',
+        nombre: valuesPreviousSteps.StepParticipantes.nombre,
+        apellido: valuesPreviousSteps.StepParticipantes.apellido,
+        email: valuesPreviousSteps.StepParticipantes.email,
+        organizacion: valuesPreviousSteps.StepParticipantes.organizacion,
+        rol: valuesPreviousSteps.StepParticipantes.rol,
+        pais: valuesCurrentStep.pais,
+        nombreCompleto: valuesCurrentStep.nombreCompleto,
+        identificacionFiscal: valuesCurrentStep.identificacionFiscal,
+        direccion: valuesCurrentStep.direccion,
+        telefono: valuesCurrentStep.telefono,
+      })
+      .then((response) => {
+        const idFactura = response.data.id_factura;
+        axios
+          .post('/api/create-mp-preference/', {
+            allow_promotion_codes: true,
+            id_factura: idFactura, // Pass the id_factura as a parameter
+          })
+          .then((response) => {
+            window.location.href = response.data.sandbox_init_point;
+          })
+          .catch((error) => {
+            if (error.response && error.response.status === 302) {
+              window.location.href = error.response.headers.location;
+            } else {
+              console.error('Error:', error);
+            }
+          });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
   const submitPagoStripe = () => {
     axios
       .post('/api/cursos/' + idCurso + '/inscripciones/', {
@@ -844,6 +881,7 @@ const StepFacturacion = ({ idCurso }) => {
         console.error('Error:', error);
       });
   };
+
   return (
     <Fragment>
       <h3 className="form-title">Datos para facturación</h3>
@@ -952,7 +990,7 @@ const StepFacturacion = ({ idCurso }) => {
         <button
           type={paisEsArgentina ? 'submit' : 'button'}
           className="BotonFormulario BotonContinuar"
-          onClick={paisEsArgentina ? () => {} : submitPagoStripe}
+          onClick={paisEsArgentina ? submitPagoMP : submitPagoStripe}
         >
           Continuar
           <ArrowRight />
