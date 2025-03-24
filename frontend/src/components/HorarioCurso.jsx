@@ -153,7 +153,7 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
                 <Dialog.Backdrop className="DialogOverlay" />
                 <Dialog.Positioner>
                   <Dialog.Content className="DialogContent">
-                    <Inscripcion 
+                    <Inscripcion
                       idCurso={proximoCurso.id}
                       nombreCorto={nombreCorto}
                       costoUSD={costoUSD}
@@ -174,20 +174,20 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
         {proximoCurso ? (
           <>
             {capitalizeFirstLetter(
-              formatDate(fechaCurso, 'dddd', { locale: 'es-AR' })
+              formatDate(fechaCurso, 'dddd', { locale: 'es-AR' }),
             )}{' '}
             a{' '}
             {formatDate(
               new Date(fechaCurso.getTime()).setDate(
-                fechaCurso.getDate() + proximoCurso.cantidad_dias - 1
+                fechaCurso.getDate() + proximoCurso.cantidad_dias - 1,
               ),
               'dddd',
-              { locale: 'es-AR' }
+              { locale: 'es-AR' },
             )}{' '}
             en {proximoCurso.cantidad_dias} sesiones diarias de{' '}
             {calculateTimeDifference(
               proximoCurso.hora_inicio,
-              proximoCurso.hora_fin
+              proximoCurso.hora_fin,
             )}{' '}
             hs cada una
           </>
