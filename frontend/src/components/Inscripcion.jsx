@@ -6,7 +6,6 @@ import { useWizard, Wizard } from 'react-formik-step-wizard';
 import { useFormikContext } from 'formik';
 import StepParticipantes from './StepParticipantes';
 import StepFacturacion from './StepFacturacion';
-import StepPago from './StepPago';
 import * as Yup from 'yup';
 import FormStepper from './FormStepper';
 
