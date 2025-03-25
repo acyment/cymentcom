@@ -17,6 +17,7 @@ from rest_framework import status
 from rest_framework import generics
 from ..models import Inscripcion, Alumno, Curso, Factura, EstadoInscripcion, TipoCurso
 from .serializers import TipoCursoSerializer
+from django.shortcuts import redirect
 
 
 # ruff: noqa
@@ -124,19 +125,23 @@ class CreateMpPreferenceView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, response_format=None):
+        factura = Factura.objects.get(id=request.data.get("id_factura"))
+        tipo_curso = factura.curso.tipo
+        descripcion_curso = tipo_curso.nombre_completo
+        precio_curso = float(tipo_curso.costo_ars.amount)
         preference_data = {
             "items": [
                 {
-                    "title": "Certified ScrumMaster",
+                    "title": descripcion_curso,
                     "quantity": 1,
-                    "unit_price": 855.0,
-                    "currency_id": "USD",  # or other currency according to your needs
+                    "unit_price": precio_curso,
+                    "currency_id": "ARS",  # or other currency according to your needs
                 },
             ],
             "back_urls": {
-                "success": f"{settings.WEBHOOKS_DOMAIN}/finished-payment",
-                "pending": f"{settings.WEBHOOKS_DOMAIN}/finished-payment",
-                "failure": f"{settings.WEBHOOKS_DOMAIN}/finished-payment",
+                "success": f"{settings.REDIRECT_DOMAIN}?status=approved",
+                "pending": f"{settings.REDIRECT_DOMAIN}?status=pending",
+                "failure": f"{settings.REDIRECT_DOMAIN}?status=failed",
             },
             "notification_url": f"{settings.WEBHOOKS_DOMAIN}/api/webhook-mp/",
         }
@@ -146,14 +151,7 @@ class CreateMpPreferenceView(APIView):
         if preference_response["status"] == SUCCESSFUL_RESPONSE:
             preference_info = preference_response["response"]
             # Return the preference ID and the init_point (URL to make the payment)
-            return Response(
-                {
-                    "message": "Preference created successfully.",
-                    "preference_id": preference_info["id"],
-                    "init_point": preference_info["init_point"],
-                },
-                status=201,
-            )
+            return redirect(preference_info["init_point"])
         # Return an error response
         return Response(
             {
@@ -173,27 +171,28 @@ class CreateStripeCheckoutSessionView(APIView):
     def post(self, request, response_format=None):
         try:
             factura = Factura.objects.get(id=request.data.get("id_factura"))
+            tipo_curso = factura.curso.tipo
+            stripe_price_id = tipo_curso.stripe_price_id
             stripe.api_key = env("STRIPE_API_KEY")
             checkout_session = stripe.checkout.Session.create(
                 line_items=[
                     {
-                        # Provide the exact Price ID (for example, pr_1234) of the prod.
-                        "price": env("CSM_PRICE_STRIPE_ID"),
+                        "price": stripe_price_id,
                         "quantity": 1,
                     },
                 ],
                 mode="payment",
                 success_url=f"{settings.REDIRECT_DOMAIN}?status=approved",
                 cancel_url=f"{settings.REDIRECT_DOMAIN}?status=canceled",
+                allow_promotion_codes=True,
             )
             factura.id_pago = checkout_session.id
             factura.save()
+            return redirect(checkout_session.url)
         except Exception as e:  # noqa: BLE001
             # TODO: Manejar excepciones de Stripe https://docs.stripe.com/api/errors/handling
             print(f"Excepcion Stripe:{str(e)}")
             return str(e)
-
-        return Response({"checkout_url": checkout_session.url})
 
 
 class CreateStripePaymentIntent(APIView):

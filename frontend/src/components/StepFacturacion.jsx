@@ -805,6 +805,10 @@ const StepFacturacion = ({ idCurso }) => {
     const selectedPais = valuesCurrentStep.pais;
     const eligioArgentina = selectedPais === 'AR';
     setPaisEsArgentina(eligioArgentina);
+    document.forms[0].method = 'POST';
+    eligioArgentina
+      ? (document.forms[0].action = '/api/create-mp-preference/')
+      : (document.forms[0].action = '/api/create-stripe-checkoutsession/');
   }, [valuesCurrentStep.pais]);
 
   const submitPagoMP = () => {
@@ -844,6 +848,7 @@ const StepFacturacion = ({ idCurso }) => {
         console.error('Error:', error);
       });
   };
+
   const submitPagoStripe = () => {
     axios
       .post('/api/cursos/' + idCurso + '/inscripciones/', {
@@ -879,6 +884,47 @@ const StepFacturacion = ({ idCurso }) => {
       })
       .catch((error) => {
         console.error('Error:', error);
+      });
+  };
+
+  const addHiddenField = (form, name, value) => {
+    const input = document.createElement('input');
+    input.type = 'hidden'; // 👈 Makes it invisible in the UI
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+  };
+
+  const submitPago = () => {
+    axios
+      .post('/api/cursos/' + idCurso + '/inscripciones/', {
+        procesador_pago: paisEsArgentina ? 'MP' : 'STRIPE',
+        nombre: valuesPreviousSteps.StepParticipantes.nombre,
+        apellido: valuesPreviousSteps.StepParticipantes.apellido,
+        email: valuesPreviousSteps.StepParticipantes.email,
+        organizacion: valuesPreviousSteps.StepParticipantes.organizacion,
+        rol: valuesPreviousSteps.StepParticipantes.rol,
+        pais: valuesCurrentStep.pais,
+        nombreCompleto: valuesCurrentStep.nombreCompleto,
+        identificacionFiscal: valuesCurrentStep.identificacionFiscal,
+        direccion: valuesCurrentStep.direccion,
+        telefono: valuesCurrentStep.telefono,
+      })
+      .then((response) => {
+        const idFactura = response.data.id_factura;
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = paisEsArgentina
+          ? '/api/create-mp-preference/'
+          : '/api/create-stripe-checkoutsession/';
+        addHiddenField(form, 'id_factura', idFactura);
+        addHiddenField(form, 'allow_promotion_codes', true);
+        document.body.appendChild(form);
+        form.submit();
+      })
+      .catch((error) => {
+        console.error('There was an error submitting the payment!', error);
+        alert('Error processing payment. Please try again.');
       });
   };
 
@@ -988,9 +1034,9 @@ const StepFacturacion = ({ idCurso }) => {
           Volver{'  '}
         </button>
         <button
-          type={paisEsArgentina ? 'submit' : 'button'}
+          type="button"
           className="BotonFormulario BotonContinuar"
-          onClick={paisEsArgentina ? submitPagoMP : submitPagoStripe}
+          onClick={submitPago}
         >
           Continuar
           <ArrowRight />

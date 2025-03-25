@@ -38,6 +38,14 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
     },
     {
       id: 'StepFacturacion',
+
+      onSubmit: async (stepValues, allValues, actions) => {
+        await fetch(someUrl, {
+          method: 'POST',
+          body: JSON.stringify({ id: 'StepName', data: stepValues }),
+        });
+        return stepValues;
+      },
       component: <StepFacturacion idCurso={idCurso} />,
       validationSchema: Yup.object({
         pais: Yup.string().required('No te olvides del país'),
@@ -48,11 +56,6 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
         }),
       }),
       // onSubmit: () => trackFunnelStep('Billing Info'),
-    },
-    {
-      id: 'StepPago',
-      component: <StepPago idCurso={idCurso} costoARS={costoARS} />,
-      // onSubmit: () => trackFunnelStep('Payment'),
     },
   ];
 
