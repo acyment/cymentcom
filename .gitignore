@@ -285,3 +285,4 @@ webpack-stats.json
 
 # Ignore Ansible lock files
 *.lock
+*.pnpm-store
