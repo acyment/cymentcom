@@ -18,7 +18,8 @@
       "costo_ars": "940000.00",
       "costo_ars_currency": "ARS",
       "costo_sin_descuento_ars": "1038825.00",
-      "costo_sin_descuento_ars_currency": "ARS"
+      "costo_sin_descuento_ars_currency": "ARS",
+      "stripe_price_id": "price_1NBdhjAXZPf5d77ewsFM3qQ5"
     }
   },
   {
@@ -40,7 +41,8 @@
       "costo_ars": "940000.00",
       "costo_ars_currency": "ARS",
       "costo_sin_descuento_ars": "1038825.00",
-      "costo_sin_descuento_ars_currency": "ARS"
+      "costo_sin_descuento_ars_currency": "ARS",
+      "stripe_price_id": "price_1R4MTgAXZPf5d77e7RntuRBE"
     }
   },
   {
@@ -62,7 +64,8 @@
       "costo_ars": "499999.00",
       "costo_ars_currency": "ARS",
       "costo_sin_descuento_ars": "595350.00",
-      "costo_sin_descuento_ars_currency": "ARS"
+      "costo_sin_descuento_ars_currency": "ARS",
+      "stripe_price_id": "price_1R4MVEAXZPf5d77eavCPjVay"
     }
   },
   {

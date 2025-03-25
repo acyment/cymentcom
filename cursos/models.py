@@ -27,6 +27,7 @@ class TipoCurso(models.Model):
         decimal_places=2,
         default_currency="ARS",
     )
+    stripe_price_id = models.CharField(max_length=100, blank=True)
 
     class Meta:
         verbose_name_plural = "Tipos de curso"
