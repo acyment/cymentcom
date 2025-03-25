@@ -362,7 +362,9 @@ class MPPaymentConfirmationView(APIView):
             inscripciones = Inscripcion.objects.filter(factura=factura)
             EmailSender.send_welcome_email(inscripciones)
         except ObjectDoesNotExist:
-            mensaje_error = f"No se encontró la factura con ID: {id_factura}"
+            mensaje_error = (
+                f"No se encontró la factura con ID: {request.data['data']['id']}"
+            )
             logger.error(mensaje_error)
             return HttpResponse(mensaje_error, status=404)
         return HttpResponse("Notificación recibida y validada", status=200)
