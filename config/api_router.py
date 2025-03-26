@@ -5,11 +5,10 @@ from rest_framework.routers import SimpleRouter
 
 from cursos.api.views import CreateMpPreferenceView
 from cursos.api.views import CreateStripeCheckoutSessionView
-from cursos.api.views import CreateStripePaymentIntent
 from cursos.api.views import InscribirParticipanteEnCurso
-from cursos.api.views import MPPaymentConfirmationView
-from cursos.api.views import ProcessMPPayment
-from cursos.api.views import StripePaymentConfirmationView
+from cursos.api.views import MPPaymentCallback
+from cursos.api.views import MPPaymentWebhookView
+from cursos.api.views import StripePaymentWebhookView
 from cursos.api.views import TipoCursoList
 from cyment_com.users.api.views import UserViewSet
 
@@ -33,23 +32,13 @@ urlpatterns += [
     ),
     path(
         "mp-payment-confirmation/",
-        MPPaymentConfirmationView.as_view(),
+        MPPaymentWebhookView.as_view(),
         name="mp-payment-confirmation",
     ),
     path(
         "stripe-payment-confirmation/",
-        StripePaymentConfirmationView.as_view(),
+        StripePaymentWebhookView.as_view(),
         name="stripe-payment-confirmation",
-    ),
-    path(
-        "create-stripe-payment-intent/",
-        CreateStripePaymentIntent.as_view(),
-        name="create-stripe-payment-intent",
-    ),
-    path(
-        "process-mp-payment/",
-        ProcessMPPayment.as_view(),
-        name="process-mp-payment",
     ),
     path(
         "cursos/<int:curso_id>/inscripciones/",
@@ -60,5 +49,10 @@ urlpatterns += [
         "tipos-de-curso/",
         TipoCursoList.as_view(),
         name="tipo_curso_list",
+    ),
+    path(
+        "payments/mp-callback/",
+        MPPaymentCallback.as_view(),
+        name="mp-payment-callback",
     ),
 ]

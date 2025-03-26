@@ -197,56 +197,6 @@ class CreateStripeCheckoutSessionView(APIView):
             return str(e)
 
 
-class CreateStripePaymentIntent(APIView):
-    # Disable authentication
-    authentication_classes = []
-    # Disable permission checks
-    permission_classes = [AllowAny]
-
-    def post(self, request, response_format=None):
-        product_id = request.data.get("product_id")
-        amount = request.data.get("amount")
-
-        if not product_id or not amount:
-            error_message = "No se encontró 'product_id' o 'amount' en el request body."
-            return Response(
-                {"error": error_message}, status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # Retrieve the product price based on the product_id
-        try:
-            product_price = 100
-        except Exception as e:
-            error_message = f"No se encontró un producto con ID {product_id}."
-            return Response({"error": error_message}, status=status.HTTP_404_NOT_FOUND)
-
-        # Calculate the total amount
-        total_amount = product_price * amount
-
-        try:
-            stripe.api_key = env("STRIPE_API_KEY")
-            payment_intent = stripe.PaymentIntent.create(
-                amount=total_amount,
-                currency="usd",
-            )
-        except Exception as e:  # noqa: BLE001
-            # TODO: Manejar excepciones de Stripe https://docs.stripe.com/api/errors/handling
-            print(f"Excepcion Stripe:{str(e)}")
-            return str(e)
-
-        return Response({"client_secret": payment_intent.client_secret})
-
-
-class PriceDiscrepancyError(Exception):
-    """Raised when the price in the request doesn't match the stored price."""
-
-    def __init__(self, stored_price, requested_price):
-        self.stored_price = stored_price
-        self.requested_price = requested_price
-        self.message = f"Discrepancia de precio detectada: el precio almacenado ({stored_price}) no coincide con el precio solicitado ({requested_price})"
-        super().__init__(self.message)
-
-
 class MPPaymentCallback(APIView):
     # Disable authentication
     authentication_classes = []
@@ -254,86 +204,33 @@ class MPPaymentCallback(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, format=None):
-        payment_status = request.query_params.get('status')
-        preference_id = request.query_params.get('preference_id')
+        payment_status = request.query_params.get("status")
+        preference_id = request.query_params.get("preference_id")
 
-        if not all([ payment_status, preference_id]):
+        if not all([payment_status, preference_id]):
             return self._build_error_response(
-                "Missing required parameters",
-                status.HTTP_400_BAD_REQUEST
+                "Missing required parameters", status.HTTP_400_BAD_REQUEST
             )
         try:
             factura = Factura.objects.get(id_pago=preference_id)
             if payment_status == "approved":
                 factura.pago_realizado = True
                 factura.save()
-            return redirect(f"{settings.REDIRECT_DOMAIN}/payment-result",status=payment_status)
+            return redirect(
+                f"{settings.REDIRECT_DOMAIN}/payment-result", status=payment_status
+            )
         except ObjectDoesNotExist:
             return self._build_error_response(
-                "Factura no encontrada",
-                status.HTTP_404_NOT_FOUND
+                "Factura no encontrada", status.HTTP_404_NOT_FOUND
             )
         except Exception as e:  # noqa: BLE001
             return self._build_error_response(
                 f"Error al procesar el pago: {str(e)}",
-                status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
-
-
-class ProcessMPPayment(APIView):
-    # Disable authentication
-    authentication_classes = []
-    # Disable permission checks
-    permission_classes = [AllowAny]
-
-    def post(self, request, response_format=None):
-        try:
-            factura = Factura.objects.get(id=request.data.get("id_factura"))
-
-            precio_ars_original = factura.curso.tipo.costo_ars.amount
-            precio_ars_request = float(request.data["transaction_amount"])
-
-            # Validate prices match (with small tolerance for floating point precision)
-            if abs(float(precio_ars_original) - precio_ars_request) > 0.01:
-                raise PriceDiscrepancyError(precio_ars_original, precio_ars_request)
-
-            sdk = mercadopago.SDK(env("MP_ACCESS_TOKEN"))
-            request_options = mercadopago.config.RequestOptions()
-            request_options.custom_headers = {
-                "x-idempotency-key": str(uuid.uuid4().int)
-            }
-            payment_data = {
-                "transaction_amount": precio_ars_request,
-                "token": request.data["token"],
-                "installments": int(request.data["installments"]),
-                "payment_method_id": request.data["payment_method_id"],
-                "issuer_id": request.data["issuer_id"],
-                "payer": {
-                    "email": request.data["payer"]["email"],
-                    "identification": {
-                        "type": request.data["payer"]["identification"]["type"],
-                        "number": request.data["payer"]["identification"]["number"],
-                    },
-                },
-                "three_d_secure_mode": "optional",
-            }
-            payment_response = sdk.payment().create(payment_data, request_options)
-            payment = payment_response["response"]
-            factura.id_pago = payment["id"]
-            factura.save()
-        except Exception as e:  # noqa: BLE001
-            # TODO: Manejar excepciones de MercadoPago
-            print(f"Excepcion Mercado Pago:{str(e)}")
-            return Response(
-                {
-                    "error": "Ha ocurrido un error al procesar el pago. Por favor, intente nuevamente más tarde o contacte a soporte."
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-        return Response(payment)
 
 
-class MPPaymentConfirmationView(APIView):
+class MPPaymentWebhookView(APIView):
     # Disable authentication
     authentication_classes = []
     # Disable permission checks
@@ -405,7 +302,7 @@ class MPPaymentConfirmationView(APIView):
         return HttpResponse("Notificación recibida y validada", status=200)
 
 
-class StripePaymentConfirmationView(APIView):
+class StripePaymentWebhookView(APIView):
     # Disable authentication
     authentication_classes = []
     # Disable permission checks
