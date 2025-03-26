@@ -1,9 +1,17 @@
 import React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useSearch } from '@tanstack/react-router';
+import { useSearch, useNavigate } from '@tanstack/react-router';
 
 const ResultadoPago = () => {
   const { status } = useSearch({ strict: false });
+  const navigate = useNavigate();
+
+  const handleClose = () => {
+    navigate({
+      to: '/',
+      search: (prev) => ({ ...prev, status: undefined })
+    });
+  };
   
   return (
     <Dialog.Root open={!!status}>
@@ -15,6 +23,7 @@ const ResultadoPago = () => {
           ) : (
             <div>Status is not approved.</div>
           )}
+          <Dialog.Close onClick={handleClose} />
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

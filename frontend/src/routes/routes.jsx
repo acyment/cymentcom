@@ -3,25 +3,23 @@ import { Route as rootRoute } from './root';
 import Sections from '../components/Sections';
 import ResultadoPago from '../components/ResultadoPago';
 
-// Index route
+// Index route with nested payment result
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: Sections
+  component: Sections,
 });
 
-// Payment result route
 const paymentResultRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => indexRoute,
   path: 'payment-result',
   component: ResultadoPago,
   validateSearch: (search) => ({
-    status: search.status,
-    payment_id: search.payment_id
+    status: search.status || search.collection_status,
+    payment_id: search.payment_id || search.collection_id
   })
 });
 
 export const routeTree = rootRoute.addChildren([
-  indexRoute,
-  paymentResultRoute
+  indexRoute.addChildren([paymentResultRoute])
 ]);
