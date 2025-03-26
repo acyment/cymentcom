@@ -139,9 +139,9 @@ class CreateMpPreferenceView(APIView):
                 },
             ],
             "back_urls": {
-                "success": f"{settings.REDIRECT_DOMAIN}?status=approved",
-                "pending": f"{settings.REDIRECT_DOMAIN}?status=pending",
-                "failure": f"{settings.REDIRECT_DOMAIN}?status=failed",
+                "success": f"{settings.REDIRECT_DOMAIN}/api/payments/mp-callback/?status=approved",
+                "pending": f"{settings.REDIRECT_DOMAIN}/api/payments/mp-callback/?status=pending",
+                "failure": f"{settings.REDIRECT_DOMAIN}/api/payments/mp-callback/?status=failed",
             },
             "notification_url": f"{settings.WEBHOOKS_DOMAIN}/api/webhook-mp/",
         }
@@ -150,6 +150,8 @@ class CreateMpPreferenceView(APIView):
         # Check if the preference was created successfully
         if preference_response["status"] == SUCCESSFUL_RESPONSE:
             preference_info = preference_response["response"]
+            factura.id_pago = preference_info["id"]
+            factura.save()
             # Return the preference ID and the init_point (URL to make the payment)
             return redirect(preference_info["init_point"])
         # Return an error response
@@ -243,6 +245,39 @@ class PriceDiscrepancyError(Exception):
         self.requested_price = requested_price
         self.message = f"Discrepancia de precio detectada: el precio almacenado ({stored_price}) no coincide con el precio solicitado ({requested_price})"
         super().__init__(self.message)
+
+
+class MPPaymentCallback(APIView):
+    # Disable authentication
+    authentication_classes = []
+    # Disable permission checks
+    permission_classes = [AllowAny]
+
+    def get(self, request, format=None):
+        payment_status = request.query_params.get('status')
+        preference_id = request.query_params.get('preference_id')
+
+        if not all([ payment_status, preference_id]):
+            return self._build_error_response(
+                "Missing required parameters",
+                status.HTTP_400_BAD_REQUEST
+            )
+        try:
+            factura = Factura.objects.get(id_pago=preference_id)
+            if payment_status == "approved":
+                factura.pago_realizado = True
+                factura.save()
+            return redirect(f"{settings.REDIRECT_DOMAIN}/payment-result",status=payment_status)
+        except ObjectDoesNotExist:
+            return self._build_error_response(
+                "Factura no encontrada",
+                status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:  # noqa: BLE001
+            return self._build_error_response(
+                f"Error al procesar el pago: {str(e)}",
+                status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 class ProcessMPPayment(APIView):
