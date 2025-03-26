@@ -37,7 +37,6 @@ urlpatterns += [
 
 # Add catch-all routes for client-side routing LAST
 urlpatterns += [
-    re_path(r'^payment-result(/.*)?$', TemplateView.as_view(template_name="pages/home.html")),
     re_path(r'^.*$', TemplateView.as_view(template_name="pages/home.html")),
 ]
 
