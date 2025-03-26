@@ -1,32 +1,23 @@
-import queryString from 'query-string';
 import React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
+import { useSearch } from '@tanstack/react-router';
 
 const ResultadoPago = () => {
-  const volviendoDeIntentarPago = () => {
-    const queryStringParams = queryString.parse(window.location.search);
-    return 'status' in queryStringParams;
-  };
-
-  const statusIntentoDePago = () => {
-    return queryString.parse(window.location.search).status;
-  };
-
+  const { status } = useSearch({ strict: false });
+  
   return (
-    volviendoDeIntentarPago() && (
-      <Dialog.Root defaultOpen={true}>
-        <Dialog.Portal>
-          <Dialog.Overlay className="DialogOverlay" />
-          <Dialog.Content className="DialogContent">
-            {statusIntentoDePago() === 'approved' ? (
-              <div>Pago aprobado</div>
-            ) : (
-              <div>Status is not approved.</div>
-            )}
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
-    )
+    <Dialog.Root open={!!status}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="DialogOverlay" />
+        <Dialog.Content className="DialogContent">
+          {status === 'approved' ? (
+            <div>Pago aprobado</div>
+          ) : (
+            <div>Status is not approved.</div>
+          )}
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 };
 

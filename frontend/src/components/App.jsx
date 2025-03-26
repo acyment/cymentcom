@@ -1,18 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Logo from './Logo';
 import NavMenu from './NavMenu';
-import Sections from './Sections';
 import useFontFaceObserver from 'use-font-face-observer';
 import 'normalize.css';
 import '../../public/css/styles.scss';
 import Contacto from './Contacto';
-import ResultadoPago from './ResultadoPago';
+import { Link } from '@tanstack/react-router';
 
-function App() {
+function App({ children }) {
   const isFontListLoaded = useFontFaceObserver([
-    {
-      family: `Rubik`,
-    },
+    { family: 'Rubik' }
   ]);
 
   return (
@@ -22,12 +19,11 @@ function App() {
         <NavMenu className="nav-menu" />
       </header>
       <main>
-        <Sections />
+        {children}
       </main>
       <footer>
         <Contacto />
       </footer>
-      <ResultadoPago />
     </div>
   );
 }
