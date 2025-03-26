@@ -20,38 +20,38 @@ app_name = "api"
 urlpatterns = router.urls
 
 urlpatterns += [
-    path(
-        "create-mp-preference/",
+    re_path(
+        r'^create-mp-preference/?$',
         CreateMpPreferenceView.as_view(),
         name="create-mp-preference",
     ),
-    path(
-        "create-stripe-checkoutsession/",
+    re_path(
+        r'^create-stripe-checkoutsession/?$',
         CreateStripeCheckoutSessionView.as_view(),
         name="create-stripe-checkoutsession",
     ),
-    path(
-        "mp-payment-confirmation/",
+    re_path(
+        r'^mp-payment-confirmation/?$',
         MPPaymentWebhookView.as_view(),
         name="mp-payment-confirmation",
     ),
-    path(
-        "stripe-payment-confirmation/",
+    re_path(
+        r'^stripe-payment-confirmation/?$',
         StripePaymentWebhookView.as_view(),
         name="stripe-payment-confirmation",
     ),
-    path(
-        "cursos/<int:curso_id>/inscripciones/",
+    re_path(
+        r'^cursos/(?P<curso_id>\d+)/inscripciones/?$',
         InscribirParticipanteEnCurso.as_view(),
         name="inscribir_participante",
     ),
-    path(
-        "tipos-de-curso/",
+    re_path(
+        r'^tipos-de-curso/?$',
         TipoCursoList.as_view(),
         name="tipo_curso_list",
     ),
-    path(
-        "payments/mp-callback/",
+    re_path(
+        r'^payments/mp-callback/?$',
         MPPaymentCallback.as_view(),
         name="mp-payment-callback",
     ),
