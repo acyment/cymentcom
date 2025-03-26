@@ -13,7 +13,7 @@ const indexRoute = createRoute({
 // Payment result route
 const paymentResultRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/payment-result',
+  path: 'payment-result',
   component: ResultadoPago,
   validateSearch: (search) => ({
     status: search.status,

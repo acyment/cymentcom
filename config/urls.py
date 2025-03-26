@@ -2,8 +2,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include
-from django.urls import path
+from django.urls import include, path, re_path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView
@@ -40,6 +39,12 @@ urlpatterns += [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
+]
+
+# Add catch-all routes for client-side routing
+urlpatterns += [
+    re_path(r'^payment-result/.*$', TemplateView.as_view(template_name="pages/home.html")),
+    re_path(r'^.*$', TemplateView.as_view(template_name="pages/home.html")),
 ]
 
 if settings.DEBUG:
