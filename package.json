@@ -31,10 +31,8 @@
     "webpack-merge": "^6.0.1"
   },
   "dependencies": {
-    "@ark-ui/react": "^5.0.1",
-    "@mercadopago/sdk-react": "^1.0.0",
-    "@mux/mux-player-react": "^3.3.0",
-    "posthog-js": "^1.229.5",
+    "@mux/mux-player-react": "^3.3.1",
+    "posthog-js": "^1.234.1",
     "@radix-ui/colors": "^3.0.0",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-dialog": "^1.1.6",
@@ -43,11 +41,10 @@
     "@radix-ui/react-scroll-area": "^1.2.3",
     "@radix-ui/react-toggle-group": "^1.1.2",
     "@radix-ui/react-separator": "^1.1.2",
-    "@stripe/react-stripe-js": "^3.3.0",
-    "@stripe/stripe-js": "^5.10.0",
+    "@tanstack/react-router-devtools": "^1.114.27",
     "@tanstack/react-router": "^1.114.27",
     "@use-gesture/react": "^10.3.1",
-    "axios": "^1.8.3",
+    "axios": "^1.8.4",
     "formik": "^2.4.6",
     "formik-wizard-form": "^2.1.0",
     "framer-motion": "^12.4.10",
@@ -82,9 +79,12 @@
   "babel": {
     "presets": [
       "@babel/preset-env",
-      ["@babel/preset-react", {
-        "runtime": "automatic"
-      }]
+      [
+        "@babel/preset-react",
+        {
+          "runtime": "automatic"
+        }
+      ]
     ]
   },
   "scripts": {

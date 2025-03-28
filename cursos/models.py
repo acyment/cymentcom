@@ -125,10 +125,7 @@ class Factura(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
     confeccionada = models.BooleanField(default=False)
     pagada = models.BooleanField(default=False)
-    id_pago = models.CharField(
-        max_length=100,
-        blank=True,
-    )  # ID de Mercado Pago o Stripe (Session ID)
+    email = models.EmailField()
 
     def __str__(self):
         return f"{self.nombre} - {self.curso}"
@@ -147,8 +144,6 @@ class Factura(models.Model):
         if self.codigo_postal is None:
             self.codigo_postal = ""
         if self.telefono is None:
-            self.telefono = ""
-        if self.id_pago is None:
             self.telefono = ""
 
         # Call the "real" save() method

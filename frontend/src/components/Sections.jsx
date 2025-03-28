@@ -4,6 +4,7 @@ import Cursos from './Cursos';
 import Hero from './Hero';
 import Intervenciones from './Intervenciones';
 import AgilidadProfunda from './AgilidadProfunda';
+import { Outlet } from '@tanstack/react-router';
 
 const Sections = () => {
   return (
@@ -12,6 +13,7 @@ const Sections = () => {
       <Cursos />
       <Intervenciones />
       <AgilidadProfunda />
+      <Outlet />
     </Accordion.Root>
   );
 };

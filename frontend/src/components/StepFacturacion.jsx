@@ -833,6 +833,7 @@ const StepFacturacion = ({ idCurso }) => {
         identificacionFiscal: valuesCurrentStep.identificacionFiscal,
         direccion: valuesCurrentStep.direccion,
         telefono: valuesCurrentStep.telefono,
+        emailFacturacion: valuesCurrentStep.email,
       })
       .then((response) => {
         const idFactura = response.data.id_factura;
@@ -856,7 +857,7 @@ const StepFacturacion = ({ idCurso }) => {
     <Fragment>
       <h3 className="form-title">Datos para facturación</h3>
       <div className="form-row">
-        <div className="form-group full-width">
+        <div className="form-group">
           <label htmlFor="NombreCompleto">Nombre completo*</label>
           <FieldWithInfo
             name="nombreCompleto"
@@ -866,6 +867,16 @@ const StepFacturacion = ({ idCurso }) => {
             tooltip="Nombre de la persona jurídica para organizaciones o el nombre completo del participante en el caso de individuos"
           />
           <CustomErrorMessage name="nombreCompleto" />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Email">Email*</label>
+          <FieldWithInfo
+            name="email"
+            type="text"
+            className="form-control"
+            tooltip="Email al que debe llegar la factura"
+          />
+          <CustomErrorMessage name="email" />
         </div>
       </div>
       <div className="form-row">

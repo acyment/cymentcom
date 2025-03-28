@@ -18,6 +18,7 @@ from rest_framework import generics
 from ..models import Inscripcion, Alumno, Curso, Factura, EstadoInscripcion, TipoCurso
 from .serializers import TipoCursoSerializer
 from django.shortcuts import redirect
+from urllib.parse import urlencode
 
 
 # ruff: noqa
@@ -101,6 +102,7 @@ class InscribirParticipanteEnCurso(APIView):
                 direccion=data.get("direccion"),
                 telefono=data.get("telefono"),
                 curso=curso,
+                email=data.get("emailFacturacion"),
             )
 
             Inscripcion.objects.create(
@@ -144,6 +146,8 @@ class CreateMpPreferenceView(APIView):
                 "failure": f"{settings.REDIRECT_DOMAIN}/api/payments/mp-callback/?status=failed",
             },
             "notification_url": f"{settings.WEBHOOKS_DOMAIN}/api/webhook-mp/",
+            "auto_return": "approved",
+            "external_reference": str(factura.id),
         }
         sdk = mercadopago.SDK(env("MP_ACCESS_TOKEN"))
         preference_response = sdk.preference().create(preference_data)
@@ -184,9 +188,10 @@ class CreateStripeCheckoutSessionView(APIView):
                     },
                 ],
                 mode="payment",
-                success_url=f"{settings.REDIRECT_DOMAIN}?status=approved",
-                cancel_url=f"{settings.REDIRECT_DOMAIN}?status=canceled",
+                success_url=f"{settings.REDIRECT_DOMAIN}/api/payments/stripe-callback/?status=approved&id_factura={factura.id}",
+                cancel_url=f"{settings.REDIRECT_DOMAIN}/api/payments/stripe-callback/?status=failed",
                 allow_promotion_codes=True,
+                client_reference_id=factura.id,
             )
             factura.id_pago = checkout_session.id
             factura.save()
@@ -197,6 +202,16 @@ class CreateStripeCheckoutSessionView(APIView):
             return str(e)
 
 
+class StripePaymentCallback(APIView):
+    # Disable authentication
+    authentication_classes = []
+    # Disable permission checks
+    permission_classes = [AllowAny]
+
+    def get(self, request, format=None):
+        payment_status = request.query_params.get("status")
+
+
 class MPPaymentCallback(APIView):
     # Disable authentication
     authentication_classes = []
@@ -205,28 +220,40 @@ class MPPaymentCallback(APIView):
 
     def get(self, request, format=None):
         payment_status = request.query_params.get("status")
-        preference_id = request.query_params.get("preference_id")
+        id_factura = request.query_params.get("external_reference")
 
-        if not all([payment_status, preference_id]):
+        if not all([payment_status, id_factura]):
             return self._build_error_response(
                 "Missing required parameters", status.HTTP_400_BAD_REQUEST
             )
         try:
-            factura = Factura.objects.get(id_pago=preference_id)
+            factura = Factura.objects.get(id=id_factura)
             if payment_status == "approved":
                 factura.pago_realizado = True
                 factura.save()
-            return redirect(
-                f"{settings.REDIRECT_DOMAIN}/payment-result", status=payment_status
-            )
+
+            inscripcion = Inscripcion.objects.get(factura=factura)
+            params = {
+                "status": payment_status,
+                "nombre_curso": inscripcion.curso.tipo.nombre_completo,
+                "fecha_curso": inscripcion.curso.fecha,
+                "nombre_participante": inscripcion.alumno.nombre,
+                "apellido_participante": inscripcion.alumno.apellido,
+                "email_facturacion": factura.email,
+                "email_participante": inscripcion.alumno.email,
+                "monto": inscripcion.monto,
+            }
+            query_string = urlencode(params)
+            redirect_url = f"{settings.REDIRECT_DOMAIN}/payment-result?{query_string}"
+
+            return redirect(redirect_url)
         except ObjectDoesNotExist:
-            return self._build_error_response(
-                "Factura no encontrada", status.HTTP_404_NOT_FOUND
+            return JsonResponse(
+                {"error": "Factura no encontrada: " + str(id_factura)}, status=400
             )
         except Exception as e:  # noqa: BLE001
-            return self._build_error_response(
-                f"Error al procesar el pago: {str(e)}",
-                status.HTTP_500_INTERNAL_SERVER_ERROR,
+            return JsonResponse(
+                {"error": f"Error al procesar el pago: {str(e)}"}, status=500
             )
 
 

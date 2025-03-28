@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { usePostHog } from 'posthog-js/react';
 
 import Inscripcion from './Inscripcion';
-import { Dialog, Portal } from '@ark-ui/react';
+import * as Dialog from '@radix-ui/react-dialog';
 import formatDate from 'intl-dateformat';
 
 const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
@@ -149,19 +149,18 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
                 </button>
               </Dialog.Trigger>
 
-              <Portal>
-                <Dialog.Backdrop className="DialogOverlay" />
-                <Dialog.Positioner>
-                  <Dialog.Content className="DialogContent">
-                    <Inscripcion 
-                      idCurso={proximoCurso.id}
-                      nombreCorto={nombreCorto}
-                      costoUSD={costoUSD}
-                      costoARS={costoARS}
-                    />
-                  </Dialog.Content>
-                </Dialog.Positioner>
-              </Portal>
+              <Dialog.Portal>
+                <Dialog.Overlay className="DialogOverlay" />
+
+                <Dialog.Content className="DialogContent">
+                  <Inscripcion
+                    idCurso={proximoCurso.id}
+                    nombreCorto={nombreCorto}
+                    costoUSD={costoUSD}
+                    costoARS={costoARS}
+                  />
+                </Dialog.Content>
+              </Dialog.Portal>
             </>
           ) : (
             <button className="BotonInscripcion" disabled>
@@ -174,20 +173,20 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
         {proximoCurso ? (
           <>
             {capitalizeFirstLetter(
-              formatDate(fechaCurso, 'dddd', { locale: 'es-AR' })
+              formatDate(fechaCurso, 'dddd', { locale: 'es-AR' }),
             )}{' '}
             a{' '}
             {formatDate(
               new Date(fechaCurso.getTime()).setDate(
-                fechaCurso.getDate() + proximoCurso.cantidad_dias - 1
+                fechaCurso.getDate() + proximoCurso.cantidad_dias - 1,
               ),
               'dddd',
-              { locale: 'es-AR' }
+              { locale: 'es-AR' },
             )}{' '}
             en {proximoCurso.cantidad_dias} sesiones diarias de{' '}
             {calculateTimeDifference(
               proximoCurso.hora_inicio,
-              proximoCurso.hora_fin
+              proximoCurso.hora_fin,
             )}{' '}
             hs cada una
           </>

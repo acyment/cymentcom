@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { usePostHog } from 'posthog-js/react';
-import { Dialog } from '@ark-ui/react';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
 import { useWizard, Wizard } from 'react-formik-step-wizard';
 import { useFormikContext } from 'formik';
 import StepParticipantes from './StepParticipantes';
 import StepFacturacion from './StepFacturacion';
 import * as Yup from 'yup';
-import FormStepper from './FormStepper';
+import HeaderDialogo from './HeaderDialogo';
 
 export const AppContext = React.createContext({});
 
@@ -49,6 +48,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
       validationSchema: Yup.object({
         pais: Yup.string().required('No te olvides del país'),
         nombreCompleto: Yup.string().required('No te olvides del nombre'),
+        email: Yup.string().required('No te olvides del e-mail'),
         identificacionFiscal: Yup.string().when('pais', {
           is: (pais) => pais === 'AR',
           then: (schema) => schema.required('No te olvides del CUIT'),
@@ -58,19 +58,9 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
     },
   ];
 
-  function Header() {
+  function HeaderInscripcion() {
     const { stepNumber } = useWizard();
-    const stepLabels = ['Participante', 'Facturación', 'Pago'];
-    return (
-      <div className="HeaderModal">
-        <FormStepper activeStep={stepNumber} labels={stepLabels} />
-        <Dialog.CloseTrigger asChild>
-          <button className="close-button" aria-label="Close" tabIndex={-1}>
-            ×
-          </button>
-        </Dialog.CloseTrigger>
-      </div>
-    );
+    return <HeaderDialogo stepNumber={stepNumber} />;
   }
 
   function StepWrapper({ nombreCorto, costoUSD, costoARS }) {
@@ -130,7 +120,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
                 costoARS={costoARS}
               />
             }
-            header={<Header />}
+            header={<HeaderInscripcion />}
           />
         </div>
       </ScrollArea.Viewport>
