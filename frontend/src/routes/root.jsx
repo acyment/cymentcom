@@ -7,5 +7,5 @@ export const Route = createRootRoute({
     <App>
       <Outlet /> {/* Renders child routes */}
     </App>
-  )
+  ),
 });
