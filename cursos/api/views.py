@@ -1,4 +1,5 @@
 # ruff: noqa
+from abc import ABC, abstractmethod
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.template import Context
@@ -18,7 +19,7 @@ from rest_framework import generics
 from ..models import Inscripcion, Alumno, Curso, Factura, EstadoInscripcion, TipoCurso
 from .serializers import TipoCursoSerializer
 from django.shortcuts import redirect
-from urllib.parse import urlencode
+from urllib.parse import urlencode, quote
 
 
 # ruff: noqa
@@ -202,25 +203,21 @@ class CreateStripeCheckoutSessionView(APIView):
             return str(e)
 
 
-class StripePaymentCallback(APIView):
-    # Disable authentication
+class BasePaymentCallback(APIView, ABC):
     authentication_classes = []
-    # Disable permission checks
     permission_classes = [AllowAny]
+
+    @abstractmethod
+    def get_external_reference(self, request):
+        """Get the invoice ID from the request parameters"""
+        pass
+
+    def _build_error_response(self, message, status_code):
+        return JsonResponse({"error": message}, status=status_code)
 
     def get(self, request, format=None):
         payment_status = request.query_params.get("status")
-
-
-class MPPaymentCallback(APIView):
-    # Disable authentication
-    authentication_classes = []
-    # Disable permission checks
-    permission_classes = [AllowAny]
-
-    def get(self, request, format=None):
-        payment_status = request.query_params.get("status")
-        id_factura = request.query_params.get("external_reference")
+        id_factura = self.get_external_reference(request)
 
         if not all([payment_status, id_factura]):
             return self._build_error_response(
@@ -228,9 +225,6 @@ class MPPaymentCallback(APIView):
             )
         try:
             factura = Factura.objects.get(id=id_factura)
-            if payment_status == "approved":
-                factura.pago_realizado = True
-                factura.save()
 
             inscripcion = Inscripcion.objects.get(factura=factura)
             params = {
@@ -243,7 +237,9 @@ class MPPaymentCallback(APIView):
                 "email_participante": inscripcion.alumno.email,
                 "monto": inscripcion.monto,
             }
-            query_string = urlencode(params)
+            query_string = urlencode(
+                params, quote_via=quote
+            )  # For compatibility when unencoding on the frontend
             redirect_url = f"{settings.REDIRECT_DOMAIN}/payment-result?{query_string}"
 
             return redirect(redirect_url)
@@ -255,6 +251,16 @@ class MPPaymentCallback(APIView):
             return JsonResponse(
                 {"error": f"Error al procesar el pago: {str(e)}"}, status=500
             )
+
+
+class MPPaymentCallback(BasePaymentCallback):
+    def get_external_reference(self, request):
+        return request.query_params.get("external_reference")
+
+
+class StripePaymentCallback(BasePaymentCallback):
+    def get_external_reference(self, request):
+        return request.query_params.get("id_factura")
 
 
 class MPPaymentWebhookView(APIView):
@@ -357,14 +363,14 @@ class StripePaymentWebhookView(APIView):
 
         # Handle the event
         if event.type == "checkout.session.completed":
-            id_checkout_session = event["data"]["object"]["id"]
+            id_factura = event["data"]["object"]["client_reference_id"]
             try:
-                factura = Factura.objects.get(id_pago=id_checkout_session)
+                factura = Factura.objects.get(id=id_factura)
                 factura.pagada = True
                 factura.save()
 
-                inscripciones = Inscripcion.objects.filter(factura=factura)
-                EmailSender.send_welcome_email(inscripciones)
+                inscripcion = Inscripcion.objects.get(factura=factura)
+                EmailSender.send_welcome_email(inscripcion)
             except ObjectDoesNotExist:
                 mensaje_error = f"No se encontró la factura con ID: {id_factura}"
                 logger.error(mensaje_error)
