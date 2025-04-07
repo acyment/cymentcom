@@ -85,7 +85,6 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
     "webpack_loader",
     "djmoney",
-    "mjml",
 ]
 
 LOCAL_APPS = [
@@ -369,12 +368,6 @@ SPECTACULAR_SETTINGS = {
     "SCHEMA_PATH_PREFIX": "/api/",
 }
 
-# MJML
-# ------------------------------------------------------------------------------
-MJML_BACKEND_MODE = "tcpserver"
-MJML_TCPSERVERS = [
-    ("mjml", 28101),  # the host and port of MJML TCP-Server
-]
 
 # MoneyField
 # ------------------------------------------------------------------------------
