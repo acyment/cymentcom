@@ -70,7 +70,7 @@ const ResultadoPago = () => {
                 </h2>
                 <div className="details-content">
                   <p>
-                    <strong>Curso:</strong> {nombre_curso}
+                    <strong>Curso:</strong> {nombre_curso} ({fecha_curso})
                   </p>
                   <p>
                     <strong>
