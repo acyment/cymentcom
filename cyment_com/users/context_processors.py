@@ -7,6 +7,7 @@ def allauth_settings(request):
         "ACCOUNT_ALLOW_REGISTRATION": settings.ACCOUNT_ALLOW_REGISTRATION,
     }
 
+
 def posthog_settings(request):
     """Expose PostHog settings in templates."""
     return {

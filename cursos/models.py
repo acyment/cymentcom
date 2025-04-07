@@ -58,7 +58,7 @@ class Curso(models.Model):
     hora_fin = models.TimeField(default=time(13, 30))
     modalidad = models.CharField(
         max_length=10,
-        choices=CursoModalidad.choices,
+        choices=CursoModalidad,
         default=CursoModalidad.VIRTUAL,
     )
     meeting_url = models.URLField(blank=True)
@@ -154,8 +154,8 @@ class Inscripcion(models.Model):
     alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
     monto = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
-    procesador_pago = models.CharField(max_length=6, choices=ProcesadorPago.choices)
-    estado = models.CharField(max_length=9, choices=EstadoInscripcion.choices)
+    procesador_pago = models.CharField(max_length=6, choices=ProcesadorPago)
+    estado = models.CharField(max_length=9, choices=EstadoInscripcion)
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE, null=True)
 
     class Meta:
