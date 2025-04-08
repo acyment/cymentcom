@@ -85,6 +85,7 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
     "webpack_loader",
     "djmoney",
+    "django_afip",
 ]
 
 LOCAL_APPS = [
