@@ -7,6 +7,9 @@ jobs:
   pytest:
     runs-on: ubuntu-latest
     steps:
+      - name: Clean up old runner logs
+        run: |
+          sudo rm -rf /home/runner/runners/*/_diag/*.log
       - name: Checkout Code Repository
         uses: actions/checkout@v4.2.2
 
