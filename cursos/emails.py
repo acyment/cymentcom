@@ -81,7 +81,7 @@ class EmailSender:
                     logo_mime.add_header(
                         "Content-Disposition",
                         "inline",
-                        filename=Path.name(image_path),
+                        filename=Path(image_path).name,
                     )
                     email.attach(logo_mime)
                 else:
