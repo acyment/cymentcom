@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Invoice</title>
+    <style type="text/css">
+      /* Basic Reset & Page Container */
+      body {
+        margin: 0;
+        background-color: #eee;
+        /* Light grey background like pdf2htmlEX */
+      }
+
+      #page-container {
+        /* For centering */
+        display: flex;
+        justify-content: center;
+        padding: 15px 0;
+      }
+
+      /* Core pdf2htmlEX layout styles (Simplified) */
+      .pf {
+        position: relative;
+        background-color: white;
+        overflow: hidden;
+        margin: 0;
+        border: 1px solid #ccc;
+        /* Add border for clarity */
+        box-shadow: 1px 1px 3px 1px #999;
+        /* Add shadow for visual separation */
+      }
+
+      .pc {
+        position: absolute;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: block;
+        transform-origin: 0 0;
+        -ms-transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+      }
+
+      .c {
+        /* Container for text chunks */
+        position: absolute;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        display: block;
+      }
+
+      .t {
+        /* Text element */
+        position: absolute;
+        white-space: pre;
+        font-size: 1px;
+        /* Base size for scaling */
+        transform-origin: 0 100%;
+        -ms-transform-origin: 0 100%;
+        -webkit-transform-origin: 0 100%;
+        /* unicode-bidi: bidi-override; optional */
+      }
+
+      /* --- Font/Text Styling --- */
+      /* Using generic sans-serif */
+      .ff1,
+      .ff2,
+      .ff3,
+      .ff4 {
+        font-family: sans-serif;
+        visibility: visible;
+      }
+
+      /* Transforms */
+      .m0 {
+        transform: matrix(0.250000, 0.000000, 0.000000, 0.250000, 0, 0);
+        -ms-transform: matrix(0.250000, 0.000000, 0.000000, 0.250000, 0, 0);
+        -webkit-transform: matrix(0.250000, 0.000000, 0.000000, 0.250000, 0, 0);
+      }
+
+      /* Vertical Align / Letter Spacing / Word Spacing */
+      .ls0 {
+        letter-spacing: 0.000000px;
+      }
+
+      .ls1 {
+        letter-spacing: 1.440000px;
+      }
+
+      /* Removed ws0, _0, _1 for simplicity, add back if spacing is critical */
+
+      /* --- Colors --- */
+      .fc4 {
+        color: rgb(96, 96, 96);
+      }
+
+      .fc3 {
+        color: rgb(68, 68, 68);
+      }
+
+      .fc2 {
+        color: rgb(255, 255, 255);
+      }
+
+      .fc1 {
+        color: rgb(0, 0, 0);
+      }
+
+      .fc0 {
+        color: rgb(54, 125, 162);
+      }
+
+      /* --- Font Sizes --- */
+      .fs1 {
+        font-size: 40.000000px;
+      }
+
+      .fs0 {
+        font-size: 52.000000px;
+      }
+
+      .fs2 {
+        font-size: 72.000000px;
+      }
+
+      /* --- Positioning & Dimensions (Keep all generated ones) --- */
+      /* Y Positions (bottom) */
+      .y0 {
+        bottom: -0.500000px;
+      }
+
+      .y1e {
+        bottom: 0.382100px;
+      }
+
+      .y13 {
+        bottom: 6.354800px;
+      }
+
+      .y15 {
+        bottom: 6.359000px;
+      }
+
+      .y11 {
+        bottom: 6.776300px;
+      }
+
+      .y1c {
+        bottom: 36.466000px;
+      }
+
+      .y1b {
+        bottom: 50.808000px;
+      }
+
+      .y1a {
+        bottom: 65.150000px;
+      }
+
+      .y19 {
+        bottom: 79.492000px;
+      }
+
+      .y1 {
+        bottom: 90.000000px;
+      }
+
+      .y18 {
+        bottom: 108.175900px;
+      }
+
+      .y17 {
+        bottom: 150.756000px;
+      }
+
+      .yf {
+        bottom: 239.486200px;
+      }
+
+      .ye {
+        bottom: 262.828200px;
+      }
+
+      .y14 {
+        bottom: 395.434100px;
+      }
+
+      .yd {
+        bottom: 422.507600px;
+      }
+
+      .yc {
+        bottom: 436.849600px;
+      }
+
+      .y12 {
+        bottom: 437.060600px;
+      }
+
+      .y10 {
+        bottom: 457.495400px;
+      }
+
+      .yb {
+        bottom: 465.533600px;
+      }
+
+      .ya {
+        bottom: 479.875600px;
+      }
+
+      .y9 {
+        bottom: 494.217600px;
+      }
+
+      .y16 {
+        bottom: 499.600100px;
+      }
+
+      .y1d {
+        bottom: 507.000000px;
+      }
+
+      .y8 {
+        bottom: 508.559600px;
+      }
+
+      .y7 {
+        bottom: 522.901600px;
+      }
+
+      .y6 {
+        bottom: 537.243500px;
+      }
+
+      .y5 {
+        bottom: 551.585500px;
+      }
+
+      .y4 {
+        bottom: 565.927500px;
+      }
+
+      .y3 {
+        bottom: 612.611500px;
+      }
+
+      .y2 {
+        bottom: 675.198000px;
+      }
+
+      /* Heights */
+      .h7 {
+        height: 19.934790px;
+      }
+
+      .h8 {
+        height: 19.938930px;
+      }
+
+      .h5 {
+        height: 20.316290px;
+      }
+
+      .h6 {
+        height: 29.240000px;
+      }
+
+      .h4 {
+        height: 32.280000px;
+      }
+
+      .h3 {
+        height: 38.012000px;
+      }
+
+      .ha {
+        height: 58.104000px;
+      }
+
+      .hb {
+        height: 161.000000px;
+      }
+
+      .h9 {
+        height: 173.709800px;
+      }
+
+      .h2 {
+        height: 700.874000px;
+      }
+
+      .h0 {
+        height: 842.000000px;
+      }
+
+      .h1 {
+        height: 842.500000px;
+      }
+
+      /* Keep dimensions */
+      /* Widths */
+      .w8 {
+        width: 55.117180px;
+      }
+
+      .w4 {
+        width: 55.617180px;
+      }
+
+      .w9 {
+        width: 60.686160px;
+      }
+
+      .w5 {
+        width: 61.186160px;
+      }
+
+      .wa {
+        width: 70.535560px;
+      }
+
+      .w6 {
+        width: 70.785560px;
+      }
+
+      .wb {
+        width: 126.619900px;
+      }
+
+      .w7 {
+        width: 155.970200px;
+      }
+
+      .w3 {
+        width: 156.220200px;
+      }
+
+      .w2 {
+        width: 481.824000px;
+      }
+
+      .w0 {
+        width: 595.000000px;
+      }
+
+      .w1 {
+        width: 595.500000px;
+      }
+
+      /* Keep dimensions */
+      /* X Positions (left) */
+      .x0 {
+        left: 0.000000px;
+      }
+
+      .x5 {
+        left: 4.000000px;
+      }
+
+      .xc {
+        left: 5.309970px;
+      }
+
+      .xa {
+        left: 14.465500px;
+      }
+
+      .x9 {
+        left: 45.547600px;
+      }
+
+      .xb {
+        left: 54.690030px;
+      }
+
+      .x1 {
+        left: 57.050020px;
+      }
+
+      .x2 {
+        left: 83.893780px;
+      }
+
+      .x3 {
+        left: 132.949980px;
+      }
+
+      .x4 {
+        left: 190.250000px;
+      }
+
+      .x6 {
+        left: 346.720200px;
+      }
+
+      .x7 {
+        left: 402.587400px;
+      }
+
+      .x8 {
+        left: 464.023600px;
+      }
+
+      /* --- Added Styles --- */
+      /* Recreate Header Bar for the table */
+      .header-bar {
+        position: absolute;
+        background-color: #367DA2;
+        /* Sample color matching fc0 */
+        height: 20.316290px;
+        /* Matches h5 */
+        /* Calculate top: PageHeight - BottomOfElement - ElementHeight */
+        top: calc(842.000000px - 457.495400px - 20.316290px);
+        /* y10 and h5 */
+        left: 190.250000px;
+        /* Matches x4 */
+        /* Calculate right: PageWidth - LeftOfLastElement - WidthOfLastElement */
+        right: calc(595.000000px - 464.023600px - 70.785560px);
+        /* Based on x8 and w6 */
+        z-index: 0;
+        /* Place behind text */
+      }
+
+      /* Logo Container - for positioning the image */
+      #logo-container {
+        position: absolute;
+        /* !! ADJUST top, left, width, height based on your logo and desired placement !! */
+        /* These are estimates based on surrounding element positions (xb, y17, y18) */
+        top: 50px;
+        /* Estimate, adjust as needed */
+        left: 54.690030px;
+        /* Matches xb */
+        width: 120px;
+        /* Example width */
+        height: 50px;
+        /* Example height */
+        z-index: 1;
+        /* Place above other elements if needed */
+      }
+
+      /* Style the image itself within the container */
+      #logo-container img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: contain;
+        /* Keeps aspect ratio */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="page-container">
+      <div id="pf1" class="pf w0 h0">
+        <div class="pc pc1 w0 h0">
+          <!-- Recreated Header Bar -->
+          <div class="header-bar"></div>
+          <!-- SVG Logo Container -->
+          <div id="logo-container">
+            <!-- !! REPLACE 'path/to/your/logo.svg' WITH THE ACTUAL PATH !! -->
+            <img src="path/to/your/logo.svg" alt="Company Logo" />
+          </div>
+          <!-- Original Text Content -->
+          <div class="c x1 y1 w2 h2">
+            <div class="t m0 x2 h3 y2 ff1 fs0 fc0 ls0 ws1"></div>
+            <!-- Potentially placeholder/spacer -->
+            <div class="t m0 x3 h4 y3 ff2 fs1 fc1 ls0 ws1"></div>
+            <!-- Potentially placeholder/spacer -->
+            <div class="t m0 x3 h4 y4 ff2 fs1 fc1 ls0 ws1">Attention:</div>
+            <div class="t m0 x3 h4 y5 ff2 fs1 fc1 ls0 ws1">Jhon Jairo Mendez Guaca</div>
+            <div class="t m0 x3 h4 y6 ff2 fs1 fc1 ls0 ws1">Cédula: 1130600400</div>
+            <div class="t m0 x3 h4 y7 ff2 fs1 fc1 ls0 ws1">Calle 9 # 20B-146</div>
+            <div class="t m0 x3 h4 y8 ff2 fs1 fc1 ls0 ws1">Ciudad: Yumbo, Valle del cauca</div>
+            <div class="t m0 x3 h4 y9 ff2 fs1 fc1 ls0 ws1">Colombia</div>
+            <div class="t m0 x3 h4 ya ff2 fs1 fc1 ls0 ws1">+57 319 493 08 98</div>
+            <div class="t m0 x3 h4 yb ff2 fs1 fc1 ls0 ws1">jojhan1@gmail.com</div>
+            <div class="t m0 x3 h4 yc ff2 fs1 fc1 ls0 ws1">Date: Feb 16h 2024</div>
+            <div class="t m0 x3 h4 yd ff2 fs1 fc1 ls0 ws1">Invoice number: 45</div>
+            <div class="t m0 x3 h4 ye ff2 fs1 fc1 ls0 ws1">Sincerely yours,</div>
+            <div class="t m0 x3 h4 yf ff2 fs1 fc1 ls0 ws1">Alan Cyment</div>
+          </div>
+          <div class="c x4 y10 w3 h5">
+            <div class="t m0 x5 h6 y11 ff1 fs1 fc2 ls0">Description</div>
+          </div>
+          <div class="c x6 y10 w4 h5">
+            <div class="t m0 x5 h6 y11 ff1 fs1 fc2 ls0">Quantity</div>
+          </div>
+          <div class="c x7 y10 w5 h5">
+            <div class="t m0 x5 h6 y11 ff1 fs1 fc2 ls0 ws1">Unit Price</div>
+          </div>
+          <div class="c x8 y10 w6 h5">
+            <div class="t m0 x5 h6 y11 ff1 fs1 fc2 ls0">Cost</div>
+          </div>
+          <div class="c x4 y12 w7 h7">
+            <div class="t m0 x5 h4 y13 ff2 fs1 fc1 ls0 ws1">CSM March</div>
+          </div>
+          <div class="c x6 y12 w8 h7">
+            <div class="t m0 x9 h4 y13 ff2 fs1 fc1 ls0">1</div>
+          </div>
+          <div class="c x7 y12 w9 h7">
+            <div class="t m0 x5 h4 y13 ff2 fs1 fc1 ls0">US$ 858,00</div>
+          </div>
+          <div class="c x8 y12 wa h7">
+            <div class="t m0 xa h4 y13 ff2 fs1 fc1 ls0">US$ 858,00</div>
+          </div>
+          <div class="c x7 y14 w9 h8">
+            <div class="t m0 x5 h4 y15 ff2 fs1 fc1 ls0 ws1">Total</div>
+          </div>
+          <div class="c x8 y14 wa h8">
+            <div class="t m0 xa h4 y15 ff2 fs1 fc1 ls0">US$ 858,00</div>
+          </div>
+          <div class="c xb y16 wb h9">
+            <div class="t m0 xc ha y17 ff2 fs2 fc3 ls1 ws1">INVOICE</div>
+            <div class="t m0 xc h6 y18 ff4 fs1 fc0 ls0 ws1">alan@cyment.com</div>
+            <div class="t m0 xc h6 y19 ff4 fs1 fc4 ls0 ws1">710 West Hallandale</div>
+            <div class="t m0 xc h6 y1a ff4 fs1 fc4 ls0 ws1">Beach Boulevard, U 103</div>
+            <div class="t m0 xc h6 y1b ff4 fs1 fc4 ls0 ws1">Hallandale Beach, FL</div>
+            <div class="t m0 xc h6 y1c ff4 fs1 fc4 ls0 ws1">33009</div>
+          </div>
+          <div class="c xb y1d wb hb">
+            <div class="t m0 xc h6 y1e ff4 fs1 fc4 ls0 ws1">EIN: 92-1259609</div>
+            <!-- This was the last visible line -->
+          </div>
+          <!-- Closing tag for the container of EIN -->
+        </div>
+        <!-- Closing tag for .pc -->
+      </div>
+      <!-- Closing tag for .pf -->
+    </div>
+    <!-- Closing tag for #page-container -->
+  </body>
+</html>
