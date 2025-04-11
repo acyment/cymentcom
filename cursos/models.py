@@ -15,6 +15,7 @@ class TipoCurso(models.Model):
     foto = models.CharField(max_length=50)
     foto_tint = models.CharField(max_length=50)
     orden = models.IntegerField(unique=True)
+    url_logo = models.URLField(blank=True)
     costo_usd = MoneyField(
         max_digits=14,
         decimal_places=2,
@@ -111,17 +112,23 @@ class EstadoInscripcion(models.TextChoices):
     ACEPTADO = "ACEPTADO", "Aceptado"
 
 
+class TipoFactura(models.TextChoices):
+    FACTURA_A = "A", "Factura A"
+    FACTURA_B = "B", "Factura B"
+
+
 class Factura(models.Model):
     monto = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
     nombre = models.CharField(max_length=100)
-    organizacion = models.CharField(max_length=100, blank=True)
     pais = models.CharField(max_length=40)
+    tipo_identificacion_fiscal = models.CharField(max_length=10, blank=True)
     identificacion_fiscal = models.CharField(max_length=100, blank=True)
+    tipo_factura = models.CharField(
+        max_length=1,
+        choices=TipoFactura.choices,
+        blank=True,
+    )
     direccion = models.CharField(max_length=200, blank=True)
-    ciudad = models.CharField(max_length=100, blank=True)
-    estado = models.CharField(max_length=100, blank=True)
-    codigo_postal = models.CharField(max_length=15, blank=True)
-    telefono = models.CharField(max_length=20, blank=True)
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
     confeccionada = models.BooleanField(default=False)
     pagada = models.BooleanField(default=False)
@@ -133,18 +140,8 @@ class Factura(models.Model):
     def save(self, *args, **kwargs):
         if self.identificacion_fiscal is None:
             self.identificacion_fiscal = ""
-        if self.organizacion is None:
-            self.organizacion = ""
         if self.direccion is None:
             self.direccion = ""
-        if self.ciudad is None:
-            self.ciudad = ""
-        if self.estado is None:
-            self.estado = ""
-        if self.codigo_postal is None:
-            self.codigo_postal = ""
-        if self.telefono is None:
-            self.telefono = ""
 
         # Call the "real" save() method
         super().save(*args, **kwargs)

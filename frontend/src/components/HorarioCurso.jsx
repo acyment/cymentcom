@@ -144,6 +144,7 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
                   onClick={() => {
                     posthog.capture('Boton inscripcion ' + proximoCurso.id);
                   }}
+                  autofocus={true}
                 >
                   Inscribirme
                 </button>

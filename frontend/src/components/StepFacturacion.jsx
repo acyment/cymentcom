@@ -6,7 +6,9 @@ import { usePostHog } from 'posthog-js/react';
 import CustomErrorMessage from './CustomErrorMessage';
 import { ArrowRight, ArrowLeft, Info } from 'lucide-react';
 import FieldWithInfo from './FieldWithInfo';
-import CircleLoader from 'react-spinners/ClipLoader';
+import CircleLoader from 'react-spinners/CircleLoader';
+import { AnimatePresence, motion } from 'framer-motion';
+import FormGroup from './FormGroup';
 
 const paises = [
   {
@@ -797,9 +799,16 @@ const paises = [
 
 const StepFacturacion = ({ idCurso }) => {
   const posthog = usePostHog();
-  const { values: valuesCurrentStep, touched, errors } = useFormikContext();
+  const {
+    values: valuesCurrentStep,
+    touched,
+    errors,
+    setFieldValue,
+  } = useFormikContext();
   const { goToPreviousStep, values: valuesPreviousSteps } = useWizard();
   const [paisEsArgentina, setPaisEsArgentina] = useState(null);
+  const isTipoFacturaDisabled =
+    valuesCurrentStep.tipoIdentificacionFiscal !== 'CUIT';
 
   useEffect(() => {
     const selectedPais = valuesCurrentStep.pais;
@@ -811,9 +820,25 @@ const StepFacturacion = ({ idCurso }) => {
       : (document.forms[0].action = '/api/create-stripe-checkoutsession/');
   }, [valuesCurrentStep.pais]);
 
+  // Use useEffect to automatically set TipoFactura to 'B' when it should be disabled
+  useEffect(() => {
+    // If the condition to disable is met AND the current value is not already 'B'
+    if (isTipoFacturaDisabled && valuesCurrentStep.tipoFactura !== 'B') {
+      // Set the value of tipoFactura to 'B'
+      setFieldValue('tipoFactura', 'B');
+    }
+    // No need for an 'else' here - if it's CUIT, the user can select A or B freely,
+    // and we don't want to override their choice.
+  }, [
+    valuesCurrentStep.tipoIdentificacionFiscal,
+    valuesCurrentStep.tipoFactura,
+    isTipoFacturaDisabled,
+    setFieldValue,
+  ]); // Dependencies array
+
   const addHiddenField = (form, name, value) => {
     const input = document.createElement('input');
-    input.type = 'hidden'; // 👈 Makes it invisible in the UI
+    input.type = 'hidden';
     input.name = name;
     input.value = value;
     form.appendChild(input);
@@ -830,7 +855,10 @@ const StepFacturacion = ({ idCurso }) => {
         rol: valuesPreviousSteps.StepParticipantes.rol,
         pais: valuesCurrentStep.pais,
         nombreCompleto: valuesCurrentStep.nombreCompleto,
+        tipoIdentificacionFiscal:
+          valuesCurrentStep.tipoIdentificacionFiscal ?? '',
         identificacionFiscal: valuesCurrentStep.identificacionFiscal,
+        tipoFactura: valuesCurrentStep.tipoFactura,
         direccion: valuesCurrentStep.direccion,
         telefono: valuesCurrentStep.telefono,
         emailFacturacion: valuesCurrentStep.email,
@@ -853,11 +881,12 @@ const StepFacturacion = ({ idCurso }) => {
       });
   };
 
+  let tabIndexCounter = 1;
   return (
     <Fragment>
       <h3 className="form-title">Datos para facturación</h3>
       <div className="form-row">
-        <div className="form-group">
+        <div className="form-element">
           <label htmlFor="NombreCompleto">Nombre completo*</label>
           <FieldWithInfo
             name="nombreCompleto"
@@ -865,24 +894,38 @@ const StepFacturacion = ({ idCurso }) => {
             className="form-control"
             autoFocus={true}
             tooltip="Nombre de la persona jurídica para organizaciones o el nombre completo del participante en el caso de individuos"
+            defaultValueOnFocus={
+              valuesPreviousSteps.StepParticipantes.nombre +
+              ' ' +
+              valuesPreviousSteps.StepParticipantes.apellido
+            }
+            tabIndex={tabIndexCounter++}
           />
           <CustomErrorMessage name="nombreCompleto" />
         </div>
-        <div className="form-group">
+        <div className="form-element">
           <label htmlFor="Email">Email*</label>
           <FieldWithInfo
             name="email"
             type="text"
             className="form-control"
             tooltip="Email al que debe llegar la factura"
+            defaultValueOnFocus={valuesPreviousSteps.StepParticipantes.email}
+            tabIndex={tabIndexCounter++}
           />
           <CustomErrorMessage name="email" />
         </div>
       </div>
       <div className="form-row">
-        <div className="form-group">
+        <div className="form-element">
           <label htmlFor="Pais">País*</label>
-          <Field id="pais" name="pais" as="select" className="form-control">
+          <Field
+            id="pais"
+            name="pais"
+            as="select"
+            className="form-control "
+            tabIndex={tabIndexCounter++}
+          >
             <option value="">País*</option>
             {paises.map((pais) => (
               <option key={pais.value} value={pais.value}>
@@ -892,70 +935,90 @@ const StepFacturacion = ({ idCurso }) => {
           </Field>
           <CustomErrorMessage name="pais" />
         </div>
-        <div className="form-group">
-          <label htmlFor="Estado">Estado/Región</label>
-          <Field
-            id="estado"
-            name="estado"
-            type="text"
-            className="form-control"
-          />
-        </div>
-      </div>
-      <div className="form-row">
-        <div className="form-group">
-          <label htmlFor="Ciudad">Ciudad</label>
-          <Field
-            id="ciudad"
-            name="ciudad"
-            type="text"
-            className="form-control"
-          />
-        </div>
-        <div className="form-group">
+        <div className="form-element">
           <label htmlFor="Direccion">Dirección</label>
           <Field
             id="direccion"
             name="direccion"
             type="text"
             className="form-control"
+            tabIndex={tabIndexCounter++}
           />
         </div>
       </div>
 
-      <div className="form-row">
-        <div className="form-group">
-          <label htmlFor="IdentificacionFiscal">
-            {paisEsArgentina ? 'CUIT*' : 'Identificación'}
-          </label>
-          {paisEsArgentina ? (
-            <Field
-              id="identificacionFiscal"
-              name="identificacionFiscal"
-              type="text"
-              className="form-control"
-            />
-          ) : (
+      <FormGroup
+        title="Información fiscal"
+        visible={valuesCurrentStep.pais != null}
+      >
+        {paisEsArgentina ? (
+          <>
+            <div className="triple-form-row">
+              <div className="form-element">
+                <label htmlFor="TipoIdentificacionFiscal">Tipo</label>
+                <Field
+                  id="tipoIdentificacionFiscal"
+                  name="tipoIdentificacionFiscal"
+                  as="select"
+                  className="form-control"
+                  tabIndex={tabIndexCounter++}
+                >
+                  <option key="DNI" value="DNI">
+                    DNI
+                  </option>
+                  <option key="CUIT" value="CUIT">
+                    CUIT
+                  </option>
+                  <option key="CUIL" value="CUIL">
+                    CUIL
+                  </option>
+                </Field>
+              </div>
+              <div className="form-element">
+                <label htmlFor="IdentificacionFiscal">Número</label>
+                <Field
+                  id="identificacionFiscal"
+                  name="identificacionFiscal"
+                  type="text"
+                  className="form-control"
+                  tabIndex={tabIndexCounter++}
+                />
+              </div>
+              <div className="form-element">
+                <label htmlFor="TipoFactura">Tipo factura</label>
+                <Field
+                  id="tipoFactura"
+                  name="tipoFactura"
+                  as="select"
+                  className="form-control"
+                  disabled={isTipoFacturaDisabled}
+                  tabIndex={tabIndexCounter++}
+                >
+                  <option key="A" value="A">
+                    A
+                  </option>
+                  <option key="B" value="B" selected>
+                    B
+                  </option>
+                </Field>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <label htmlFor="IdentificacionFiscal">Identificación</label>
             <FieldWithInfo
               id="identificacionFiscal"
               name="identificacionFiscal"
               type="text"
               className="form-control"
               tooltip="Identificación fiscal (RUC, RUT, etc. según corresponda) o identificación personal"
+              tabIndex={tabIndexCounter++}
             />
-          )}
-          <CustomErrorMessage name="identificacionFiscal" />
-        </div>
-        <div className="form-group">
-          <label htmlFor="Telefono">Teléfono</label>
-          <Field
-            id="telefono"
-            name="telefono"
-            type="text"
-            className="form-control"
-          />
-        </div>
-      </div>
+          </>
+        )}
+      </FormGroup>
+
       <div className="DosBotonesFormulario">
         <button
           type="button"
@@ -964,6 +1027,7 @@ const StepFacturacion = ({ idCurso }) => {
             posthog?.capture('back_to_participants');
             goToPreviousStep();
           }}
+          tabIndex={tabIndexCounter++}
         >
           <ArrowLeft />
           Volver{'  '}
@@ -972,6 +1036,7 @@ const StepFacturacion = ({ idCurso }) => {
           type="button"
           className="BotonFormulario BotonContinuar"
           onClick={submitPago}
+          tabIndex={tabIndexCounter++}
         >
           Continuar
           <ArrowRight />

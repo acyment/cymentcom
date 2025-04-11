@@ -31,7 +31,7 @@ const StepParticipantes = ({ idCurso }) => {
       <h3 className="form-title">Datos del participante</h3>
 
       <div className="form-row">
-        <div className="form-group">
+        <div className="form-element">
           <label htmlFor="nombre">Nombre*</label>
           <Field
             id="nombre"
@@ -43,7 +43,7 @@ const StepParticipantes = ({ idCurso }) => {
           <CustomErrorMessage name="nombre" />
         </div>
 
-        <div className="form-group">
+        <div className="form-element">
           <label htmlFor="apellido">Apellido*</label>
           <Field
             id="apellido"
@@ -55,7 +55,7 @@ const StepParticipantes = ({ idCurso }) => {
         </div>
       </div>
       <div className="form-row">
-        <div className="form-group full-width">
+        <div className="form-element full-width">
           <label htmlFor="email">E-mail*</label>
           <Field
             id="email"
@@ -68,7 +68,7 @@ const StepParticipantes = ({ idCurso }) => {
       </div>
 
       <div className="form-row">
-        <div className="form-group">
+        <div className="form-element">
           <label htmlFor="organizacion">Organización</label>
           <Field
             id="organizacion"
@@ -78,14 +78,14 @@ const StepParticipantes = ({ idCurso }) => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-element">
           <label htmlFor="rol">Rol</label>
           <Field id="rol" name="rol" type="text" className="form-control" />
         </div>
       </div>
 
       <div className="form-row hidden">
-        <div className="form-group">
+        <div className="form-element">
           <label>Hidden</label>
           <span className="form-control" />
         </div>
