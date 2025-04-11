@@ -16,6 +16,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.10.0
 
+      - name: Prune Docker System (Before Build)
+        run: |
+          docker system prune -af --volumes
+          echo "Disk space after pruning before build:"
+          df -h /
       - uses: crazy-max/ghaction-github-runtime@v3
       - uses: docker/bake-action@v6.5.0
         with:
@@ -34,3 +39,11 @@ jobs:
 
       - name: Tear down the Stack
         run: docker compose -f local.yml down
+
+      - name: Tear down the Stack and Prune Docker System
+        if: always() # Ensure this runs even if previous steps fail
+        run: |
+          docker compose -f local.yml down --volumes --remove-orphans # Clean up compose resources including volumes
+          docker system prune -af --volumes # Aggressively prune everything else
+          echo "Disk space after final cleanup:"
+          df -h /
