@@ -20,7 +20,9 @@ from ..models import Inscripcion, Alumno, Curso, Factura, EstadoInscripcion, Tip
 from .serializers import TipoCursoSerializer
 from django.shortcuts import redirect
 from urllib.parse import urlencode, quote
-
+from nameparser import HumanName
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 # ruff: noqa
 import hashlib
@@ -99,9 +101,10 @@ class InscribirParticipanteEnCurso(APIView):
                 monto=monto,
                 nombre=data.get("nombreCompleto"),
                 pais=data.get("pais"),
+                tipo_identificacion_fiscal=data.get("tipoIdentificacionFiscal"),
                 identificacion_fiscal=data.get("identificacionFiscal"),
+                tipo_factura=data.get("tipoFactura"),
                 direccion=data.get("direccion"),
-                telefono=data.get("telefono"),
                 curso=curso,
                 email=data.get("emailFacturacion"),
             )
@@ -117,7 +120,7 @@ class InscribirParticipanteEnCurso(APIView):
 
             return JsonResponse({"id_factura": factura.id}, status=201)
         except Exception as e:
-            logger.exception("Error al crear inscripción")
+            logger.exception("Error al crear inscripción", exc_info=e)
             return JsonResponse({"error": "Error al crear inscripción"}, status=500)
 
 
@@ -132,13 +135,22 @@ class CreateMpPreferenceView(APIView):
         tipo_curso = factura.curso.tipo
         descripcion_curso = tipo_curso.nombre_completo
         precio_curso = float(tipo_curso.costo_ars.amount)
+        id = tipo_curso.id
+        nombre_completo = HumanName(factura.nombre)
+        nombre = nombre_completo.first
+        apellido = nombre_completo.last
+
         preference_data = {
             "items": [
                 {
                     "title": descripcion_curso,
                     "quantity": 1,
                     "unit_price": precio_curso,
-                    "currency_id": "ARS",  # or other currency according to your needs
+                    "currency_id": "ARS",
+                    "id": id,
+                    "picture_url": tipo_curso.url_logo,
+                    "category_id": "learnings",
+                    "currency_id": "ARS",
                 },
             ],
             "back_urls": {
@@ -146,17 +158,26 @@ class CreateMpPreferenceView(APIView):
                 "pending": f"{settings.REDIRECT_DOMAIN}/api/payments/mp-callback/?status=pending",
                 "failure": f"{settings.REDIRECT_DOMAIN}/api/payments/mp-callback/?status=failed",
             },
-            "notification_url": f"{settings.WEBHOOKS_DOMAIN}/api/webhook-mp/",
+            "payer": {
+                "name": nombre,
+                "surname": apellido,
+                "email": factura.email,
+                "identification": {
+                    "type": factura.tipo_identificacion_fiscal,
+                    "number": factura.identificacion_fiscal,
+                },
+            },
+            "notification_url": f"{settings.WEBHOOKS_DOMAIN}/api/payments/mercado-pago/webhook/",
             "auto_return": "approved",
             "external_reference": str(factura.id),
+            "statement_descriptor": descripcion_curso,
         }
         sdk = mercadopago.SDK(env("MP_ACCESS_TOKEN"))
         preference_response = sdk.preference().create(preference_data)
         # Check if the preference was created successfully
         if preference_response["status"] == SUCCESSFUL_RESPONSE:
             preference_info = preference_response["response"]
-            factura.id_pago = preference_info["id"]
-            factura.save()
+
             # Return the preference ID and the init_point (URL to make the payment)
             return redirect(preference_info["init_point"])
         # Return an error response
@@ -193,9 +214,9 @@ class CreateStripeCheckoutSessionView(APIView):
                 cancel_url=f"{settings.REDIRECT_DOMAIN}/api/payments/stripe-callback/?status=failed",
                 allow_promotion_codes=True,
                 client_reference_id=factura.id,
+                customer_email=factura.email,
             )
-            factura.id_pago = checkout_session.id
-            factura.save()
+
             return redirect(checkout_session.url)
         except Exception as e:  # noqa: BLE001
             # TODO: Manejar excepciones de Stripe https://docs.stripe.com/api/errors/handling
@@ -269,6 +290,7 @@ class MPPaymentWebhookView(APIView):
     # Disable permission checks
     permission_classes = [AllowAny]
 
+    @method_decorator(csrf_exempt)
     def post(self, request, response_format=None):
         # TODO: extraer a clase propia la validación del webhook de MP
         # La clave secreta de Mercado Pago
@@ -320,12 +342,15 @@ class MPPaymentWebhookView(APIView):
         #  return HttpResponse("Timestamp validation failed", status=403)
 
         try:
-            factura = Factura.objects.get(id_pago=request.data["data"]["id"])
+            sdk = mercadopago.SDK(env("MP_ACCESS_TOKEN"))
+            pago = sdk.payment().get(request.data["data"]["id"])
+            factura = Factura.objects.get(id=pago["response"]["external_reference"])
             factura.pagada = True
             factura.save()
 
-            inscripciones = Inscripcion.objects.filter(factura=factura)
-            EmailSender.send_welcome_email(inscripciones)
+            inscripcion = Inscripcion.objects.get(factura=factura)
+            EmailSender.send_welcome_email(inscripcion)
+
         except ObjectDoesNotExist:
             mensaje_error = (
                 f"No se encontró la factura con ID: {request.data['data']['id']}"
@@ -343,7 +368,12 @@ class StripePaymentWebhookView(APIView):
 
     def post(self, request, response_format=None):
         payload = request.body
-        sig_header = request.headers["stripe-signature"]
+        sig_header = request.headers.get("stripe-signature")
+        # Check if header exists
+        if not sig_header:
+            print("Error: Missing Stripe-Signature header.")
+            return HttpResponse(status=400)
+
         event = None
 
         try:

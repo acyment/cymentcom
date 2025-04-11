@@ -32,12 +32,12 @@ urlpatterns += [
         name="create-stripe-checkoutsession",
     ),
     re_path(
-        r"^mp-payment-confirmation/?$",
+        r"^payments/mercado-pago/webhook/?$",
         MPPaymentWebhookView.as_view(),
         name="mp-payment-confirmation",
     ),
     re_path(
-        r"^stripe-payment-confirmation/?$",
+        r"^payments/stripe/webhook/?$",
         StripePaymentWebhookView.as_view(),
         name="stripe-payment-confirmation",
     ),
