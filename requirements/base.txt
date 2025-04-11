@@ -29,7 +29,10 @@ django-money==3.5.3  # https://github.com/django-money/django-money
 html2text==2024.2.26 # https://github.com/Alir3z4/html2text/
 mjml-python==1.3.5 # https://github.com/mgd020/mjml-python
 mercadopago==2.3.0 # https://github.com/mercadopago/sdk-python
-stripe==11.6.0 # https://github.com/stripe/stripe-python
+stripe==12.0.0 # https://github.com/stripe/stripe-python
+nameparser==1.1.3 # https://pypi.org/project/python-nameparser/
+deepparse==0.9.13 # https://pypi.org/project/deepparse/
+titlecase==2.4.1 # https://pypi.org/project/titlecase/
 
 django-afip==13.2.0 # https://github.com/WhyNotHugo/django-afip
 django-weasyprint==2.4.0 # https://github.com/fdemmer/django-weasyprint
