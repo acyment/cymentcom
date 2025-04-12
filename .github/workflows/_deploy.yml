@@ -39,7 +39,7 @@ jobs:
           envkey_STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
           envkey_CSM_PRICE_STRIPE_ID: ${{ secrets.CSM_PRICE_STRIPE_ID }}
           envkey_MAILJET_API_KEY: ${{ secrets.MAILJET_API_KEY }}
-          envkey_MAILJET_API_SECRET: ${{ secrets.MAILJET_API_SECRET }}
+          envkey_MAILJET_SECRET_KEY: ${{ secrets.MAILJET_SECRET_KEY }}
           directory: .envs/.production
           file_name: .django
       - name: Create production .webpack
