@@ -8,9 +8,7 @@ import Contacto from './Contacto';
 import { Link } from '@tanstack/react-router';
 
 function App({ children }) {
-  const isFontListLoaded = useFontFaceObserver([
-    { family: 'Rubik' }
-  ]);
+  const isFontListLoaded = useFontFaceObserver([{ family: 'Rubik' }]);
 
   return (
     <div>
@@ -18,9 +16,7 @@ function App({ children }) {
         <Logo />
         <NavMenu className="nav-menu" />
       </header>
-      <main>
-        {children}
-      </main>
+      <main>{children}</main>
       <footer>
         <Contacto />
       </footer>

@@ -16,10 +16,10 @@ const paymentResultRoute = createRoute({
   component: ResultadoPago,
   validateSearch: (search) => ({
     status: search.status || search.collection_status,
-    payment_id: search.payment_id || search.collection_id
-  })
+    payment_id: search.payment_id || search.collection_id,
+  }),
 });
 
 export const routeTree = rootRoute.addChildren([
-  indexRoute.addChildren([paymentResultRoute])
+  indexRoute.addChildren([paymentResultRoute]),
 ]);
