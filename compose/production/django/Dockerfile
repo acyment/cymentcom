@@ -5,10 +5,10 @@ WORKDIR ${APP_HOME}
 
 COPY ./package.json ${APP_HOME}
 
-RUN npm install -g pnpm
-RUN pnpm install && pnpm store prune
+RUN npm install -g bun
+RUN bun install
 COPY . ${APP_HOME}
-RUN pnpm run build
+RUN bun run build
 
 # define an alias for the specific python version used in this file.
 FROM docker.io/python:3.12.9-slim-bookworm AS python
