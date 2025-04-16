@@ -13,7 +13,7 @@ quote_type = single
 indent_style = space
 indent_size = 4
 
-[*.{html,css,scss,json,yml,xml}]
+[*.{html,css,scss,json,yml,xml,toml}]
 indent_style = space
 indent_size = 2
 
