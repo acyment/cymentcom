@@ -37,9 +37,10 @@ jobs:
           envkey_CELERY_FLOWER_USER: ${{ secrets.CELERY_FLOWER_USER }}
           envkey_CELERY_FLOWER_PASSWORD: ${{ secrets.CELERY_FLOWER_PASSWORD }}
           envkey_STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
-          envkey_CSM_PRICE_STRIPE_ID: ${{ secrets.CSM_PRICE_STRIPE_ID }}
           envkey_MAILJET_API_KEY: ${{ secrets.MAILJET_API_KEY }}
           envkey_MAILJET_SECRET_KEY: ${{ secrets.MAILJET_SECRET_KEY }}
+          envkey_MP_WEBHOOK_SECRET: ${{ secrets.MP_WEBHOOK_SECRET }}
+          envkey_STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
           directory: .envs/.production
           file_name: .django
       - name: Create production .webpack
