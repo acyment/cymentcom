@@ -1,6 +1,7 @@
 volumes:
   cyment_com_local_postgres_data: {}
   cyment_com_local_postgres_data_backups: {}
+  cyment_com_local_redis_data: {}
 
 services:
   django: &django
@@ -11,12 +12,13 @@ services:
         - 'acyment/django'
     image: cyment_com_local_django
     container_name: cyment_com_local_django
+    volumes:
+      - /app/.venv
+      - .:/app:z
     depends_on:
       - postgres
       - redis
       - mailpit
-    volumes:
-      - .:/app:z
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
@@ -48,6 +50,9 @@ services:
   redis:
     image: docker.io/redis:6
     container_name: cyment_com_local_redis
+
+    volumes:
+      - cyment_com_local_redis_data:/data
 
   celeryworker:
     <<: *django
@@ -96,9 +101,10 @@ services:
       - .:/app:z
       # http://jdlm.info/articles/2016/03/06/lessons-building-node-app-docker.html
       - /app/node_modules
-    command: pnpm run dev
+    command: bun run dev
     ports:
       - '3000:3000'
       - '9229:9229'
         # Expose browsersync UI: https://www.browsersync.io/docs/options/#option-ui
       - '3001:3001'
+      - '8888:8888'
