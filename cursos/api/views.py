@@ -5,6 +5,7 @@ from django.template.loader import get_template
 from django.template import Context
 import environ
 import json
+import structlog
 import logging
 from django.conf import settings
 from django.http import HttpResponse
@@ -43,7 +44,8 @@ import logging
 from cursos.emails import EmailSender
 
 env = environ.Env()
-logger = logging.getLogger(__name__)
+# Get the logger (it's automatically configured by the settings)
+logger = structlog.get_logger(__name__)  # Using __name__ is standard practice
 
 SUCCESSFUL_RESPONSE = 201
 FIVE_MINUTES_IN_SECONDS = 300
@@ -134,7 +136,7 @@ class CreateMpPreferenceView(APIView):
         factura = Factura.objects.get(id=request.data.get("id_factura"))
         tipo_curso = factura.curso.tipo
         descripcion_curso = tipo_curso.nombre_completo
-        precio_curso = float(tipo_curso.costo_ars.amount)
+        precio_curso = float(tipo_curso.costo_usd.amount)
         id = tipo_curso.id
         nombre_completo = HumanName(factura.nombre)
         nombre = nombre_completo.first
@@ -146,11 +148,10 @@ class CreateMpPreferenceView(APIView):
                     "title": descripcion_curso,
                     "quantity": 1,
                     "unit_price": precio_curso,
-                    "currency_id": "ARS",
+                    "currency_id": "USD",
                     "id": id,
                     "picture_url": tipo_curso.url_logo,
                     "category_id": "learnings",
-                    "currency_id": "ARS",
                 },
             ],
             "back_urls": {
@@ -237,6 +238,17 @@ class BasePaymentCallback(APIView, ABC):
         return JsonResponse({"error": message}, status=status_code)
 
     def get(self, request, format=None):
+        raw_query_string = request.META.get("QUERY_STRING", "")
+        log = logger.bind(
+            callback_type=self.__class__.__name__,  # e.g., "MPPaymentCallback"
+            http_method=request.method,
+            http_path=request.path,
+            raw_query_string=raw_query_string,
+            # Convert QueryDict to dict for easier logging/parsing if needed
+            # query_params=dict(request.GET.lists())
+        )
+        log.info("payment_callback_received")
+
         payment_status = request.query_params.get("status")
         id_factura = self.get_external_reference(request)
 

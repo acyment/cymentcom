@@ -1,7 +1,9 @@
 # ruff: noqa: E501
 import logging
+import sys
 
 import sentry_sdk
+import structlog
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
@@ -122,33 +124,91 @@ ANYMAIL = {
 # See https://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 
+# --- Production Structlog Configuration ---
+# Reconfigure structlog is good practice if processors might differ,
+# but if they are the same as base, this call isn't strictly needed again.
+# It doesn't hurt, though.
+structlog.configure(
+    processors=[
+        structlog.contextvars.merge_contextvars,
+        structlog.stdlib.add_logger_name,
+        structlog.stdlib.add_log_level,
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.processors.StackInfoRenderer(),
+        structlog.processors.format_exc_info,
+        structlog.processors.UnicodeDecoder(),
+        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+    ],
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    wrapper_class=structlog.stdlib.BoundLogger,
+    cache_logger_on_first_use=True,
+)
+
+# Define the PRODUCTION formatter instance using JSONRenderer
+# This instance needs to be applied via AppConfig.ready()
+production_formatter = structlog.stdlib.ProcessorFormatter(
+    processor=structlog.processors.JSONRenderer(),
+)
+
+# --- Production Django LOGGING ---
 LOGGING = {
     "version": 1,
-    "disable_existing_loggers": True,
+    "disable_existing_loggers": False,  # CORRECT - Must be False
     "formatters": {
-        "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s",
+        # Placeholder for the production formatter instance
+        "structlog_json_formatter": {
+            "()": "django.utils.log.ServerFormatter",
+            "format": "%(message)s",
         },
     },
     "handlers": {
         "console": {
-            "level": "DEBUG",
+            "level": "INFO",  # Production level
             "class": "logging.StreamHandler",
-            "formatter": "verbose",
+            "stream": sys.stdout,
+            # Use the placeholder formatter name
+            "formatter": "structlog_json_formatter",
         },
     },
-    "root": {"level": "INFO", "handlers": ["console"]},
+    "root": {
+        "handlers": ["console"],  # Add other handlers like 'sentry', 'file'
+        "level": "INFO",
+    },
     "loggers": {
-        "django.db.backends": {
-            "level": "ERROR",
-            "handlers": ["console"],
+        "django": {
+            "handlers": ["console"],  # Add other handlers if used
+            "level": "INFO",
             "propagate": False,
         },
-        # Errors logged by the SDK itself
-        "sentry_sdk": {"level": "ERROR", "handlers": ["console"], "propagate": False},
-        "django.security.DisallowedHost": {
-            "level": "ERROR",
+        "django.db.backends": {
             "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        "sentry_sdk": {
+            "handlers": ["console"],  # Or remove if Sentry handler captures errors
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "django.security.DisallowedHost": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        # Replace with your actual app logger names for production levels
+        "pagos": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "cursos": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "cyment_com.users": {
+            "handlers": ["console"],
+            "level": "INFO",
             "propagate": False,
         },
     },
@@ -186,3 +246,9 @@ SPECTACULAR_SETTINGS["SERVERS"] = [
 # ------------------------------------------------------------------------------
 WEBHOOKS_DOMAIN = "https://cyment.com/"
 REDIRECT_DOMAIN = "https://cyment.com/"
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://stripe.com",  # Your site's actual domain
+    # Add the origin reported in the error message
+    "https://mercadopago.com.ar",
+]

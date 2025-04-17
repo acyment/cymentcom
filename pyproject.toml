@@ -56,110 +56,175 @@ indent_size = 2
 indent_size = 2
 
 [tool.ruff]
+target-version = "py312"
 # Exclude a variety of commonly ignored directories.
-exclude = [
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".git-rewrite",
-    ".hg",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".pytype",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "node_modules",
-    "venv",
+extend-exclude = [
     "*/migrations/*.py",
     "staticfiles/*"
 ]
-# Same as Django: https://github.com/cookiecutter/cookiecutter-django/issues/4792.
-line-length = 88
-indent-width = 4
-target-version = "py312"
 
 [tool.ruff.lint]
 select = [
-  "F",
-  "E",
-  "W",
-  "C90",
-  "I",
-  "N",
-  "UP",
-  "YTT",
-  # "ANN", # flake8-annotations: we should support this in the future but 100+ errors atm
-  "ASYNC",
-  "S",
-  "BLE",
-  "FBT",
-  "B",
-  "A",
-  "COM",
-  "C4",
-  "DTZ",
-  "T10",
-  "DJ",
-  "EM",
-  "EXE",
-  "FA",
-  'ISC',
-  "ICN",
-  "G",
-  'INP',
-  'PIE',
-  "T20",
-  'PYI',
-  'PT',
-  "Q",
-  "RSE",
-  "RET",
-  "SLF",
-  "SLOT",
-  "SIM",
-  "TID",
-  "TCH",
-  "INT",
-  # "ARG", # Unused function argument
-  "PTH",
-  "ERA",
-  "PD",
-  "PGH",
-  "PL",
-  "TRY",
-  "FLY",
-  # "NPY",
-  # "AIR",
-  "PERF",
-  # "FURB",
-  # "LOG",
-  "RUF"
+    "F",
+    "E",
+    "W",
+    "C90",
+    "I",
+    "N",
+    "UP",
+    "YTT",
+    # "ANN", # flake8-annotations: we should support this in the future but 100+ errors atm
+    "ASYNC",
+    "S",
+    "BLE",
+    "FBT",
+    "B",
+    "A",
+    "COM",
+    "C4",
+    "DTZ",
+    "T10",
+    "DJ",
+    "EM",
+    "EXE",
+    "FA",
+    'ISC',
+    "ICN",
+    "G",
+    'INP',
+    'PIE',
+    "T20",
+    'PYI',
+    'PT',
+    "Q",
+    "RSE",
+    "RET",
+    "SLF",
+    "SLOT",
+    "SIM",
+    "TID",
+    "TC",
+    "INT",
+    # "ARG", # Unused function argument
+    "PTH",
+    "ERA",
+    "PD",
+    "PGH",
+    "PL",
+    "TRY",
+    "FLY",
+    # "NPY",
+    # "AIR",
+    "PERF",
+    # "FURB",
+    # "LOG",
+    "RUF",
 ]
 ignore = [
-  "S101", # Use of assert detected https://docs.astral.sh/ruff/rules/assert/
-  "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
-  "SIM102" # sometimes it's better to nest
+    "S101", # Use of assert detected https://docs.astral.sh/ruff/rules/assert/
+    "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
+    "SIM102", # sometimes it's better to nest
+    "UP038", # Checks for uses of isinstance/issubclass that take a tuple
+    # of types for comparison.
+    # Deactivated because it can make the code slow:
+    # https://github.com/astral-sh/ruff/issues/7871
 ]
-# Allow fix for all enabled rules (when `--fix`) is provided.
-fixable = ["ALL"]
-unfixable = []
-# Allow unused variables when underscore-prefixed.
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
-
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
-skip-magic-trailing-comma = false
-line-ending = "auto"
+# The fixes in extend-unsafe-fixes will require
+# provide the `--unsafe-fixes` flag when fixing.
+extend-unsafe-fixes = [
+  "UP038",
+]
 
 [tool.ruff.lint.isort]
 force-single-line = true
+
+[dependency-groups]
+dev = [
+    "coverage==7.8.0",
+    "django-coverage-plugin==3.1.0",
+    "django-debug-toolbar==5.1.0",
+    "django-extensions==4.0",
+    "django-stubs[compatible-mypy]==5.1.3",
+    "djangorestframework-stubs==3.15.3",
+    "djlint==1.36.4",
+    "factory-boy==3.3.2",
+    "ipdb==0.13.13",
+    "mypy==1.15.0",
+    "pre-commit==4.2.0",
+    "psycopg[c]==3.2.6",
+    "pytest==8.3.5",
+    "pytest-django==4.11.1",
+    "pytest-sugar==1.0.0",
+    "ruff==0.11.4",
+    "sphinx==8.2.3",
+    "sphinx-autobuild==2024.10.3",
+    "watchfiles==1.0.4",
+    "werkzeug[watchdog]==3.1.3",
+]
+
+[project]
+name = "cyment_com"
+version = "0.1.0"
+description = "Cyment.com"
+readme = "README.md"
+
+license = { text = "Not open source" }
+authors = [
+  { name = "Alan Cyment", email = "alan@cyment.com" },
+]
+requires-python = "==3.12.*"
+dependencies = [
+    "argon2-cffi==23.1.0",
+    "celery==5.5.0",
+    "crispy-bootstrap5==2025.4",
+    "django==5.0.12",
+    "django-allauth[mfa]==65.6.0",
+    "django-anymail[mailjet]==12.0",
+    "django-celery-beat==2.7.0",
+    "django-cors-headers==4.6.0",
+    "django-crispy-forms==2.3",
+    "django-environ==0.12.0",
+    "django-model-utils==5.0.0",
+    "django-redis==5.4.0",
+    "django-webpack-loader==3.1.1",
+    "djangorestframework==3.16.0",
+    "drf-spectacular==0.28.0",
+    "flower==2.0.1",
+    "gunicorn==23.0.0",
+    "hiredis==3.1.0",
+    "pillow==11.1.0",
+    "psycopg[c]==3.2.6",
+    "python-slugify==8.0.4",
+    "redis==5.2.1",
+    "sentry-sdk==2.25.0",
+    "whitenoise==6.9.0",
+    "django-money==3.5.3",
+    "html2text==2024.2.26",
+    "mjml-python==1.3.5",
+    "mercadopago==2.3.0",
+    "stripe==12.0.0",
+    "nameparser==1.1.3",
+    "django-afip==13.2.0",
+    "django-weasyprint==2.4.0",
+    "werkzeug[watchdog]==3.1.3",
+    "ipdb==0.13.13",
+    "watchfiles==1.0.4",
+    "mypy==1.15.0",
+    "django-stubs[compatible-mypy]==5.1.3",
+    "pytest==8.3.5",
+    "pytest-sugar==1.0.0",
+    "djangorestframework-stubs==3.15.3",
+    "sphinx==8.2.3",
+    "sphinx-autobuild==2024.10.3",
+    "ruff==0.11.4",
+    "coverage==7.8.0",
+    "djlint==1.36.4",
+    "pre-commit==4.2.0",
+    "factory-boy==3.3.2",
+    "django-debug-toolbar==5.1.0",
+    "django-extensions==4.0",
+    "django-coverage-plugin==3.1.0",
+    "pytest-django==4.11.1",
+    "debugpy==1.5.1",
+    "django-structlog>=9.1.1",
+]

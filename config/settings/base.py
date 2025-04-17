@@ -2,9 +2,11 @@
 """Base settings to build other settings files upon."""
 
 import ssl
+import sys
 from pathlib import Path
 
 import environ
+import structlog
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 
@@ -148,6 +150,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django_structlog.middlewares.RequestMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
@@ -265,7 +268,17 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "verbose": {
+        # We define a basic formatter here, but structlog's ProcessorFormatter
+        # will take precedence for logs processed by structlog.
+        "plain_console": {
+            "format": "%(message)s",
+        },
+        # Define placeholder for the structlog formatter instance (applied via AppConfig)
+        "structlog_console_formatter": {  # Renamed for clarity
+            "()": "django.utils.log.ServerFormatter",
+            "format": "%(message)s",
+        },
+        "verbose": {  # Keep for potential non-structlog use
             "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s",
         },
     },
@@ -273,11 +286,97 @@ LOGGING = {
         "console": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
-            "formatter": "verbose",
+            "stream": sys.stdout,  # Use stdout for console logging generally
+            "formatter": "structlog_console_formatter",
         },
     },
-    "root": {"level": "INFO", "handlers": ["console"]},
+    "loggers": {
+        # Define specific log levels for Django/libraries if needed
+        "django": {
+            "handlers": ["console"],  # Or ["console", "file"]
+            "level": "INFO",  # Set appropriate level for Django logs
+            "propagate": False,  # Don't send Django logs to root logger if handled here
+        },
+        "django.db.backends": {
+            "level": "WARNING",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+        "pagos": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+        "cursos": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+        "cyment_com.users": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+    },
+    "root": {  # Catch-all logger
+        "handlers": ["console"],  # Or ["console", "file"]
+        "level": "INFO",
+    },
 }
+
+# --- Structlog Configuration ---
+
+# Define the processors Structlog will use IN ORDER.
+structlog.configure(
+    processors=[
+        # Merge contextvars (from RequestMiddleware and elsewhere) into the event dict.
+        structlog.contextvars.merge_contextvars,
+        # Add metadata about the logger instance (name, etc.)
+        structlog.stdlib.add_logger_name,
+        # Add metadata about the log level
+        structlog.stdlib.add_log_level,
+        # Add a timestamp in ISO 8601 format.
+        structlog.processors.TimeStamper(fmt="iso"),
+        # If the log record contains an exception, render it appropriately.
+        structlog.processors.StackInfoRenderer(),
+        # Adds caller info like filename, funcName, lineno - useful for dev, potentially slow for prod
+        # structlog.processors.CallsiteParameterAdder(
+        #     {
+        #         structlog.processors.CallsiteParameter.FILENAME,
+        #         structlog.processors.CallsiteParameter.FUNC_NAME,
+        #         structlog.processors.CallsiteParameter.LINENO,
+        #     }
+        # ),
+        # Special formatting for exceptions if structlog.processors.StackInfoRenderer is not used
+        structlog.processors.format_exc_info,
+        # Decodes byte strings to unicode.
+        structlog.processors.UnicodeDecoder(),
+        # Pre-format the event dict for the stdlib logger.
+        # This prepares the log record for the standard logging handlers.
+        # It MUST come before the final renderer.
+        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+    ],
+    # Use the standard logging logger factory.
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    # Use the standard logging BoundLogger wrapper.
+    wrapper_class=structlog.stdlib.BoundLogger,
+    # Cache logger instances for performance.
+    cache_logger_on_first_use=True,
+)
+
+# Define the DEVELOPMENT formatter instance using ConsoleRenderer
+# This instance needs to be applied via AppConfig.ready()
+dev_formatter = structlog.stdlib.ProcessorFormatter(
+    processor=structlog.dev.ConsoleRenderer(
+        colors=True,
+    ),  # *** CHANGED for Development ***
+    # Optionally add foreign_pre_chain if you want non-structlog logs formatted nicely too
+    # foreign_pre_chain=[
+    #     structlog.stdlib.add_log_level,
+    #     structlog.processors.TimeStamper(fmt="iso"),
+    # ]
+)
+
 
 REDIS_URL = env("REDIS_URL", default="redis://redis:6379/0")
 REDIS_SSL = REDIS_URL.startswith("rediss://")

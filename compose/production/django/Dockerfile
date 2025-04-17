@@ -1,3 +1,4 @@
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS python
 FROM docker.io/node:22.14-bookworm-slim AS client-builder
 
 ARG APP_HOME=/app
@@ -9,14 +10,14 @@ RUN npm install -g bun
 RUN bun install
 COPY . ${APP_HOME}
 RUN bun run build
-
 # define an alias for the specific python version used in this file.
-FROM docker.io/python:3.12.9-slim-bookworm AS python
-
-# Python build stage
 FROM python AS python-build-stage
 
-ARG BUILD_ENVIRONMENT=production
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+
+ARG APP_HOME=/app
+
+WORKDIR ${APP_HOME}
 
 # Install apt packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -27,22 +28,20 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 
 # Requirements are installed here to ensure they will be cached.
-COPY ./requirements .
+RUN --mount=type=cache,target=/root/.cache/uv \
+  --mount=type=bind,source=uv.lock,target=uv.lock \
+  --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+  uv sync --frozen --no-install-project --no-dev
+COPY --from=client-builder ${APP_HOME} ${APP_HOME}
 
-# Create Python Dependency and Sub-Dependency Wheels.
-RUN pip wheel --wheel-dir /usr/src/app/wheels  \
-  -r ${BUILD_ENVIRONMENT}.txt
 
+RUN --mount=type=cache,target=/root/.cache/uv \
+  uv sync --frozen --no-dev
 
 # Python 'run' stage
 FROM python AS python-run-stage
 
-ARG BUILD_ENVIRONMENT=production
 ARG APP_HOME=/app
-
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV BUILD_ENV=${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
@@ -62,14 +61,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
-
-# All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
-# copy python dependency wheels from python-build-stage
-COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
-
-# use wheels to install python dependencies
-RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
-  && rm -rf /wheels/
 
 
 COPY --chown=django:django ./compose/production/django/entrypoint /entrypoint
@@ -94,13 +85,11 @@ COPY --chown=django:django ./compose/production/django/celery/flower/start /star
 RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
 
+# Copy the application from the builder
+COPY --from=python-build-stage --chown=django:django ${APP_HOME} ${APP_HOME}
 
-# copy application code to WORKDIR
-COPY --from=client-builder --chown=django:django ${APP_HOME} ${APP_HOME}
-
-
-# make django owner of the WORKDIR directory as well.
-RUN chown -R django:django ${APP_HOME}
+# Place executables in the environment at the front of the path
+ENV PATH="/app/.venv/bin:$PATH"
 
 USER django
 
