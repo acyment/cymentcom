@@ -24,9 +24,12 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # dependencies for building Python packages
   build-essential \
   # psycopg dependencies
-  libpq-dev
+  libpq-dev \
+  && rm -rf /var/lib/apt/lists/*
 
-
+# Create venv using cached sync
+# Note: COPY pyproject.toml and uv.lock first for better caching
+COPY pyproject.toml uv.lock ./
 # Requirements are installed here to ensure they will be cached.
 RUN --mount=type=cache,target=/root/.cache/uv \
   --mount=type=bind,source=uv.lock,target=uv.lock \
@@ -37,6 +40,20 @@ COPY --from=client-builder ${APP_HOME} ${APP_HOME}
 
 RUN --mount=type=cache,target=/root/.cache/uv \
   uv sync --frozen --no-dev
+
+RUN echo "--- Debugging /app contents in python-build-stage ---"
+
+# Show disk usage summary of top-level items in /app (including hidden ones like .venv)
+# Sorted by human-readable size (largest last)
+RUN echo "Disk Usage Summary:" && du -sh /app/* /app/.* | sort -h
+
+# Count the total number of files within /app
+RUN echo "Total File Count:" && find /app -type f | wc -l
+
+# Optionally, for a more detailed (but potentially very long) listing:
+# RUN echo "Detailed Listing (potentially large output):" && ls -lhaR /app
+
+RUN echo "--- End Debugging /app contents ---"
 
 # Python 'run' stage
 FROM python AS python-run-stage
