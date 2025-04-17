@@ -3,6 +3,8 @@ const commonConfig = require('./common.config');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const webpack = require('webpack');
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = merge(commonConfig, {
   mode: 'development',
@@ -35,6 +37,9 @@ module.exports = merge(commonConfig, {
       path: path.resolve(__dirname, '../.envs/.local/.webpack'),
     }),
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"development"' }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+    }),
   ],
 });
 
