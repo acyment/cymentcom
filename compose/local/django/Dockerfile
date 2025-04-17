@@ -1,59 +1,54 @@
-# Define alias for specific Python version
-FROM docker.io/python:3.12.7-slim-bookworm AS python
+# define an alias for the specific python version used in this file.
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS python
 
 # Python build stage
 FROM python AS python-build-stage
 
-ARG BUILD_ENVIRONMENT=local
+ARG APP_HOME=/app
+
+WORKDIR ${APP_HOME}
+
+# we need to move the virtualenv outside of the $APP_HOME directory because it will be overriden by the docker compose mount
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy UV_PYTHON_DOWNLOADS=0
 
 # Install apt packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
   # dependencies for building Python packages
   build-essential \
   # psycopg dependencies
-  libpq-dev
+  libpq-dev \
+  gettext \
+  wait-for-it \
+  weasyprint
 
 # Requirements are installed here to ensure they will be cached.
-COPY ./requirements .
+RUN --mount=type=cache,target=/root/.cache/uv \
+  --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+  --mount=type=bind,source=uv.lock,target=uv.lock:rw \
+  uv sync --no-install-project
 
-# Create Python Dependency and Sub-Dependency Wheels.
-RUN pip wheel --wheel-dir /usr/src/app/wheels \
-  -r ${BUILD_ENVIRONMENT}.txt
+COPY . ${APP_HOME}
 
-# Python 'run' stage
-FROM python AS python-run-stage
+RUN --mount=type=cache,target=/root/.cache/uv \
+  --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+  --mount=type=bind,source=uv.lock,target=uv.lock:rw \
+  uv sync
 
-ARG BUILD_ENVIRONMENT=local
-ARG APP_HOME=/app
 
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV BUILD_ENV=${BUILD_ENVIRONMENT}
-
-WORKDIR ${APP_HOME}
-
-# Install required system dependencies
+# devcontainer dependencies and utils
 RUN apt-get update && apt-get install --no-install-recommends -y \
-  # psycopg dependencies
-  libpq-dev \
-  # WeasyPrint dependencies
-  weasyprint \
-  # wait-for-it
-  wait-for-it \
-  # Translations dependencies
-  gettext \
-  # cleaning up unused files
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/*
+  sudo git bash-completion nano ssh
 
-# Copy python dependency wheels from python-build-stage
-COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
+# Create devcontainer user and add it to sudoers
+RUN groupadd --gid 1000 dev-user \
+  && useradd --uid 1000 --gid dev-user --shell /bin/bash --create-home dev-user \
+  && echo dev-user ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/dev-user \
+  && chmod 0440 /etc/sudoers.d/dev-user
 
-# Use wheels to install python dependencies
-RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
-  && rm -rf /wheels/
 
-# ... rest of the Dockerfile remains the same ...
+ENV PATH="/${APP_HOME}/.venv/bin:$PATH"
+ENV PYTHONPATH="${APP_HOME}/.venv/lib/python3.12/site-packages:$PYTHONPATH"
+
 COPY ./compose/production/django/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
@@ -61,6 +56,7 @@ RUN chmod +x /entrypoint
 COPY ./compose/local/django/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
+
 
 COPY ./compose/local/django/celery/worker/start /start-celeryworker
 RUN sed -i 's/\r$//g' /start-celeryworker
@@ -74,7 +70,5 @@ COPY ./compose/local/django/celery/flower/start /start-flower
 RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
 
-# Copy application code to WORKDIR
-COPY . ${APP_HOME}
 
 ENTRYPOINT ["/entrypoint"]
