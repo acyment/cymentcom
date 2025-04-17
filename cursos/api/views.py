@@ -148,16 +148,16 @@ class CreateMpPreferenceView(APIView):
                     "title": descripcion_curso,
                     "quantity": 1,
                     "unit_price": precio_curso,
-                    "currency_id": "USD",
+                    "currency_id": "ARS",
                     "id": id,
                     "picture_url": tipo_curso.url_logo,
                     "category_id": "learnings",
                 },
             ],
             "back_urls": {
-                "success": f"{settings.REDIRECT_DOMAIN}/api/payments/mp-callback/?status=approved",
-                "pending": f"{settings.REDIRECT_DOMAIN}/api/payments/mp-callback/?status=pending",
-                "failure": f"{settings.REDIRECT_DOMAIN}/api/payments/mp-callback/?status=failed",
+                "success": f"{settings.REDIRECT_DOMAIN}api/payments/mp-callback/?status=approved",
+                "pending": f"{settings.REDIRECT_DOMAIN}api/payments/mp-callback/?status=pending",
+                "failure": f"{settings.REDIRECT_DOMAIN}api/payments/mp-callback/?status=failed",
             },
             "payer": {
                 "name": nombre,
@@ -168,11 +168,17 @@ class CreateMpPreferenceView(APIView):
                     "number": factura.identificacion_fiscal,
                 },
             },
-            "notification_url": f"{settings.WEBHOOKS_DOMAIN}/api/payments/mercado-pago/webhook/",
+            "notification_url": f"{settings.WEBHOOKS_DOMAIN}api/payments/mercado-pago/webhook/",
             "auto_return": "approved",
             "external_reference": str(factura.id),
             "statement_descriptor": descripcion_curso,
         }
+        log = logger.bind(
+            preference_data=preference_data,
+            tipo_curso=tipo_curso,
+            request=request.data,
+        )
+        log.info("payment_preference_created")
         sdk = mercadopago.SDK(env("MP_ACCESS_TOKEN"))
         preference_response = sdk.preference().create(preference_data)
         # Check if the preference was created successfully
@@ -244,8 +250,6 @@ class BasePaymentCallback(APIView, ABC):
             http_method=request.method,
             http_path=request.path,
             raw_query_string=raw_query_string,
-            # Convert QueryDict to dict for easier logging/parsing if needed
-            # query_params=dict(request.GET.lists())
         )
         log.info("payment_callback_received")
 
