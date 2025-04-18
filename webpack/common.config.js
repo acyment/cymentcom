@@ -26,7 +26,8 @@ module.exports = {
       // we pass the output from babel loader to react-hot loader
       {
         test: /\.(js|jsx)$/,
-        loader: 'babel-loader',
+        exclude: /node_modules/, // IMPORTANT: Keep excluding node_modules
+        loader: 'swc-loader',
       },
       {
         test: /\.s?css$/i,

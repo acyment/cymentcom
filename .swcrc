@@ -1,0 +1,45 @@
+// .swcrc
+{
+  "$schema": "https://json.schemastore.org/swcrc", // Optional: For editor autocompletion
+  "jsc": {
+    "parser": {
+      "syntax": "ecmascript", // Use "typescript" if you have TS files
+      "jsx": true,
+      "dynamicImport": true // Enable if you use dynamic imports
+    },
+    "transform": {
+      "react": {
+        // Use "automatic" for the new JSX transform (React 17+)
+        // Use "classic" for the old transform
+        "runtime": "automatic"
+        // Enable this if you use React Fast Refresh (requires setup with webpack-dev-server)
+        // "refresh": true
+      }
+      // You might add other transforms here if needed
+      // e.g., "legacyDecorator": true if using old decorators
+    },
+    // Mimics @babel/preset-env's target behavior
+    // Sets the minimum JS version SWC will output
+    // Adjust "es2017" based on your browser support needs (e.g., "es2015", "es2020")
+    "target": "es2017",
+
+    // Optional: For more fine-grained control similar to @babel/preset-env using browserslist
+    // SWC's 'env' config is still evolving compared to Babel's but provides core functionality.
+    // It primarily handles syntax transforms based on targets and can inject core-js polyfills (if configured)
+    // "env": {
+    //   "targets": "> 0.5%, not dead", // Example: Use your project's browserslist query
+    //   "mode": "usage", // How to handle polyfills ('usage', 'entry', or undefined)
+    //   "coreJs": "3" // Specify core-js version if using polyfills via SWC
+    // },
+
+    // Keep commonjs modules output for Webpack, unless you configure Webpack for ES modules
+    "baseUrl": ".", // Helps with path resolution if you use it
+    "paths": {} // Add path aliases if needed, e.g., {"@/*": ["src/*"]}
+  },
+  // Usually handled by Webpack, but you can specify module type if needed
+  "module": {
+    "type": "es6" // Or "commonjs" - usually SWC defaults correctly for Webpack
+  },
+  // Optional: Enable source maps
+  "sourceMaps": true // or "inline"
+}
