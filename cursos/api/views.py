@@ -308,6 +308,9 @@ class MPPaymentWebhookView(APIView):
 
     @method_decorator(csrf_exempt)
     def post(self, request, response_format=None):
+        log = logger.bind(request=request)
+        log.info("MP_payment_webhook_received")
+
         # TODO: extraer a clase propia la validación del webhook de MP
         # La clave secreta de Mercado Pago
         mp_webhook_secret = env("MP_WEBHOOK_SECRET")
