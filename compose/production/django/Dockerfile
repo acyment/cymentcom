@@ -14,6 +14,13 @@ FROM python AS python-build-stage
 
 ARG BUILD_ENVIRONMENT=production
 
+# Install apt packages
+RUN apt-get update && apt-get install --no-install-recommends -y \
+  # dependencies for building Python packages
+  build-essential \
+  # psycopg dependencies
+  libpq-dev
+
 COPY ./requirements .
 
 RUN pip wheel --wheel-dir /usr/src/app/wheels  \
@@ -44,7 +51,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   gettext \
   # entrypoint
   wait-for-it \
-  weasyprint \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
