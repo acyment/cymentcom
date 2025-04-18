@@ -93,7 +93,7 @@
   },
   "scripts": {
     "dev": "webpack serve --config webpack/dev.config.js",
-    "build": "webpack --config webpack/prod.config.js"
+    "build": "webpack --config webpack/prod.config.js --profile --json > stats.json"
   },
   "packageManager": "bun@1.2.9"
 }
