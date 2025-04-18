@@ -22,27 +22,25 @@ const mergeProd = mergeWithCustomize({
 });
 
 // 2. Now use the customized merge function (mergeProd)
-module.exports = smp.wrap(
-  mergeProd(
-    // Use the mergeProd function here
-    commonConfig, // First config (base)
-    {
-      // Second config (production specifics)
-      mode: 'production',
-      devtool: 'source-map',
-      bail: true,
-      output: {
-        publicPath: `${staticUrl}webpack_bundles/`,
-      },
-      // Only list the PRODUCTION-SPECIFIC plugins here
-      plugins: [
-        new Dotenv({
-          path: path.resolve(__dirname, '../.envs/.production/.webpack'),
-        }),
-        new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"production"' }),
-        // MiniCssExtractPlugin and BundleTracker are already in commonConfig
-        // and will be merged correctly by mergeProd
-      ],
+module.exports = mergeProd(
+  // Use the mergeProd function here
+  commonConfig, // First config (base)
+  {
+    // Second config (production specifics)
+    mode: 'production',
+    devtool: 'source-map',
+    bail: true,
+    output: {
+      publicPath: `${staticUrl}webpack_bundles/`,
     },
-  ), // End of mergeProd call
-); // End of smp.wrap
+    // Only list the PRODUCTION-SPECIFIC plugins here
+    plugins: [
+      new Dotenv({
+        path: path.resolve(__dirname, '../.envs/.production/.webpack'),
+      }),
+      new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"production"' }),
+      // MiniCssExtractPlugin and BundleTracker are already in commonConfig
+      // and will be merged correctly by mergeProd
+    ],
+  },
+); // End of mergeProd call // End of smp.wrap
