@@ -3,11 +3,9 @@ const commonConfig = require('./common.config');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const webpack = require('webpack');
-const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 
 // This variable should mirror the one from config/settings/production.py
 const staticUrl = '/static/';
-const smp = new SpeedMeasurePlugin();
 
 // 1. Create the customized merge function first
 const mergeProd = mergeWithCustomize({
