@@ -1,4 +1,4 @@
-const { mergeWithCustomize } = require('webpack-merge');
+const { mergeWithCustomize, unique } = require('webpack-merge');
 const commonConfig = require('./common.config');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
@@ -9,36 +9,40 @@ const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const staticUrl = '/static/';
 const smp = new SpeedMeasurePlugin();
 
+// 1. Create the customized merge function first
+const mergeProd = mergeWithCustomize({
+  // Define custom merge strategies inside this object
+  customizeArray: unique(
+    'plugins', // Target the 'plugins' array
+    ['MiniCssExtractPlugin', 'BundleTracker', 'DefinePlugin', 'Dotenv'], // Identify plugins by constructor name or a unique property
+    (plugin) => plugin.constructor && plugin.constructor.name, // Use constructor name for uniqueness check
+  ),
+  // Use default strategies for other keys (like 'module.rules')
+  // customizeObject: (a, b, key) => { /* custom object merging if needed */ }
+});
+
+// 2. Now use the customized merge function (mergeProd)
 module.exports = smp.wrap(
-  mergeWithCustomize(commonConfig, {
-    // Define custom merge strategies
-    customMerge: (key) => {
-      if (key === 'plugins') {
-        // For the 'plugins' array, concatenate the arrays.
-        // 'unique' helps prevent duplicates if the same plugin type exists in both configs,
-        // although in this case, the plugins are distinct.
-        // 'append' strategy means prod plugins come after common plugins.
-        return unique('plugins', [], (a, b) => [...a, ...b]); // Simple concatenation
-      }
-      // For all other keys, use the default merge behavior
-      return undefined;
+  mergeProd(
+    // Use the mergeProd function here
+    commonConfig, // First config (base)
+    {
+      // Second config (production specifics)
+      mode: 'production',
+      devtool: 'source-map',
+      bail: true,
+      output: {
+        publicPath: `${staticUrl}webpack_bundles/`,
+      },
+      // Only list the PRODUCTION-SPECIFIC plugins here
+      plugins: [
+        new Dotenv({
+          path: path.resolve(__dirname, '../.envs/.production/.webpack'),
+        }),
+        new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"production"' }),
+        // MiniCssExtractPlugin and BundleTracker are already in commonConfig
+        // and will be merged correctly by mergeProd
+      ],
     },
-  })(commonConfig, {
-    // Apply the custom merge to commonConfig and the prod-specific config
-    // Prod-specific config starts here
-    mode: 'production',
-    devtool: 'source-map',
-    bail: true,
-    output: {
-      publicPath: `${staticUrl}webpack_bundles/`,
-    },
-    // Only list the PRODUCTION-SPECIFIC plugins here
-    plugins: [
-      new Dotenv({
-        path: path.resolve(__dirname, '../.envs/.production/.webpack'),
-      }),
-      new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"production"' }),
-    ],
-    // No need to repeat mode, devtool, bail, output etc. if they are correctly merged
-  }),
-);
+  ), // End of mergeProd call
+); // End of smp.wrap
