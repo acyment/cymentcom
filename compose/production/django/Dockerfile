@@ -1,3 +1,4 @@
+FROM docker.io/python:3.12.9-slim-bookworm AS python
 FROM gplane/pnpm:10.8.1-node22-bullseye AS client-builder
 ARG APP_HOME=/app
 WORKDIR ${APP_HOME}
@@ -24,8 +25,6 @@ COPY ./requirements .
 
 RUN pip wheel --wheel-dir /usr/src/app/wheels  \
   -r ${BUILD_ENVIRONMENT}.txt
-
-
 
 # Python 'run' stage
 FROM python AS python-run-stage
@@ -86,7 +85,6 @@ RUN chmod +x /start-flower
 
 # copy application code to WORKDIR
 COPY --from=client-builder --chown=django:django ${APP_HOME} ${APP_HOME}
-
 
 # make django owner of the WORKDIR directory as well.
 RUN chown -R django:django ${APP_HOME}
