@@ -34,3 +34,4 @@ nameparser==1.1.3 # https://pypi.org/project/python-nameparser/
 
 django-afip==13.2.0 # https://github.com/WhyNotHugo/django-afip
 django-weasyprint==2.4.0 # https://github.com/fdemmer/django-weasyprint
+django-structlog==9.1.1 # https://github.com/structlog/django-structlog
