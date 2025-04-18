@@ -1,19 +1,12 @@
-# Stage 1: Install dependencies with Bun
-FROM oven/bun:slim as deps
-WORKDIR /app
-COPY package.json bun.lockb* ./
-RUN bun install --frozen-lockfile
+FROM gplane/pnpm:10.8.1-node22-bullseye AS client-builder
+ARG APP_HOME=/app
+WORKDIR ${APP_HOME}
 
-# Stage 2: Build the application
-FROM node:22.14-bookworm-slim as builder
+COPY ./package.json ${APP_HOME}
 
-WORKDIR /app
-# Copy dependencies from the previous stage
-COPY --from=deps /app/node_modules ./node_modules
-# Copy source code
-COPY . .
-# Run the build using Node/npm
-RUN npm run build
+RUN pnpm install
+COPY . ${APP_HOME}
+RUN pnpm run build
 
 # define an alias for the specific python version used in this file.
 FROM python AS python-build-stage
@@ -52,7 +45,7 @@ RUN addgroup --system django \
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
   # psycopg dependencies
-  libpq-dev \
+  libpq5 \
   # Translations dependencies
   gettext \
   # entrypoint
