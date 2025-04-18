@@ -2,7 +2,7 @@ const { mergeWithCustomize, unique } = require('webpack-merge');
 const commonConfig = require('./common.config');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
-const webpack = require('webpack');
+const { rspack } = require('@rspack/core');
 
 // This variable should mirror the one from config/settings/production.py
 const staticUrl = '/static/';
@@ -36,7 +36,7 @@ module.exports = mergeProd(
       new Dotenv({
         path: path.resolve(__dirname, '../.envs/.production/.webpack'),
       }),
-      new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"production"' }),
+      new rspack.DefinePlugin({ 'process.env.NODE_ENV': '"production"' }),
       // MiniCssExtractPlugin and BundleTracker are already in commonConfig
       // and will be merged correctly by mergeProd
     ],

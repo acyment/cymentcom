@@ -1,6 +1,6 @@
 const path = require('path');
 const BundleTracker = require('webpack-bundle-tracker');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { rspack } = require('@rspack/core');
 
 module.exports = {
   target: 'web',
@@ -19,7 +19,9 @@ module.exports = {
       path: path.resolve(path.join(__dirname, '../')),
       filename: 'webpack-stats.json',
     }),
-    new MiniCssExtractPlugin({ filename: 'css/[name].[contenthash].css' }),
+    new rspack.CssExtractRspackPlugin({
+      filename: 'css/[name].[contenthash].css',
+    }),
   ],
   module: {
     rules: [
@@ -32,7 +34,7 @@ module.exports = {
       {
         test: /\.s?css$/i,
         use: [
-          MiniCssExtractPlugin.loader,
+          rspack.CssExtractRspackPlugin.loader,
           'css-loader',
           {
             loader: 'postcss-loader',
@@ -44,6 +46,7 @@ module.exports = {
           },
           'sass-loader',
         ],
+        type: 'javascript/auto',
       },
       {
         test: /\.(ts|tsx)$/,

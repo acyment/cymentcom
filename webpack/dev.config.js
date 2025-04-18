@@ -2,7 +2,7 @@ const { merge } = require('webpack-merge');
 const commonConfig = require('./common.config');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
-const webpack = require('webpack');
+const { rspack } = require('@rspack/core');
 const BundleAnalyzerPlugin =
   require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -36,7 +36,7 @@ module.exports = merge(commonConfig, {
     new Dotenv({
       path: path.resolve(__dirname, '../.envs/.local/.webpack'),
     }),
-    new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"development"' }),
+    new rspack.DefinePlugin({ 'process.env.NODE_ENV': '"development"' }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
     }),
