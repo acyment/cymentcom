@@ -1,9 +1,7 @@
-FROM docker.io/node:22.14-bookworm-slim
+FROM gplane/pnpm:10.8.1-node22-bullseye
 
 WORKDIR /app
 
 COPY ./package.json /app
 
-RUN npm install -g bun
-
-RUN bun install
+RUN pnpm install
