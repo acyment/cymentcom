@@ -8,7 +8,7 @@ COPY ./package.json ${APP_HOME}
 
 RUN bun install
 COPY . ${APP_HOME}
-RUN bun run build
+RUN npm run build
 # define an alias for the specific python version used in this file.
 FROM python AS python-build-stage
 
