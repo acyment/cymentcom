@@ -87,6 +87,11 @@
       ]
     ]
   },
+  "pnpm": {
+    "overrides": {
+      "@radix-ui/react-use-controllable-state": "1.1.1"
+    }
+  },
   "scripts": {
     "dev": "rspack serve --config webpack/dev.config.js",
     "build": "rspack --config webpack/prod.config.js"
