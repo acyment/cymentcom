@@ -1,14 +1,20 @@
-FROM docker.io/python:3.12.9-slim-bookworm AS python
-FROM oven/bun:debian AS client-builder
+# Stage 1: Install dependencies with Bun
+FROM oven/bun:slim as deps
+WORKDIR /app
+COPY package.json bun.lockb* ./
+RUN bun install --frozen-lockfile
 
-ARG APP_HOME=/app
-WORKDIR ${APP_HOME}
+# Stage 2: Build the application
+FROM node:22.14-bookworm-slim as builder
 
-COPY ./package.json ${APP_HOME}
-
-RUN bun install
-COPY . ${APP_HOME}
+WORKDIR /app
+# Copy dependencies from the previous stage
+COPY --from=deps /app/node_modules ./node_modules
+# Copy source code
+COPY . .
+# Run the build using Node/npm
 RUN npm run build
+
 # define an alias for the specific python version used in this file.
 FROM python AS python-build-stage
 
