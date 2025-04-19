@@ -26,9 +26,6 @@ Thumbs.db
 .idea
 *.swp
 
-# Secrets / Environment
-.env*
-! .env.example # Keep example files if needed
 
 # Build artifacts (if not needed in context)
 dist
