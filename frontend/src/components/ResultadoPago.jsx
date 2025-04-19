@@ -4,16 +4,12 @@ import HeaderDialogo from './HeaderDialogo';
 import * as Dialog from '@radix-ui/react-dialog';
 
 const ResultadoPago = () => {
-  const {
-    status,
-    nombre_curso,
-    fecha_curso,
-    nombre_participante,
-    apellido_participante,
-    email_facturacion,
-    email_participante,
-    monto,
-  } = useSearch({ strict: false });
+  console.log('ResultadoPago component mounting...');
+  console.log('Initial window.location.href:', window.location.href);
+
+  const searchParams = useSearch({ strict: false });
+  console.log('Params from useSearch on mount:', searchParams);
+
   const navigate = useNavigate();
   const isSuccess = status === 'approved';
   const statusClassName = isSuccess ? 'status-success' : 'status-failure';
@@ -33,6 +29,37 @@ const ResultadoPago = () => {
       }
     }
   };
+
+  // Log inside useEffect to see if it changes after initial mount
+  useEffect(() => {
+    console.log('ResultadoPago useEffect triggered.');
+    const currentSearchParams = new URLSearchParams(window.location.search);
+    console.log(
+      'Params from URLSearchParams in useEffect:',
+      Object.fromEntries(currentSearchParams.entries()),
+    );
+    // You could potentially force a state update here if needed, but try to avoid it
+  }, []); // Empty dependency array means it runs once after mount
+
+  const {
+    status,
+    nombre_curso,
+    fecha_curso,
+    nombre_participante,
+    apellido_participante,
+    email_facturacion,
+    email_participante,
+    monto,
+  } = searchParams;
+  const navigate = useNavigate();
+  // ... rest of the component
+  // Add logs inside conditional rendering too
+  console.log(
+    'Rendering with status:',
+    status,
+    'Is Success:',
+    status === 'approved',
+  );
 
   return (
     <div className="ContenedorModal">
