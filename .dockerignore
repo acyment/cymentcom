@@ -1,11 +1,40 @@
-.editorconfig
-.gitattributes
-.github
-.gitignore
-.gitlab-ci.yml
-.idea
-.pre-commit-config.yaml
-.readthedocs.yml
-.travis.yml
-venv
+# Git
 .git
+.gitignore
+.gitattributes
+
+# Node
+node_modules
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+.venv
+venv
+env
+*.egg-info
+.pytest_cache
+.mypy_cache
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor specific
+.vscode
+.idea
+*.swp
+
+# Secrets / Environment
+.env*
+! .env.example # Keep example files if needed
+
+# Build artifacts (if not needed in context)
+dist
+build
+
+# Other
+README.md # If not needed in image
+docs/ # If not needed in image
+# Add any other logs, local configs, etc.
