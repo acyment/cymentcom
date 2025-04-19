@@ -87,9 +87,6 @@ RUN chmod +x /start-flower
 # copy application code to WORKDIR
 COPY --from=client-builder --chown=django:django ${APP_HOME} ${APP_HOME}
 
-# make django owner of the WORKDIR directory as well.
-RUN chown -R django:django ${APP_HOME}
-
 USER django
 
 RUN DATABASE_URL="" \
