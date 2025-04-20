@@ -204,10 +204,44 @@ class CreateStripeCheckoutSessionView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, response_format=None):
+        factura_id = request.data.get("id_factura")
+        if not factura_id:
+            log.warning("missing_factura_id")
+            return Response(
+                {"error": "Missing 'id_factura' in request data."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         try:
-            factura = Factura.objects.get(id=request.data.get("id_factura"))
+            try:
+                factura = Factura.objects.get(id=factura_id)
+                log = log.bind(
+                    curso_id=factura.curso_id, tipo_curso_id=factura.curso.tipo_id
+                )
+                log.info("factura_found")
+            except Factura.DoesNotExist:
+                log.warning("factura_not_found")
+                return Response(
+                    {"error": f"Invoice with ID {factura_id} not found."},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
             tipo_curso = factura.curso.tipo
             stripe_price_id = tipo_curso.stripe_price_id
+
+            if not stripe_price_id:
+                log.error("missing_stripe_price_id", tipo_curso_id=tipo_curso.id)
+                return Response(
+                    {
+                        "error": "Configuration error: Stripe Price ID not set for this course type."
+                    },
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,  # Or 400 if client could influence this
+                )
+
+            log = log.bind(
+                stripe_price_id=stripe_price_id, customer_email=factura.email
+            )
+            log.info("attempting_stripe_checkout_creation")
+
             stripe.api_key = env("STRIPE_API_KEY")
             checkout_session = stripe.checkout.Session.create(
                 line_items=[
@@ -224,11 +258,75 @@ class CreateStripeCheckoutSessionView(APIView):
                 customer_email=factura.email,
             )
 
+            log.info(
+                "stripe_checkout_session_created_successfully",
+                checkout_session_id=checkout_session.id,
+                checkout_url=checkout_session.url,  # Don't log sensitive parts if any
+            )
+
             return redirect(checkout_session.url)
-        except Exception as e:  # noqa: BLE001
-            # TODO: Manejar excepciones de Stripe https://docs.stripe.com/api/errors/handling
-            print(f"Excepcion Stripe:{str(e)}")
-            return str(e)
+        except stripe.error.CardError as e:
+            # Since it's a decline, Stripe Checkout handles this, but if API call failed:
+            log.warning("stripe_card_error", error_message=str(e), stripe_code=e.code)
+            return Response(
+                {"error": e.user_message or "Card error"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except stripe.error.RateLimitError as e:
+            log.warning("stripe_rate_limit_error", error_message=str(e))
+            # Potentially retry or queue? For now, return 503
+            return Response(
+                {"error": "Stripe service busy. Please try again later."},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+        except stripe.error.InvalidRequestError as e:
+            # Bad request parameters
+            log.warning(
+                "stripe_invalid_request_error",
+                error_message=str(e),
+                stripe_param=e.param,
+            )
+            return Response(
+                {"error": "Invalid request to Stripe."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except stripe.error.AuthenticationError as e:
+            # Authentication with Stripe's API failed (check API key)
+            log.error("stripe_authentication_error", error_message=str(e))
+            return Response(
+                {"error": "Stripe authentication error."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        except stripe.error.APIConnectionError as e:
+            # Network communication with Stripe failed
+            log.error("stripe_api_connection_error", error_message=str(e))
+            return Response(
+                {"error": "Could not connect to Stripe. Please try again later."},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+        except stripe.error.StripeError as e:
+            # Generic Stripe error
+            log.exception(
+                "stripe_generic_error", error_message=str(e)
+            )  # Use exception for traceback
+            return Response(
+                {"error": "An error occurred during Stripe processing."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        # --- General Exception Handling ---
+        except Exception as e:
+            # Log the exception with traceback and context
+            log.exception(
+                "unexpected_error_creating_checkout_session"
+            )  # No need to add str(e) here
+            # Return a generic error response to the client
+            return Response(
+                {
+                    "error": "An unexpected error occurred while processing your payment request."
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
 
 class BasePaymentCallback(APIView, ABC):
