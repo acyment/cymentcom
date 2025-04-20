@@ -10,7 +10,6 @@ const ResultadoPago = () => {
   const searchParams = useSearch({ strict: false });
   console.log('Params from useSearch on mount:', searchParams);
 
-  const navigate = useNavigate();
   const isSuccess = status === 'approved';
   const statusClassName = isSuccess ? 'status-success' : 'status-failure';
 
