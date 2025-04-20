@@ -88,7 +88,7 @@ RUN chmod +x /start-flower
 COPY --from=client-builder --chown=django:django ${APP_HOME} ${APP_HOME}
 
 # make django owner of the WORKDIR directory as well.
-
+RUN chown  django:django ${APP_HOME}
 
 USER django
 
