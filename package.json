@@ -76,25 +76,14 @@
   "browserslist": [
     "last 2 versions"
   ],
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      [
-        "@babel/preset-react",
-        {
-          "runtime": "automatic"
-        }
-      ]
-    ]
-  },
   "pnpm": {
     "overrides": {
       "@radix-ui/react-use-controllable-state": "1.1.1"
     }
   },
   "scripts": {
-    "dev": "rspack serve --config webpack/dev.config.js",
-    "build": "rspack --config webpack/prod.config.js"
+    "dev": "echo '--- DEBUG RUNTIME (via pnpm run dev) ---'; echo 'Current Directory:'; pwd; echo '---'; echo 'Listing /app:'; ls -la /app; echo '---'; echo 'Listing /app/node_modules/.bin:'; ls -la /app/node_modules/.bin/; echo '---'; echo 'Checking existence of specific file:'; ls -la /app/node_modules/.bin/rspack; echo '---'; echo 'Attempting to execute script:'; ./node_modules/.bin/rspack serve --config webpack/dev.config.js",
+    "build": "npx rspack --config webpack/prod.config.js"
   },
   "packageManager": "pnpm@10.8.1"
 }

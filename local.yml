@@ -94,7 +94,6 @@ services:
     container_name: cyment_com_local_node
     environment:
       NODE_ENV: development
-      NODE_OPTIONS: '--inspect=0.0.0.0:9229' # Expose the debugging port
     depends_on:
       - django
     volumes:
@@ -104,7 +103,6 @@ services:
     command: pnpm run dev
     ports:
       - '3000:3000'
-      - '9229:9229'
         # Expose browsersync UI: https://www.browsersync.io/docs/options/#option-ui
       - '3001:3001'
       - '8888:8888'
