@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react'; // Removed useState as it wasn't used
 import { useSearch, useNavigate } from '@tanstack/react-router';
 import HeaderDialogo from './HeaderDialogo';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -7,16 +7,44 @@ const ResultadoPago = () => {
   console.log('ResultadoPago component mounting...');
   console.log('Initial window.location.href:', window.location.href);
 
+  // --- HOOKS FIRST ---
+  const navigate = useNavigate(); // Declare navigate early
   const searchParams = useSearch({ strict: false });
   console.log('Params from useSearch on mount:', searchParams);
 
-  const isSuccess = status === 'approved';
+  // --- EXTRACT PARAMS NEXT ---
+  const {
+    status, // Now 'status' is declared
+    nombre_curso,
+    fecha_curso,
+    nombre_participante,
+    apellido_participante,
+    email_facturacion,
+    email_participante,
+    monto,
+  } = searchParams;
+
+  // --- DERIVED VALUES ---
+  const isSuccess = status === 'approved'; // Now this line works
   const statusClassName = isSuccess ? 'status-success' : 'status-failure';
 
+  // --- EFFECT HOOKS ---
+  useEffect(() => {
+    console.log('ResultadoPago useEffect triggered.');
+    const currentSearchParams = new URLSearchParams(window.location.search);
+    console.log(
+      'Params from URLSearchParams in useEffect:',
+      Object.fromEntries(currentSearchParams.entries()),
+    );
+    // You could potentially force a state update here if needed, but try to avoid it
+  }, []); // Empty dependency array means it runs once after mount
+
+  // --- EVENT HANDLERS ---
   // Handler for when Radix requests an open state change (e.g., Esc, overlay click, Dialog.Close)
   const handleOpenChange = (open) => {
     // We only care about the closing action
     if (!open) {
+      console.log('Dialog closing, navigating to /');
       try {
         navigate({
           to: '/',
@@ -29,40 +57,23 @@ const ResultadoPago = () => {
     }
   };
 
-  // Log inside useEffect to see if it changes after initial mount
-  useEffect(() => {
-    console.log('ResultadoPago useEffect triggered.');
-    const currentSearchParams = new URLSearchParams(window.location.search);
-    console.log(
-      'Params from URLSearchParams in useEffect:',
-      Object.fromEntries(currentSearchParams.entries()),
-    );
-    // You could potentially force a state update here if needed, but try to avoid it
-  }, []); // Empty dependency array means it runs once after mount
-
-  const {
-    status,
-    nombre_curso,
-    fecha_curso,
-    nombre_participante,
-    apellido_participante,
-    email_facturacion,
-    email_participante,
-    monto,
-  } = searchParams;
-  const navigate = useNavigate();
-  // ... rest of the component
-  // Add logs inside conditional rendering too
+  // --- RENDER LOGIC ---
   console.log(
     'Rendering with status:',
     status,
     'Is Success:',
-    status === 'approved',
+    isSuccess, // Use the derived variable
   );
 
   return (
     <div className="ContenedorModal">
-      <Dialog.Root open={true} modal={true} onOpenChange={handleOpenChange}>
+      {/* Keep open={true} only if this component should ALWAYS show the dialog */}
+      {/* If it's conditionally rendered, manage open state elsewhere */}
+      <Dialog.Root
+        defaultOpen={true}
+        modal={true}
+        onOpenChange={handleOpenChange}
+      >
         <Dialog.Portal>
           <Dialog.Overlay className="DialogOverlay" />
           <Dialog.Content className="DialogContent">
@@ -110,6 +121,8 @@ const ResultadoPago = () => {
                       en breve.
                     </p>
                   )}
+                  {/* Log status directly if needed for debugging */}
+                  {/* <p><strong>Status Raw:</strong> {status}</p> */}
                 </div>
               </div>
 
@@ -147,15 +160,15 @@ const ResultadoPago = () => {
               <div className="button-container">
                 {isSuccess ? (
                   <Dialog.Close asChild>
-                    <button
-                      className="BotonFormulario BotonContinuar" /* onClick={handleGoHome} */
-                    >
+                    {/* The Dialog.Close will trigger handleOpenChange */}
+                    <button className="BotonFormulario BotonContinuar">
                       ¡Listo!
                     </button>
                   </Dialog.Close>
                 ) : (
                   <>
                     <Dialog.Close asChild>
+                      {/* The Dialog.Close will trigger handleOpenChange */}
                       <button className="BotonFormulario BotonContinuar">
                         Reintentar más tarde
                       </button>
@@ -166,6 +179,7 @@ const ResultadoPago = () => {
 
               <div className="footer-help">
                 ¿Necesitas ayuda?{' '}
+                {/* Using Dialog.Close here will also navigate home immediately */}
                 <Dialog.Close asChild>
                   <a href="#contacto" className="help-link">
                     Contactanos
