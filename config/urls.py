@@ -8,6 +8,9 @@ from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
+from .views import server_error_view
+
+handler500 = server_error_view
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -29,15 +32,19 @@ urlpatterns = [
 
 # API URLS - more specific patterns first
 urlpatterns += [
-    re_path(r'^api/auth-token/?$', obtain_auth_token),
-    re_path(r'^api/schema/?$', SpectacularAPIView.as_view(), name="api-schema"),
-    re_path(r'^api/docs/?$', SpectacularSwaggerView.as_view(url_name="api-schema"), name="api-docs"),
-    re_path(r'^api/', include("config.api_router")),
+    re_path(r"^api/auth-token/?$", obtain_auth_token),
+    re_path(r"^api/schema/?$", SpectacularAPIView.as_view(), name="api-schema"),
+    re_path(
+        r"^api/docs/?$",
+        SpectacularSwaggerView.as_view(url_name="api-schema"),
+        name="api-docs",
+    ),
+    path("api/", include("config.api_router")),
 ]
 
 # Add catch-all routes for client-side routing LAST
 urlpatterns += [
-    re_path(r'^.*$', TemplateView.as_view(template_name="pages/home.html")),
+    re_path(r"^.*$", TemplateView.as_view(template_name="pages/home.html")),
 ]
 
 if settings.DEBUG:
