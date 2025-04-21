@@ -10,6 +10,7 @@ COPY ./frontend/src ${APP_HOME}/frontend/src
 COPY ./frontend/public ${APP_HOME}/frontend/public
 COPY ./webpack ${APP_HOME}/webpack
 COPY ./.swcrc ${APP_HOME}
+COPY ./.envs/.production/.webpack ${APP_HOME}/.envs/.production/.webpack
 
 RUN pnpm run build
 
@@ -90,12 +91,15 @@ RUN chmod +x /start-flower
 
 # copy application code to WORKDIR
 COPY --from=client-builder --chown=django:django ${APP_HOME}/frontend/ ${APP_HOME}/frontend/
+COPY --from=python-build-stage ./manage.py ${APP_HOME}
 
 # make django owner of the WORKDIR directory as well.
 RUN chown  django:django ${APP_HOME}
 
 USER django
 
+RUN pwd
+RUN ls -la /app
 RUN DATABASE_URL="" \
   DJANGO_SETTINGS_MODULE="config.settings.test" \
   python manage.py compilemessages
