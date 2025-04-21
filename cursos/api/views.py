@@ -339,30 +339,123 @@ class BasePaymentCallback(APIView, ABC):
         """Get the invoice ID from the request parameters"""
         pass
 
-    def _build_error_response(self, message, status_code):
-        return JsonResponse({"error": message}, status=status_code)
+    def _build_error_response(
+        self, log, message, status_code, error_code=None, **kwargs
+    ):
+        """Builds and logs a JSON error response."""
+        payload = {"error": message}
+        if error_code:
+            payload["code"] = error_code
+        # Log the error with context before returning
+        log.error(
+            "payment_callback_error",
+            error_message=message,
+            status_code=status_code,
+            error_payload=payload,
+            **kwargs,
+        )
+        return JsonResponse(payload, status=status_code)
 
     def get(self, request, format=None):
         raw_query_string = request.META.get("QUERY_STRING", "")
+        payment_provider = (
+            self.__class__.__name__
+        )  # e.g., "MPPaymentCallback", "StripePaymentCallback"
         log = logger.bind(
-            callback_type=self.__class__.__name__,  # e.g., "MPPaymentCallback"
+            callback_type=payment_provider,
             http_method=request.method,
             http_path=request.path,
             raw_query_string=raw_query_string,
+            remote_addr=request.META.get("REMOTE_ADDR"),
         )
         log.info("payment_callback_received")
 
-        payment_status = request.query_params.get("status")
-        id_factura = self.get_external_reference(request)
+        # --- Parameter Extraction ---
+        payment_status = request.query_params.get("status")  # Common, but might vary
+        external_reference = None
 
-        if not all([payment_status, id_factura]):
-            return self._build_error_response(
-                "Missing required parameters", status.HTTP_400_BAD_REQUEST
-            )
         try:
-            factura = Factura.objects.get(id=id_factura)
+            id_factura = self.get_external_reference(request)
+            log = log.bind(
+                external_reference=external_reference
+            )  # Add to context early if available
+            log.debug(
+                "extracted_parameters",
+                payment_status=payment_status,
+                external_reference=external_reference,
+            )
+        except Exception as e:
+            # Catch errors during external reference extraction
+            return self._build_error_response(
+                log,
+                f"Error extracting external reference: {str(e)}",
+                status.HTTP_400_BAD_REQUEST,
+                error_code="PARAM_EXTRACTION_FAILED",
+                exc_info=True,  # Add stack trace to log
+            )
 
-            inscripcion = Inscripcion.objects.get(factura=factura)
+            # --- Basic Validation ---
+        if not payment_status:
+            return self._build_error_response(
+                log,
+                "Missing required parameter: 'status'",
+                status.HTTP_400_BAD_REQUEST,
+                error_code="MISSING_STATUS",
+            )
+        if not external_reference:
+            return self._build_error_response(
+                log,
+                "Missing required parameter: external reference could not be determined.",
+                status.HTTP_400_BAD_REQUEST,
+                error_code="MISSING_REFERENCE",
+            )
+
+        log = log.bind(
+            payment_status=payment_status
+        )  # Add status now we know it exists
+        log.info("processing_payment_callback")
+        try:
+            try:
+                log.debug("fetching_factura", factura_external_ref=external_reference)
+                factura = Factura.objects.get(id=id_factura)
+                log = log.bind(factura_id=factura.id)
+                log.info("factura_found")
+            except Factura.DoesNotExist:
+                return self._build_error_response(
+                    log,
+                    f"Factura not found for reference: {external_reference}",
+                    status.HTTP_404_NOT_FOUND,  # 404 is often more appropriate for 'not found'
+                    error_code="FACTURA_NOT_FOUND",
+                )
+            except ValueError:  # Handle case where external_reference isn't a valid ID format (e.g., not an int)
+                return self._build_error_response(
+                    log,
+                    f"Invalid format for external reference: {external_reference}",
+                    status.HTTP_400_BAD_REQUEST,
+                    error_code="INVALID_REFERENCE_FORMAT",
+                )
+            # --- Fetch Inscripcion ---
+            log.debug("fetching_inscripcion", factura_id=factura.id)
+            try:
+                inscripcion = Inscripcion.objects.get(factura=factura)
+                log = log.bind(
+                    inscripcion_id=inscripcion.id,
+                    curso_id=inscripcion.curso.id,
+                    alumno_id=inscripcion.alumno.id,
+                )
+                log.info("inscripcion_found")
+            except Inscripcion.DoesNotExist:
+                # This might indicate an data integrity issue (Factura exists but no Inscripcion)
+                # Consider if 404 or 500 is more appropriate. 500 suggests an unexpected server state.
+                return self._build_error_response(
+                    log,
+                    f"Inscripcion not found for Factura ID: {factura.id}",
+                    status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    error_code="INSCRIPCION_NOT_FOUND",
+                    detail="Associated Inscripcion missing for existing Factura.",
+                )
+
+            log.debug("preparing_redirect_data")
             params = {
                 "status": payment_status,
                 "nombre_curso": inscripcion.curso.tipo.nombre_completo,
@@ -373,19 +466,37 @@ class BasePaymentCallback(APIView, ABC):
                 "email_participante": inscripcion.alumno.email,
                 "monto": inscripcion.monto,
             }
-            query_string = urlencode(
-                params, quote_via=quote
-            )  # For compatibility when unencoding on the frontend
-            redirect_url = f"{settings.REDIRECT_DOMAIN}/payment-result?{query_string}"
+            try:
+                query_string = urlencode(
+                    params, quote_via=quote
+                )  # For compatibility when unencoding on the frontend
+                redirect_url = (
+                    f"{settings.REDIRECT_DOMAIN}/payment-result?{query_string}"
+                )
+            except Exception as e:
+                # Catch potential errors during URL building (e.g., missing settings)
+                return self._build_error_response(
+                    log,
+                    f"Error building redirect URL: {str(e)}",
+                    status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    error_code="REDIRECT_BUILD_FAILED",
+                    exc_info=True,
+                )
 
-            return redirect(redirect_url)
-        except ObjectDoesNotExist:
-            return JsonResponse(
-                {"error": "Factura no encontrada: " + str(id_factura)}, status=400
+            log.info(
+                "payment_processed_successfully_redirecting", redirect_url=redirect_url
             )
-        except Exception as e:  # noqa: BLE001
-            return JsonResponse(
-                {"error": f"Error al procesar el pago: {str(e)}"}, status=500
+            return redirect(redirect_url)
+
+            # --- Catch-all for Unexpected Errors ---
+        except Exception as e:  # noqa: BLE001 - Keep broad catch here but log details
+            # Log the exception with stack trace for debugging
+            log.exception("unhandled_error_processing_callback")
+            return self._build_error_response(
+                log,  # Pass the log instance to ensure context is included
+                f"An unexpected error occurred: {str(e)}",
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+                error_code="UNEXPECTED_ERROR",
             )
 
 
