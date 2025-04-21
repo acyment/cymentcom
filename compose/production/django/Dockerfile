@@ -8,7 +8,7 @@ COPY ./package.json ${APP_HOME}
 RUN pnpm install
 COPY ./frontend/src ${APP_HOME}/frontend/src
 COPY ./frontend/public ${APP_HOME}/frontend/public
-COPY ./webpack.config ${APP_HOME}/webpack
+COPY ./webpack ${APP_HOME}/webpack
 COPY ./.swcrc ${APP_HOME}
 
 RUN pnpm run build
