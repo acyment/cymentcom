@@ -54,7 +54,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # entrypoint
   wait-for-it \
   weasyprint \
-  dust \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
@@ -90,7 +89,7 @@ RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
 
 # copy application code to WORKDIR
-COPY --from=client-builder --chown=django:django ${APP_HOME} ${APP_HOME}
+COPY --from=client-builder --chown=django:django ${APP_HOME}/frontend/ ${APP_HOME}/frontend/
 
 # make django owner of the WORKDIR directory as well.
 RUN chown  django:django ${APP_HOME}
