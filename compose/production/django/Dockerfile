@@ -91,7 +91,13 @@ RUN chmod +x /start-flower
 
 # copy application code to WORKDIR
 COPY --from=client-builder --chown=django:django ${APP_HOME}/frontend/ ${APP_HOME}/frontend/
-COPY --from=python-build-stage ./manage.py ${APP_HOME}
+COPY ./manage.py ${APP_HOME}
+COPY ./config ${APP_HOME}/config
+COPY ./cursos ${APP_HOME}/cursos
+COPY ./cyment_com ${APP_HOME}/cyment_com
+COPY ./locale ${APP_HOME}/locale
+COPY ./pagos ${APP_HOME}/pagos
+
 
 # make django owner of the WORKDIR directory as well.
 RUN chown  django:django ${APP_HOME}
