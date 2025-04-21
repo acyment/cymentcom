@@ -10,6 +10,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from mjml import mjml2html
 
+from .models import Inscripcion
+
 # Define paths for both logos
 LOGO_NEGRO_PATH = "images/logo_negro_180@2x.png"
 LOGO_BLANCO_PATH = "images/logo_blanco_120@2x.png"  # Adjust if your path is different
@@ -18,8 +20,14 @@ LOGO_BLANCO_PATH = "images/logo_blanco_120@2x.png"  # Adjust if your path is dif
 class EmailSender:
     @staticmethod
     @shared_task
-    def send_welcome_email(inscripcion):
+    def send_welcome_email(inscripcion_id):
         logger = logging.getLogger(__name__)
+        
+        try:
+            inscripcion = Inscripcion.objects.get(id=inscripcion_id)
+        except Inscripcion.DoesNotExist:
+            logger.error(f"Inscripción con ID {inscripcion_id} no encontrada")
+            return
 
         logo_negro_cid = "logo_negro"  # Unique Content-ID for the black logo
         logo_blanco_cid = "logo_blanco"  # Unique Content-ID for the white logo
@@ -96,4 +104,11 @@ class EmailSender:
                 )
 
         # Send the email
-        email.send(fail_silently=False)
+        try:
+            email.send(fail_silently=False)
+            inscripcion.se_envio_mail_bienvenida = True
+            inscripcion.save()
+            logger.info(f"Email enviado y marcado como enviado para {inscripcion}")
+        except Exception as e:
+            logger.error(f"Error enviando email a {inscripcion}: {str(e)}")
+            raise
