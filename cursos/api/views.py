@@ -214,7 +214,7 @@ class CreateStripeCheckoutSessionView(APIView):
         try:
             try:
                 factura = Factura.objects.get(id=factura_id)
-                log = log.bind(
+                log = logger.bind(
                     curso_id=factura.curso_id, tipo_curso_id=factura.curso.tipo_id
                 )
                 log.info("factura_found")
@@ -237,7 +237,7 @@ class CreateStripeCheckoutSessionView(APIView):
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR,  # Or 400 if client could influence this
                 )
 
-            log = log.bind(
+            log = logger.bind(
                 stripe_price_id=stripe_price_id, customer_email=factura.email
             )
             log.info("attempting_stripe_checkout_creation")
