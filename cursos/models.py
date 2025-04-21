@@ -154,6 +154,7 @@ class Inscripcion(models.Model):
     procesador_pago = models.CharField(max_length=6, choices=ProcesadorPago.choices)
     estado = models.CharField(max_length=9, choices=EstadoInscripcion.choices)
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE, null=True)
+    se_envio_mail_bienvenida = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = "Inscripciones"
