@@ -133,6 +133,12 @@ class Factura(models.Model):
     confeccionada = models.BooleanField(default=False)
     pagada = models.BooleanField(default=False)
     email = models.EmailField()
+    archivo_pdf = models.FileField(
+        upload_to='facturas/pdfs/%Y/%m/%d/',
+        blank=True,
+        verbose_name="PDF adjunto",
+        help_text="Archivo PDF de la factura generada"
+    )
 
     def __str__(self):
         return f"{self.nombre} - {self.curso}"
