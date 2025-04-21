@@ -376,19 +376,17 @@ class BasePaymentCallback(APIView, ABC):
 
         try:
             id_factura = self.get_external_reference(request)
-            log = log.bind(
-                external_reference=external_reference
-            )  # Add to context early if available
+            log = log.bind(id_factura=id_factura)  # Add to context early if available
             log.debug(
                 "extracted_parameters",
                 payment_status=payment_status,
-                external_reference=external_reference,
+                id_factura=id_factura,
             )
         except Exception as e:
             # Catch errors during external reference extraction
             return self._build_error_response(
                 log,
-                f"Error extracting external reference: {str(e)}",
+                f"Error extracting external reference (id_factura): {str(e)}",
                 status.HTTP_400_BAD_REQUEST,
                 error_code="PARAM_EXTRACTION_FAILED",
                 exc_info=True,  # Add stack trace to log
@@ -402,10 +400,10 @@ class BasePaymentCallback(APIView, ABC):
                 status.HTTP_400_BAD_REQUEST,
                 error_code="MISSING_STATUS",
             )
-        if not external_reference:
+        if not id_factura:
             return self._build_error_response(
                 log,
-                "Missing required parameter: external reference could not be determined.",
+                "Missing required parameter: id_factura could not be determined.",
                 status.HTTP_400_BAD_REQUEST,
                 error_code="MISSING_REFERENCE",
             )
@@ -416,21 +414,21 @@ class BasePaymentCallback(APIView, ABC):
         log.info("processing_payment_callback")
         try:
             try:
-                log.debug("fetching_factura", factura_external_ref=external_reference)
+                log.debug("fetching_factura", factura_external_ref=id_factura)
                 factura = Factura.objects.get(id=id_factura)
                 log = log.bind(factura_id=factura.id)
                 log.info("factura_found")
             except Factura.DoesNotExist:
                 return self._build_error_response(
                     log,
-                    f"Factura not found for reference: {external_reference}",
+                    f"Factura not found for reference: {id_factura}",
                     status.HTTP_404_NOT_FOUND,  # 404 is often more appropriate for 'not found'
                     error_code="FACTURA_NOT_FOUND",
                 )
             except ValueError:  # Handle case where external_reference isn't a valid ID format (e.g., not an int)
                 return self._build_error_response(
                     log,
-                    f"Invalid format for external reference: {external_reference}",
+                    f"Invalid format for external reference: {id_factura}",
                     status.HTTP_400_BAD_REQUEST,
                     error_code="INVALID_REFERENCE_FORMAT",
                 )
