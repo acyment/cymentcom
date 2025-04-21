@@ -6,7 +6,11 @@ WORKDIR ${APP_HOME}
 COPY ./package.json ${APP_HOME}
 
 RUN pnpm install
-COPY . ${APP_HOME}
+COPY ./frontend/src ${APP_HOME}/frontend/src
+COPY ./frontend/public ${APP_HOME}/frontend/public
+COPY ./webpack.config ${APP_HOME}/webpack
+COPY ./.swcrc ${APP_HOME}
+
 RUN pnpm run build
 
 # define an alias for the specific python version used in this file.
@@ -50,6 +54,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # entrypoint
   wait-for-it \
   weasyprint \
+  dust \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
