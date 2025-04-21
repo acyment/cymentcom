@@ -576,7 +576,7 @@ class MPPaymentWebhookView(APIView):
             factura.save()
 
             inscripcion = Inscripcion.objects.get(factura=factura)
-            EmailSender.send_welcome_email(inscripcion)
+            EmailSender.send_welcome_email(inscripcion.id)
 
         except ObjectDoesNotExist:
             mensaje_error = (
@@ -627,7 +627,7 @@ class StripePaymentWebhookView(APIView):
                 factura.save()
 
                 inscripcion = Inscripcion.objects.get(factura=factura)
-                EmailSender.send_welcome_email(inscripcion)
+                EmailSender.send_welcome_email(inscripcion.id)
             except ObjectDoesNotExist:
                 mensaje_error = f"No se encontró la factura con ID: {id_factura}"
                 logger.error(mensaje_error)
