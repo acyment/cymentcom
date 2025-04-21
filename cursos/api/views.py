@@ -204,6 +204,7 @@ class CreateStripeCheckoutSessionView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, response_format=None):
+        log = logger
         factura_id = request.data.get("id_factura")
         if not factura_id:
             log.warning("missing_factura_id")
