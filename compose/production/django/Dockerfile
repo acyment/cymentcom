@@ -103,7 +103,7 @@ COPY ./pagos ${APP_HOME}/pagos
 # make django owner of the WORKDIR directory as well.
 RUN chown  django:django ${APP_HOME}
 RUN chown -R django:django ${APP_HOME}/locale
-RUN chown -R django:django ${APP_HOME}/cyment_commedia
+RUN chown -R django:django ${APP_HOME}/cyment_com/media
 
 USER django
 
