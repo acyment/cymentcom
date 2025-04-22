@@ -4,7 +4,6 @@ import sys
 
 import sentry_sdk
 import structlog
-from loki_logger_handler.loki_logger_handler import LokiLoggerHandler
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
@@ -153,22 +152,6 @@ production_formatter = structlog.stdlib.ProcessorFormatter(
 )
 
 
-LOKI_URL = env("LOKI_URL")
-
-loki_handler = LokiLoggerHandler(
-    url=LOKI_URL,
-    labels={"app": "cyment", "env": "production"},
-    enable_structured_loki_metadata=True,
-    loki_metadata={"django": True, "team": "cyment"},
-)
-logging.getLogger().addHandler(loki_handler)
-LOKI_HANDLER_KWARGS = {
-    "url": LOKI_URL,
-    "labels": {"app": "cyment", "env": "production"},
-    "enable_structured_loki_metadata": True,
-    "loki_metadata": {"django": True, "team": "cyment"},
-}
-
 # --- Production Django LOGGING ---
 LOGGING = {
     "version": 1,
@@ -187,11 +170,6 @@ LOGGING = {
             "stream": sys.stdout,
             # Use the placeholder formatter name
             "formatter": "structlog_json_formatter",
-        },
-        "loki": {
-            "level": "INFO",
-            "class": "loki_logger_handler.loki_logger_handler.LokiLoggerHandler",
-            **LOKI_HANDLER_KWARGS,
         },
     },
     "root": {
