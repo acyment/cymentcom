@@ -51,6 +51,13 @@ jobs:
           envkey_GA_MEASUREMENT_ID: ${{ secrets.GA_MEASUREMENT_ID }}
           directory: .envs/.production
           file_name: .webpack
+      - name: Create production .grafana
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+          envkey_GF_SECURITY_ADMIN_USER: ${{ secrets.GF_SECURITY_ADMIN_USER }}
+          envkey_GF_SECURITY_ADMIN_PASSWORD: ${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
+          directory: .envs/.production
+          file_name: .grafana
       - name: Rsync deployments
         uses: burnett01/rsync-deployments@7.0.2
         with:

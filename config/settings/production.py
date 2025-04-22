@@ -4,6 +4,7 @@ import sys
 
 import sentry_sdk
 import structlog
+from loki_logger_handler.loki_logger_handler import LokiLoggerHandler
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
@@ -128,6 +129,7 @@ ANYMAIL = {
 # Reconfigure structlog is good practice if processors might differ,
 # but if they are the same as base, this call isn't strictly needed again.
 # It doesn't hurt, though.
+
 structlog.configure(
     processors=[
         structlog.contextvars.merge_contextvars,
@@ -150,6 +152,23 @@ production_formatter = structlog.stdlib.ProcessorFormatter(
     processor=structlog.processors.JSONRenderer(),
 )
 
+
+LOKI_URL = env("LOKI_URL")
+
+loki_handler = LokiLoggerHandler(
+    url=LOKI_URL,
+    labels={"app": "cyment", "env": "production"},
+    enable_structured_loki_metadata=True,
+    loki_metadata={"django": True, "team": "cyment"},
+)
+logging.getLogger().addHandler(loki_handler)
+LOKI_HANDLER_KWARGS = {
+    "url": LOKI_URL,
+    "labels": {"app": "cyment", "env": "production"},
+    "enable_structured_loki_metadata": True,
+    "loki_metadata": {"django": True, "team": "cyment"},
+}
+
 # --- Production Django LOGGING ---
 LOGGING = {
     "version": 1,
@@ -168,6 +187,11 @@ LOGGING = {
             "stream": sys.stdout,
             # Use the placeholder formatter name
             "formatter": "structlog_json_formatter",
+        },
+        "loki": {
+            "level": "INFO",
+            "class": "loki_logger_handler.loki_logger_handler.LokiLoggerHandler",
+            **LOKI_HANDLER_KWARGS,
         },
     },
     "root": {
@@ -248,7 +272,5 @@ WEBHOOKS_DOMAIN = "https://cyment.com/"
 REDIRECT_DOMAIN = "https://cyment.com/"
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://stripe.com",  # Your site's actual domain
-    # Add the origin reported in the error message
-    "https://mercadopago.com.ar",
+    "https://cyment.com",
 ]
