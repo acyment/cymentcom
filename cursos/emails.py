@@ -265,8 +265,9 @@ class EmailSender:
                 attachment_filename=attachment_filename,
                 attachment_mimetype=attachment_mimetype,
             )
-            log.info("invoice_email_sent")
-            # Código comentado eliminado (ERA001)
+            factura.se_envio_mail_facturacion = True
+            factura.save(update_fields=["se_envio_mail_facturacion"])
+            log.info("invoice_email_sent_and_status_updated")
 
         # Captura genérica justificada en tareas Celery (BLE001)
         except Exception:

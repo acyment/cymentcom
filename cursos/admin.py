@@ -10,23 +10,46 @@ from .models import Inscripcion
 from .models import TipoCurso
 from .emails import EmailSender
 
-class InscripcionAdmin(admin.ModelAdmin):
+
+class EmailActionMixin:
+    def email_action(self, request, queryset, field, task, warning_msg, success_msg):
+        for obj in queryset:
+            if getattr(obj, field):
+                messages.warning(request, warning_msg % obj)
+            else:
+                task.delay(obj.id)
+                messages.success(request, success_msg % obj)
+
+class InscripcionAdmin(EmailActionMixin, admin.ModelAdmin):
     list_display = ('alumno', 'curso', 'estado', 'se_envio_mail_bienvenida')
     actions = ['enviar_mail_bienvenida']
 
     def enviar_mail_bienvenida(self, request, queryset):
-        for inscripcion in queryset:
-            if inscripcion.se_envio_mail_bienvenida:
-                messages.warning(request, f"Ya se había enviado el mail de bienvenida a {inscripcion}")
-            else:
-                EmailSender.send_welcome_email.delay(inscripcion.id)
-                messages.success(request, f"Enviando mail de bienvenida a {inscripcion}...")
+        self.email_action(
+            request, queryset,
+            field='se_envio_mail_bienvenida',
+            task=EmailSender.send_welcome_email,
+            warning_msg="Ya se había enviado el mail de bienvenida a %s",
+            success_msg="Enviando mail de bienvenida a %s..."
+        )
     
     enviar_mail_bienvenida.short_description = "Enviar mail de bienvenida"
 
-class FacturaAdmin(admin.ModelAdmin):
+class FacturaAdmin(EmailActionMixin, admin.ModelAdmin):
     list_display = ('nombre', 'curso', 'archivo_pdf_link', 'confeccionada', 'pagada')
     readonly_fields = ('archivo_pdf_preview',)
+    actions = ['enviar_mail_facturacion']
+    
+    def enviar_mail_facturacion(self, request, queryset):
+        self.email_action(
+            request, queryset,
+            field='se_envio_mail_facturacion',
+            task=EmailSender.send_invoice_email,
+            warning_msg="Ya se había enviado el mail de facturación a %s",
+            success_msg="Enviando mail de facturación a %s..."
+        )
+    
+    enviar_mail_facturacion.short_description = "Enviar mail de facturación"
     
     def archivo_pdf_link(self, obj):
         if obj.archivo_pdf:
