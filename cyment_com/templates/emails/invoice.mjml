@@ -1,0 +1,228 @@
+<mjml>
+  <mj-head>
+    <mj-title>Factura por Servicios Educativos</mj-title>
+    <mj-font
+      name="Rubik"
+      href="https://fonts.googleapis.com/css?family=Rubik:400,500,700"
+    />
+    <mj-attributes>
+      <mj-all font-family="Rubik, Arial, sans-serif" />
+      <mj-text font-size="16px" color="#333333" line-height="24px" />
+      <mj-button
+        background-color="#7854fa"
+        font-weight="bold"
+        border-radius="8px"
+        color="white"
+      />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#f4f4f9">
+    <!-- Header with Logo -->
+    <mj-wrapper padding="0">
+      <mj-section background-color="white" padding="20px">
+        <mj-column>
+          <mj-image
+            width="180px"
+            src="cid:{{ logo_negro_cid }}"
+            alt="Logo Cyment"
+            align="center"
+          />
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#7854fa" padding="20px">
+        <mj-column>
+          <mj-text
+            font-size="24px"
+            font-weight="bold"
+            color="white"
+            align="center"
+          >
+            Factura por Servicios Educativos
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+
+    <!-- Main Content -->
+    <mj-wrapper padding="20px" background-color="white">
+      <mj-section padding-top="0" padding-bottom="10px">
+        <!-- Reduced bottom padding -->
+        <mj-column>
+          <mj-text font-size="18px" font-weight="bold">
+            Estimado/a {{ factura.nombre }},
+          </mj-text>
+          <mj-text>
+            Adjunto a este correo encontrarás la factura correspondiente a la
+            inscripción en nuestros cursos.
+          </mj-text>
+          {% if factura.pagada %}
+          <mj-text>
+            Este correo también sirve como confirmación de que hemos registrado
+            el pago correspondiente a esta factura. ¡Muchas gracias!
+          </mj-text>
+          {% else %}
+          <mj-text>
+            Por favor, revisa el archivo PDF adjunto para conocer los detalles
+            completos.
+          </mj-text>
+          {% endif %}
+        </mj-column>
+      </mj-section>
+
+      <!-- Divider Section 1 -->
+      <mj-section padding="10px 0">
+        <mj-column>
+          <mj-divider border-color="#7854fa" border-width="1px" />
+        </mj-column>
+      </mj-section>
+
+      <!-- Invoice Summary -->
+      <mj-section padding="0 0 10px">
+        <!-- Adjusted padding -->
+        <mj-column>
+          <mj-text font-size="18px" font-weight="bold" color="#7854fa">
+            Resumen de la Factura
+          </mj-text>
+          <mj-text>
+            <strong>Número de Factura:</strong> {{ factura.id }}
+            <!-- O usar un campo específico si lo tienes -->
+          </mj-text>
+          {% if factura.fecha_confeccion is not None %}
+          <mj-text>
+            <strong>Fecha de Emisión:</strong> {{ factura.fecha_confeccion|date:"d/m/Y" }}
+            <!-- Necesitas pasar fecha_emision en el contexto -->
+          </mj-text>
+          {% endif %}
+          <mj-text>
+            <strong>Monto Total:</strong> {{ factura.monto }}
+            <!-- Asegúrate que el formato incluya la moneda -->
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <!-- Divider Section 2 -->
+      <mj-section padding="10px 0">
+        <mj-column>
+          <mj-divider border-color="#7854fa" border-width="1px" />
+        </mj-column>
+      </mj-section>
+
+      <!-- Billing Details -->
+      <mj-section padding="0 0 10px">
+        <!-- Adjusted padding -->
+        <mj-column>
+          <mj-text font-size="18px" font-weight="bold" color="#7854fa">
+            Datos de Facturación
+          </mj-text>
+          <mj-text>
+            <strong>Nombre/Razón Social:</strong> {{ factura.nombre }}
+          </mj-text>
+          <mj-text> <strong>País:</strong> {{ nombre_pais }} </mj-text>
+         {% if factura.direccion %}
+          <mj-text>
+            <strong>Dirección:</strong> {{ factura.direccion }}
+          </mj-text>
+          {% endif %}
+        </mj-column>
+      </mj-section>
+
+      <!-- Divider Section 3 -->
+      <mj-section padding="10px 0">
+        <mj-column>
+          <mj-divider border-color="#7854fa" border-width="1px" />
+        </mj-column>
+      </mj-section>
+
+      <!-- Service Details -->
+      <mj-section padding="0 0 20px">
+        <!-- Adjusted padding -->
+        <mj-column>
+          <mj-text font-size="18px" font-weight="bold" color="#7854fa">
+            Detalle de Servicios
+          </mj-text>
+          <mj-text>
+            <strong>Curso:</strong> {{ factura.curso.tipo.nombre_completo }}
+          </mj-text>
+          <mj-text>
+            <strong>Fecha Curso:</strong> {{ factura.curso.fecha|date:"d/m/Y" }}
+          </mj-text>
+          <mj-text>
+            <strong>Participantes Incluidos:</strong>
+          </mj-text>
+          <!-- Bucle sobre las inscripciones asociadas a esta factura -->
+          {% for inscripcion in inscripciones %}
+          <mj-text padding="0 25px">
+            - {{ inscripcion.alumno.nombre }} {{ inscripcion.alumno.apellido }}
+            {% if inscripcion.alumno.organizacion %}({{
+            inscripcion.alumno.organizacion }}){% endif %}
+          </mj-text>
+          {% empty %}
+          <mj-text padding="0 25px">
+            - Información de participante no detallada en esta factura.
+          </mj-text>
+          {% endfor %}
+          <!-- Fin del Bucle -->
+        </mj-column>
+      </mj-section>
+
+      <!-- Attachment Reminder -->
+      {% if factura.archivo_pdf %}
+      <mj-section background-color="#f8f5ff" padding="20px" border-radius="8px">
+        <mj-column>
+          <mj-text align="center">
+            <strong style="color: #7854fa">Importante:</strong> La factura
+            detallada se encuentra en el archivo PDF adjunto a este correo.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      {% endif %}
+    </mj-wrapper>
+
+    <!-- Contact / Support -->
+    <mj-wrapper padding="0 20px 20px 20px" background-color="white">
+      <!-- Added bottom padding -->
+      <mj-section padding="20px 0 0 0">
+        <!-- Adjusted padding -->
+        <mj-column>
+          <mj-button href="mailto:info@cyment.com">
+            ¿Consultas sobre tu factura? Contactanos
+          </mj-button>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+
+    <!-- Footer -->
+    <mj-wrapper padding="0">
+      <mj-section background-color="#333333" padding="20px">
+        <mj-column>
+          <mj-image
+            width="120px"
+            src="cid:{{ logo_blanco_cid }}"
+            alt="Logo Cyment Blanco"
+            align="center"
+          />
+          <mj-text
+            color="white"
+            align="center"
+            font-size="14px"
+            padding-top="15px"
+          >
+            Cyment - fluidez organizacional
+          </mj-text>
+          <mj-text color="#bbbbbb" align="center" font-size="12px">
+            Este correo fue enviado a {{ factura.email }} como responsable de la
+            facturación.
+          </mj-text>
+          <mj-text
+            color="#bbbbbb"
+            align="center"
+            font-size="12px"
+            padding-top="5px"
+          >
+            © {% now "Y" %} Cyment. Todos los derechos reservados.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>

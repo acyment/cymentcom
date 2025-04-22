@@ -9,13 +9,13 @@ from celery import shared_task
 from django.contrib.staticfiles import finders
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
-from django.utils import timezone
 from mjml import mjml2html
 
 from .models import Factura
 
 # Importa tus modelos necesarios
 from .models import Inscripcion
+from .utils.get_country_name import get_country_name
 
 # Logger a nivel de módulo usando structlog
 logger = structlog.get_logger(__name__)
@@ -245,7 +245,7 @@ class EmailSender:
         context = {
             "factura": factura,
             "inscripciones": inscripciones,
-            "fecha_emision": timezone.now().date(),
+            "nombre_pais": get_country_name(factura.pais),
         }
 
         subject = (

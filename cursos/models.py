@@ -131,6 +131,7 @@ class Factura(models.Model):
     direccion = models.CharField(max_length=200, blank=True)
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
     confeccionada = models.BooleanField(default=False)
+    fecha_confeccion = models.DateField(null=True, blank=True)
     pagada = models.BooleanField(default=False)
     email = models.EmailField()
     archivo_pdf = models.FileField(
