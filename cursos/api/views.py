@@ -136,7 +136,7 @@ class CreateMpPreferenceView(APIView):
         factura = Factura.objects.get(id=request.data.get("id_factura"))
         tipo_curso = factura.curso.tipo
         descripcion_curso = tipo_curso.nombre_completo
-        precio_curso = float(tipo_curso.costo_ars.amount)
+        precio_curso = float(tipo_curso.costo_ars.amount) * 1.21  # 21% IVA
         id = tipo_curso.id
         nombre_completo = HumanName(factura.nombre)
         nombre = nombre_completo.first
