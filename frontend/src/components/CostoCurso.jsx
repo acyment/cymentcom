@@ -1,7 +1,12 @@
 import React from 'react';
 import { formatPrice } from '../utils/formatPrice';
 
-const CostoCurso = ({ costoUSD, costoARS, costoSinDescuentoARS }) => {
+const CostoCurso = ({
+  costoUSD,
+  costoARS,
+  costoSinDescuentoARS,
+  costoSinDescuentoUSD,
+}) => {
   return (
     <div className="ContenedorPagos">
       <div className="TarjetaPago">
@@ -13,12 +18,12 @@ const CostoCurso = ({ costoUSD, costoARS, costoSinDescuentoARS }) => {
           <div className="ContenedorPrecio">
             <div className="ContenedorOferta">
               <span className="PrecioTachado">
-                AR$
+                ARS
                 {formatPrice(costoSinDescuentoARS)}{' '}
               </span>
               <span className="Oferta">OFERTA</span>
             </div>
-            <p className="Precio">AR$ {formatPrice(costoARS)}</p>
+            <p className="Precio">ARS {formatPrice(costoARS)}</p>
             <p className="IVA">(+IVA)</p>
           </div>
 
@@ -52,6 +57,13 @@ const CostoCurso = ({ costoUSD, costoARS, costoSinDescuentoARS }) => {
         </div>
         <div className="TarjetaContenido">
           <div className="ContenedorPrecio">
+            <div className="ContenedorOferta">
+              <span className="PrecioTachado">
+                USD
+                {formatPrice(costoSinDescuentoUSD)}{' '}
+              </span>
+              <span className="Oferta">OFERTA</span>
+            </div>
             <p className="Precio">USD {formatPrice(costoUSD)}</p>
           </div>
           <ul className="MetodosPago">

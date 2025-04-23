@@ -22,6 +22,12 @@ class TipoCurso(models.Model):
         default_currency="USD",
         default=855,
     )
+    costo_usd_sin_descuento = MoneyField(
+        max_digits=14,
+        decimal_places=2,
+        default_currency="USD",
+        default=855,
+    )
     costo_ars = MoneyField(max_digits=14, decimal_places=2, default_currency="ARS")
     costo_sin_descuento_ars = MoneyField(
         max_digits=14,
@@ -49,6 +55,18 @@ class FAQCurso(models.Model):
 class CursoModalidad(models.TextChoices):
     VIRTUAL = "VIRTUAL", "Virtual"
     PRESENCIAL = "PRESENCIAL", "Presencial"
+
+
+class Cliente(models.Model):
+    nombre = models.CharField(max_length=100)
+    tipo_identificacion_fiscal = models.CharField(max_length=10, blank=True)
+    identificacion_fiscal = models.CharField(max_length=100, blank=True)
+    email = models.EmailField()
+    ciclo_de_pago = models.IntegerField(default=0)
+    notas = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.nombre
 
 
 class Curso(models.Model):
@@ -130,7 +148,6 @@ class Factura(models.Model):
     )
     direccion = models.CharField(max_length=200, blank=True)
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
-    confeccionada = models.BooleanField(default=False)
     fecha_confeccion = models.DateField(null=True, blank=True)
     pagada = models.BooleanField(default=False)
     email = models.EmailField()
@@ -141,6 +158,12 @@ class Factura(models.Model):
         help_text="Archivo PDF de la factura generada",
     )
     se_envio_mail_facturacion = models.BooleanField(default=False)
+    cliente = models.ForeignKey(
+        Cliente,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return f"{self.nombre} - {self.curso}"

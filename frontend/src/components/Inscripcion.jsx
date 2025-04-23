@@ -85,7 +85,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
             {paisEsArgentina === null ? (
               <>
                 <span>
-                  Costo para Argentina: <b>{costoARS} ARS</b>
+                  Costo para Argentina: <b>{costoARS} ARS + IVA</b>
                 </span>
                 <span>
                   Costo otros países: <b>{costoUSD} USD</b>

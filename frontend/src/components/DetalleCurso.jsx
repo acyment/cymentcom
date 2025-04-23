@@ -21,7 +21,7 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
       {hayProximasFechas() && (
         <div id="calendario-curso">
           <p className="SubtituloDetalleCurso">Próximos cursos</p>
-          <HorarioCurso 
+          <HorarioCurso
             proximosCursos={tipoCurso.upcoming_courses}
             nombreCorto={tipoCurso.nombre_corto}
             costoUSD={tipoCurso.costo_usd}
@@ -68,6 +68,7 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
         costoUSD={tipoCurso.costo_usd}
         costoARS={tipoCurso.costo_ars}
         costoSinDescuentoARS={tipoCurso.costo_sin_descuento_ars}
+        costoSinDescuentoUSD={tipoCurso.costo_sin_descuento_usd}
       />
     </div>
   );
