@@ -60,7 +60,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
               direccion: stepValues.direccion,
               telefono: stepValues.telefono,
               emailFacturacion: stepValues.email,
-            }
+            },
           );
 
           const idFactura = response.data.id_factura;
@@ -103,14 +103,14 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
           is: (pais) => pais === 'AR',
           then: (schema) =>
             schema.required(
-              'No te olvides de ingresar tu identificación fiscal'
+              'No te olvides de ingresar tu identificación fiscal',
             ),
         }),
         tipoIdentificacionFiscal: Yup.string().when('pais', {
           is: (pais) => pais === 'AR',
           then: (schema) =>
             schema.required(
-              'No te olvides de elegir el tipo de identificación fiscal'
+              'No te olvides de elegir el tipo de identificación fiscal',
             ),
         }),
         tipoFactura: Yup.string().when('pais', {
@@ -158,7 +158,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
               </>
             ) : paisEsArgentina ? (
               <span>
-                Costo: <b>{costoARS} ARS</b>
+                Costo: <b>{costoARS} ARS + IVA</b>
               </span>
             ) : (
               <span>
