@@ -121,6 +121,7 @@ class Alumno(models.Model):
 class ProcesadorPago(models.TextChoices):
     MP = "MP", "MercadoPago"
     STRIPE = "STRIPE", "Stripe"
+    TRANSFERENCIA = "TRANSFERENCIA", "Transferencia"
 
 
 class EstadoInscripcion(models.TextChoices):
@@ -182,7 +183,7 @@ class Inscripcion(models.Model):
     alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
     monto = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
-    procesador_pago = models.CharField(max_length=6, choices=ProcesadorPago.choices)
+    procesador_pago = models.CharField(max_length=13, choices=ProcesadorPago.choices)
     estado = models.CharField(max_length=9, choices=EstadoInscripcion.choices)
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE, null=True)
     se_envio_mail_bienvenida = models.BooleanField(default=False)
