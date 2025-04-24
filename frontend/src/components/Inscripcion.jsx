@@ -7,6 +7,7 @@ import StepParticipantes from './StepParticipantes';
 import StepFacturacion from './StepFacturacion';
 import * as Yup from 'yup';
 import HeaderDialogo from './HeaderDialogo';
+import axios from 'axios';
 
 export const AppContext = React.createContext({});
 
@@ -41,22 +42,26 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
         try {
           const paisEsArgentina = stepValues.pais === 'AR';
 
-          const response = await axios.post(`/api/cursos/${idCurso}/inscripciones/`, {
-            procesador_pago: paisEsArgentina ? 'MP' : 'STRIPE',
-            nombre: allValues.StepParticipantes.nombre,
-            apellido: allValues.StepParticipantes.apellido,
-            email: allValues.StepParticipantes.email,
-            organizacion: allValues.StepParticipantes.organizacion,
-            rol: allValues.StepParticipantes.rol,
-            pais: stepValues.pais,
-            nombreCompleto: stepValues.nombreCompleto,
-            tipoIdentificacionFiscal: stepValues.tipoIdentificacionFiscal ?? '',
-            identificacionFiscal: stepValues.identificacionFiscal,
-            tipoFactura: stepValues.tipoFactura,
-            direccion: stepValues.direccion,
-            telefono: stepValues.telefono,
-            emailFacturacion: stepValues.email,
-          });
+          const response = await axios.post(
+            `/api/cursos/${idCurso}/inscripciones/`,
+            {
+              procesador_pago: paisEsArgentina ? 'MP' : 'STRIPE',
+              nombre: allValues.StepParticipantes.nombre,
+              apellido: allValues.StepParticipantes.apellido,
+              email: allValues.StepParticipantes.email,
+              organizacion: allValues.StepParticipantes.organizacion,
+              rol: allValues.StepParticipantes.rol,
+              pais: stepValues.pais,
+              nombreCompleto: stepValues.nombreCompleto,
+              tipoIdentificacionFiscal:
+                stepValues.tipoIdentificacionFiscal ?? '',
+              identificacionFiscal: stepValues.identificacionFiscal,
+              tipoFactura: stepValues.tipoFactura,
+              direccion: stepValues.direccion,
+              telefono: stepValues.telefono,
+              emailFacturacion: stepValues.email,
+            }
+          );
 
           const idFactura = response.data.id_factura;
           const form = document.createElement('form');
@@ -64,7 +69,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
           form.action = paisEsArgentina
             ? '/api/create-mp-preference/'
             : '/api/create-stripe-checkoutsession/';
-          
+
           const addHiddenField = (form, name, value) => {
             const input = document.createElement('input');
             input.type = 'hidden';
@@ -72,7 +77,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
             input.value = value;
             form.appendChild(input);
           };
-          
+
           addHiddenField(form, 'id_factura', idFactura);
           addHiddenField(form, 'allow_promotion_codes', true);
           document.body.appendChild(form);
