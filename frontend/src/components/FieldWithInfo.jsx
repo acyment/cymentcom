@@ -5,6 +5,8 @@ import { Tooltip } from 'react-tooltip';
 
 const FieldWithInfo = ({ name, type, className, autoFocus, tooltip }) => {
   const { touched, errors } = useFormikContext();
+  const fieldTouched = touched[name];
+  const fieldError = errors[name];
 
   return (
     <div className="input-container">
@@ -15,9 +17,9 @@ const FieldWithInfo = ({ name, type, className, autoFocus, tooltip }) => {
         className={className}
         autoFocus={autoFocus}
       />
-      {!(touched.nombreCompleto && errors.nombreCompleto) && (
+      {!(fieldTouched && fieldError) && tooltip && (
         <div className="field-icon">
-          <a
+          <span
             data-tooltip-id="nombre-completo-info"
             data-tooltip-content={tooltip}
             href="#"
@@ -28,6 +30,7 @@ const FieldWithInfo = ({ name, type, className, autoFocus, tooltip }) => {
               alignItems: 'center',
               color: 'inherit',
               textDecoration: 'none',
+              cursor: 'default',
             }}
           >
             <Info
@@ -37,9 +40,9 @@ const FieldWithInfo = ({ name, type, className, autoFocus, tooltip }) => {
               focusable="false" // This is key for SVG elements
               aria-hidden="true"
             />
-          </a>
+          </span>
           <Tooltip
-            id="nombre-completo-info"
+            id={`${name}-info`}
             place="top"
             effect="solid"
             style={{

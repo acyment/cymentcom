@@ -1258,11 +1258,12 @@ label {
 
 .error-indicator {
   position: absolute;
-  top: calc(50% + 2px);
+  top: 50%;
   right: 15px;
-  display: inline-flex;
+  transform: translateY(-50%);
+  display: flex;
   align-items: center;
-  pointer-events: all;
+  justify-content: center;
   z-index: 2;
 }
 
@@ -1452,8 +1453,19 @@ select,
   background-color: rgba(108, 92, 231, 0.1);
 }
 
-.BotonContinuar:hover:not(:focus) {
-  background-color: #5b42d5; /* A slightly darker purple that complements your brand color */
+.BotonContinuar:hover:not(:focus):not(:disabled) {
+  background-color: #5b42d5; /* A slightly darker purple */
+}
+
+.BotonContinuar:disabled {
+  /* Example disabled styles - adjust as needed */
+  background-color: #cccccc; /* Often a grey color */
+  color: #666666;
+  cursor: not-allowed; /* Indicate it's not clickable */
+  /* Reset or override other styles like border, opacity etc. if necessary */
+  /* For example, prevent border changes on hover/focus when disabled */
+  border-color: transparent; /* Or match the disabled background */
+  opacity: 0.6; /* Make it look faded */
 }
 
 .BotonFormulario:hover:not(:focus) {

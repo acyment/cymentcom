@@ -6,7 +6,8 @@ import { ArrowRight } from 'lucide-react';
 
 const StepParticipantes = ({ idCurso }) => {
   const posthog = usePostHog();
-  const { submitForm, setTouched, isSubmitting, errors } = useFormikContext(); // Access Formik context
+  const { submitForm, setTouched, isSubmitting, isValid, errors } =
+    useFormikContext(); // Access Formik context
 
   // Function to handle submit and show errors
   const handleSubmit = async () => {
@@ -33,37 +34,43 @@ const StepParticipantes = ({ idCurso }) => {
       <div className="form-row">
         <div className="form-element">
           <label htmlFor="nombre">Nombre*</label>
-          <Field
-            id="nombre"
-            name="nombre"
-            type="text"
-            className="form-control"
-            autoFocus={true}
-          />
-          <CustomErrorMessage name="nombre" />
+          <div className="input-container">
+            <Field
+              id="nombre"
+              name="nombre"
+              type="text"
+              className="form-control"
+              autoFocus={true}
+            />
+            <CustomErrorMessage name="nombre" />
+          </div>
         </div>
 
         <div className="form-element">
           <label htmlFor="apellido">Apellido*</label>
-          <Field
-            id="apellido"
-            name="apellido"
-            type="text"
-            className="form-control"
-          />
-          <CustomErrorMessage name="apellido" />
+          <div className="input-container">
+            <Field
+              id="apellido"
+              name="apellido"
+              type="text"
+              className="form-control"
+            />
+            <CustomErrorMessage name="apellido" />
+          </div>
         </div>
       </div>
       <div className="form-row">
         <div className="form-element full-width">
           <label htmlFor="email">E-mail*</label>
-          <Field
-            id="email"
-            name="email"
-            type="email"
-            className="form-control"
-          />
-          <CustomErrorMessage name="email" />
+          <div className="input-container">
+            <Field
+              id="email"
+              name="email"
+              type="email"
+              className="form-control"
+            />
+            <CustomErrorMessage name="email" />
+          </div>
         </div>
       </div>
 
@@ -93,7 +100,7 @@ const StepParticipantes = ({ idCurso }) => {
       <button
         className="BotonFormulario UnicoBotonSiguiente BotonContinuar"
         type="button" // Changed from "submit" to "button"
-        disabled={isSubmitting}
+        disabled={!isValid || isSubmitting}
         onClick={handleSubmit} // Use our custom handler
       >
         Continuar
