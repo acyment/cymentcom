@@ -939,19 +939,17 @@ const StepFacturacion = ({ idCurso }) => {
         </div>
       </div>
 
-      <AnimatePresence>
-        {valuesCurrentStep.pais != null && ( // Check if country is selected
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{ overflow: 'hidden' }} // Important for height animation
-          >
-            <FormGroup
-              title="Información fiscal"
-              // visible prop might not be needed if using AnimatePresence correctly
-            >
+            <FormGroup title="Información fiscal">
+              <AnimatePresence mode='wait'>
+                {valuesCurrentStep.pais != null && (
+                  <motion.div
+                    key={paisEsArgentina ? 'ar' : 'other'} // Different key for each content type
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    style={{ overflow: 'hidden' }}
+                  >
               {paisEsArgentina ? (
                 <>
                   <div className="triple-form-row">
@@ -1037,9 +1035,10 @@ const StepFacturacion = ({ idCurso }) => {
                 </div>
               )}
             </FormGroup>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </FormGroup>
 
       <div className="DosBotonesFormulario">
         <button
