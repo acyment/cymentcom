@@ -8,6 +8,8 @@ import FieldWithInfo from './FieldWithInfo';
 import CircleLoader from 'react-spinners/CircleLoader';
 import { AnimatePresence, motion } from 'framer-motion';
 import FormGroup from './FormGroup';
+import CircleLoader from 'react-spinners/CircleLoader';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const paises = [
   {
@@ -804,7 +806,11 @@ const StepFacturacion = ({ idCurso }) => {
     errors,
     setFieldValue,
   } = useFormikContext();
-  const { goToPreviousStep, values: valuesPreviousSteps } = useWizard();
+  const {
+    goToPreviousStep,
+    values: valuesPreviousSteps,
+    activeStep,
+  } = useWizard();
   const [paisEsArgentina, setPaisEsArgentina] = useState(null);
   const isTipoFacturaDisabled =
     valuesCurrentStep.tipoIdentificacionFiscal !== 'CUIT';
@@ -813,10 +819,18 @@ const StepFacturacion = ({ idCurso }) => {
     const selectedPais = valuesCurrentStep.pais;
     const eligioArgentina = selectedPais === 'AR';
     setPaisEsArgentina(eligioArgentina);
-    document.forms[0].method = 'POST';
-    eligioArgentina
-      ? (document.forms[0].action = '/api/create-mp-preference/')
-      : (document.forms[0].action = '/api/create-stripe-checkoutsession/');
+
+    const formElement = document.forms[0];
+    if (formElement) {
+      formElement.method = 'POST';
+      formElement.action = eligioArgentina
+        ? '/api/create-mp-preference/'
+        : '/api/create-stripe-checkoutsession/';
+    } else {
+      console.warn(
+        'StepFacturacion: Could not find form element to set action/method.',
+      );
+    }
   }, [valuesCurrentStep.pais]);
 
   // Use useEffect to automatically set TipoFactura to 'B' when it should be disabled
@@ -835,15 +849,33 @@ const StepFacturacion = ({ idCurso }) => {
     setFieldValue,
   ]); // Dependencies array
 
-  const addHiddenField = (form, name, value) => {
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = name;
-    input.value = value;
-    form.appendChild(input);
-  };
+  useEffect(() => {
+    if (activeStep && valuesPreviousSteps?.StepParticipantes) {
+      const nombrePrev = valuesPreviousSteps.StepParticipantes.nombre || '';
+      const apellidoPrev = valuesPreviousSteps.StepParticipantes.apellido || '';
+      const emailPrev = valuesPreviousSteps.StepParticipantes.email || '';
 
-  let tabIndexCounter = 1;
+      const nombreCompletoPrev = `${nombrePrev} ${apellidoPrev}`.trim();
+
+      // Use setFieldValue to update the form state correctly
+      // Check if data exists and if the current field is empty or different
+      if (nombreCompletoPrev && !valuesCurrentStep.nombreCompleto) {
+        console.log(
+          'Setting nombreCompleto from previous step (only if empty):',
+          nombreCompletoPrev,
+        );
+        setFieldValue('nombreCompleto', nombreCompletoPrev, false);
+      }
+      if (emailPrev && !valuesCurrentStep.email) {
+        console.log(
+          'Setting email from previous step (only if empty):',
+          emailPrev,
+        );
+        setFieldValue('email', emailPrev, false);
+      }
+    }
+  }, [activeStep, valuesPreviousSteps, setFieldValue]);
+
   const { isValid, isSubmitting } = useFormikContext();
 
   return (
@@ -852,140 +884,162 @@ const StepFacturacion = ({ idCurso }) => {
       <div className="form-row">
         <div className="form-element">
           <label htmlFor="NombreCompleto">Nombre completo*</label>
-          <FieldWithInfo
-            name="nombreCompleto"
-            type="text"
-            className="form-control"
-            autoFocus={true}
-            tooltip="Nombre de la persona jurídica para organizaciones o el nombre completo del participante en el caso de individuos"
-            defaultValueOnFocus={
-              valuesPreviousSteps.StepParticipantes.nombre +
-              ' ' +
-              valuesPreviousSteps.StepParticipantes.apellido
-            }
-            tabIndex={tabIndexCounter++}
-          />
-          <CustomErrorMessage name="nombreCompleto" />
+          <div className="input-container">
+            <FieldWithInfo
+              name="nombreCompleto"
+              type="text"
+              className="form-control"
+              autoFocus={true}
+              tooltip="Nombre de la persona jurídica para organizaciones o el nombre completo del participante en el caso de individuos"
+            />
+            <CustomErrorMessage name="nombreCompleto" />
+          </div>
         </div>
         <div className="form-element">
-          <label htmlFor="Email">Email*</label>
-          <FieldWithInfo
-            name="email"
-            type="text"
-            className="form-control"
-            tooltip="Email al que debe llegar la factura"
-            defaultValueOnFocus={valuesPreviousSteps.StepParticipantes.email}
-            tabIndex={tabIndexCounter++}
-          />
-          <CustomErrorMessage name="email" />
+          <label htmlFor="email">Email*</label>
+          <div className="input-container">
+            <FieldWithInfo
+              name="email"
+              type="text"
+              className="form-control"
+              tooltip="Email al que debe llegar la factura"
+            />
+            <CustomErrorMessage name="email" />
+          </div>
         </div>
       </div>
       <div className="form-row">
         <div className="form-element">
-          <label htmlFor="Pais">País*</label>
-          <Field
-            id="pais"
-            name="pais"
-            as="select"
-            className="form-control "
-            tabIndex={tabIndexCounter++}
-          >
-            <option value="">País*</option>
-            {paises.map((pais) => (
-              <option key={pais.value} value={pais.value}>
-                {pais.label}
-              </option>
-            ))}
-          </Field>
-          <CustomErrorMessage name="pais" />
+          <label htmlFor="pais">País*</label>
+          <div className="input-container">
+            <Field id="pais" name="pais" as="select" className="form-control ">
+              <option value="">País*</option>
+              {paises.map((pais) => (
+                <option key={pais.value} value={pais.value}>
+                  {pais.label}
+                </option>
+              ))}
+            </Field>
+            <CustomErrorMessage name="pais" />
+          </div>
         </div>
         <div className="form-element">
-          <label htmlFor="Direccion">Dirección{paisEsArgentina && '*'}</label>
-          <Field
-            id="direccion"
-            name="direccion"
-            type="text"
-            className="form-control"
-            tabIndex={tabIndexCounter++}
-          />
-          <CustomErrorMessage name="direccion" />
+          <label htmlFor="ireccion">
+            Dirección{paisEsArgentina ? '*' : ''}
+          </label>
+          <div className="input-container">
+            <Field
+              id="direccion"
+              name="direccion"
+              type="text"
+              className="form-control"
+            />
+            <CustomErrorMessage name="direccion" />
+          </div>
         </div>
       </div>
 
-      <FormGroup
-        title="Información fiscal"
-        visible={valuesCurrentStep.pais != null}
-      >
-        {paisEsArgentina ? (
-          <>
-            <div className="triple-form-row">
-              <div className="form-element">
-                <label htmlFor="TipoIdentificacionFiscal">Tipo*</label>
-                <Field
-                  id="tipoIdentificacionFiscal"
-                  name="tipoIdentificacionFiscal"
-                  as="select"
-                  className="form-control"
-                  tabIndex={tabIndexCounter++}
-                >
-                  <option key="DNI" value="DNI">
-                    DNI
-                  </option>
-                  <option key="CUIT" value="CUIT">
-                    CUIT
-                  </option>
-                  <option key="CUIL" value="CUIL">
-                    CUIL
-                  </option>
-                </Field>
-                <CustomErrorMessage name="tipoIdentificacionFiscal" />
-              </div>
-              <div className="form-element">
-                <label htmlFor="IdentificacionFiscal">Número*</label>
-                <Field
-                  id="identificacionFiscal"
-                  name="identificacionFiscal"
-                  type="text"
-                  className="form-control"
-                  tabIndex={tabIndexCounter++}
-                />
-                <CustomErrorMessage name="identificacionFiscal" />
-              </div>
-              <div className="form-element">
-                <label htmlFor="TipoFactura">Tipo factura*</label>
-                <Field
-                  id="tipoFactura"
-                  name="tipoFactura"
-                  as="select"
-                  className="form-control"
-                  disabled={isTipoFacturaDisabled}
-                  tabIndex={tabIndexCounter++}
-                >
-                  <option key="A" value="A">
-                    A
-                  </option>
-                  <option key="B" value="B" selected>
-                    B
-                  </option>
-                </Field>
-                <CustomErrorMessage name="tipoFactura" />
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <label htmlFor="IdentificacionFiscal">Identificación</label>
-            <FieldWithInfo
-              id="identificacionFiscal"
-              name="identificacionFiscal"
-              type="text"
-              className="form-control"
-              tooltip="Identificación fiscal (RUC, RUT, etc. según corresponda) o identificación personal"
-              tabIndex={tabIndexCounter++}
-            />
-          </>
+      <AnimatePresence>
+        {valuesCurrentStep.pais != null && ( // Check if country is selected
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            style={{ overflow: 'hidden' }} // Important for height animation
+          >
+            <FormGroup
+              title="Información fiscal"
+              // visible prop might not be needed if using AnimatePresence correctly
+            >
+              {paisEsArgentina ? (
+                <>
+                  <div className="triple-form-row">
+                    <div className="form-element">
+                      <label htmlFor="tipoIdentificacionFiscal">Tipo ID*</label>{' '}
+                      <div className="input-container">
+                        <Field
+                          id="tipoIdentificacionFiscal"
+                          name="tipoIdentificacionFiscal"
+                          as="select"
+                          className="form-control"
+                        >
+                          <option value="">Tipo*</option>
+                          <option key="DNI" value="DNI">
+                            DNI
+                          </option>
+                          <option key="CUIT" value="CUIT">
+                            CUIT
+                          </option>
+                          <option key="CUIL" value="CUIL">
+                            CUIL
+                          </option>
+                        </Field>
+                        <CustomErrorMessage name="tipoIdentificacionFiscal" />
+                      </div>
+                    </div>
+                    <div className="form-element">
+                      <label htmlFor="identificacionFiscal">
+                        Número identificación*
+                      </label>{' '}
+                      <div className="input-container">
+                        <Field
+                          id="identificacionFiscal"
+                          name="identificacionFiscal"
+                          type="text"
+                          className="form-control"
+                        />
+                        <CustomErrorMessage name="identificacionFiscal" />
+                      </div>
+                    </div>
+                    <div className="form-element">
+                      <label htmlFor="tipoFactura">Tipo factura*</label>{' '}
+                      <div className="input-container">
+                        <Field
+                          id="tipoFactura"
+                          name="tipoFactura"
+                          as="select"
+                          className="form-control"
+                          disabled={isTipoFacturaDisabled}
+                        >
+                          <option value="">Tipo factura*</option>
+                          <option key="A" value="A">
+                            A
+                          </option>
+                          <option key="B" value="B">
+                            B
+                          </option>
+                        </Field>
+                        <CustomErrorMessage name="tipoFactura" />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                // Fragment might not be needed here
+                <div className="form-element">
+                  {' '}
+                  {/* Wrap in form-element for consistency? */}
+                  <label htmlFor="identificacionFiscal">
+                    Identificación
+                  </label>{' '}
+                  <div className="input-container">
+                    <FieldWithInfo
+                      id="identificacionFiscal" // ID can be useful for label's htmlFor
+                      name="identificacionFiscal"
+                      type="text"
+                      className="form-control"
+                      tooltip="Identificación fiscal (RUC, RUT, etc. según corresponda) o identificación personal"
+                    />
+                    {/* Add CustomErrorMessage if this field can have errors outside Argentina */}
+                    <CustomErrorMessage name="identificacionFiscal" />
+                  </div>
+                </div>
+              )}
+            </FormGroup>
+          </motion.div>
         )}
-      </FormGroup>
+      </AnimatePresence>
 
       <div className="DosBotonesFormulario">
         <button
@@ -995,7 +1049,7 @@ const StepFacturacion = ({ idCurso }) => {
             posthog?.capture('back_to_participants');
             goToPreviousStep();
           }}
-          tabIndex={tabIndexCounter++}
+          disabled={isSubmitting}
         >
           <ArrowLeft />
           Volver{'  '}
@@ -1004,10 +1058,14 @@ const StepFacturacion = ({ idCurso }) => {
           type="submit"
           className="BotonFormulario BotonContinuar"
           disabled={!isValid || isSubmitting}
-          tabIndex={tabIndexCounter++}
         >
-          Continuar
-          <ArrowRight />
+          {isSubmitting ? ( // Show loader when submitting
+            <CircleLoader size={20} color="#ffffff" />
+          ) : (
+            <>
+              Continuar <ArrowRight />
+            </>
+          )}
         </button>
       </div>
     </Fragment>
