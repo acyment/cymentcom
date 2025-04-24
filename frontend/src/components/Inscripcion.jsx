@@ -49,9 +49,25 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
         pais: Yup.string().required('No te olvides del país'),
         nombreCompleto: Yup.string().required('No te olvides del nombre'),
         email: Yup.string().required('No te olvides del e-mail'),
+        direccion: Yup.string().required('No te olvides de la dirección'),
         identificacionFiscal: Yup.string().when('pais', {
           is: (pais) => pais === 'AR',
-          then: (schema) => schema.required('No te olvides del CUIT'),
+          then: (schema) =>
+            schema.required(
+              'No te olvides de ingresar tu identificación fiscal'
+            ),
+        }),
+        tipoIdentificacionFiscal: Yup.string().when('pais', {
+          is: (pais) => pais === 'AR',
+          then: (schema) =>
+            schema.required(
+              'No te olvides de elegir el tipo de identificación fiscal'
+            ),
+        }),
+        tipoFactura: Yup.string().when('pais', {
+          is: (pais) => pais === 'AR',
+          then: (schema) =>
+            schema.required('No te olvides de elegir el tipo de factura'),
         }),
       }),
       // onSubmit: () => trackFunnelStep('Billing Info'),

@@ -944,6 +944,7 @@ const StepFacturacion = ({ idCurso }) => {
             className="form-control"
             tabIndex={tabIndexCounter++}
           />
+          <CustomErrorMessage name="direccion" />
         </div>
       </div>
 
@@ -955,7 +956,7 @@ const StepFacturacion = ({ idCurso }) => {
           <>
             <div className="triple-form-row">
               <div className="form-element">
-                <label htmlFor="TipoIdentificacionFiscal">Tipo</label>
+                <label htmlFor="TipoIdentificacionFiscal">Tipo*</label>
                 <Field
                   id="tipoIdentificacionFiscal"
                   name="tipoIdentificacionFiscal"
@@ -973,9 +974,10 @@ const StepFacturacion = ({ idCurso }) => {
                     CUIL
                   </option>
                 </Field>
+                <CustomErrorMessage name="tipoIdentificacionFiscal" />
               </div>
               <div className="form-element">
-                <label htmlFor="IdentificacionFiscal">Número</label>
+                <label htmlFor="IdentificacionFiscal">Número*</label>
                 <Field
                   id="identificacionFiscal"
                   name="identificacionFiscal"
@@ -983,9 +985,10 @@ const StepFacturacion = ({ idCurso }) => {
                   className="form-control"
                   tabIndex={tabIndexCounter++}
                 />
+                <CustomErrorMessage name="identificacionFiscal" />
               </div>
               <div className="form-element">
-                <label htmlFor="TipoFactura">Tipo factura</label>
+                <label htmlFor="TipoFactura">Tipo factura*</label>
                 <Field
                   id="tipoFactura"
                   name="tipoFactura"
@@ -1001,6 +1004,7 @@ const StepFacturacion = ({ idCurso }) => {
                     B
                   </option>
                 </Field>
+                <CustomErrorMessage name="tipoFactura" />
               </div>
             </div>
           </>
