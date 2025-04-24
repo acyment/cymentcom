@@ -1034,7 +1034,6 @@ const StepFacturacion = ({ idCurso }) => {
                   </div>
                 </div>
               )}
-            </FormGroup>
                   </motion.div>
                 )}
               </AnimatePresence>
