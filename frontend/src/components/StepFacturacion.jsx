@@ -1013,7 +1013,6 @@ const StepFacturacion = ({ idCurso }) => {
         </button>
       </div>
     </Fragment>
-    </Fragment>
   );
 };
 
