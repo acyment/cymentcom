@@ -22,7 +22,7 @@ class TipoCurso(models.Model):
         default_currency="USD",
         default=855,
     )
-    costo_usd_sin_descuento = MoneyField(
+    costo_sin_descuento_usd = MoneyField(
         max_digits=14,
         decimal_places=2,
         default_currency="USD",
