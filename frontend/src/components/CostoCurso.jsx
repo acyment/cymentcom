@@ -21,7 +21,6 @@ const CostoCurso = ({
                 ARS
                 {formatPrice(costoSinDescuentoARS)}{' '}
               </span>
-              <span className="Oferta">OFERTA</span>
             </div>
             <p className="Precio">ARS {formatPrice(costoARS)}</p>
             <p className="IVA">(+IVA)</p>
@@ -29,7 +28,7 @@ const CostoCurso = ({
 
           <ul className="MetodosPago">
             <li>Pagá con tarjeta crédito, débito o dinero en cuenta</li>
-            <li>Escribínos si quieres hacer transferencia bancaria</li>
+            <li>Escribinos si quieres hacer transferencia bancaria</li>
           </ul>
           <button
             onClick={() =>
@@ -62,7 +61,6 @@ const CostoCurso = ({
                 USD
                 {formatPrice(costoSinDescuentoUSD)}{' '}
               </span>
-              <span className="Oferta">OFERTA</span>
             </div>
             <p className="Precio">USD {formatPrice(costoUSD)}</p>
           </div>
