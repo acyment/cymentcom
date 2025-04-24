@@ -95,7 +95,10 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
         pais: Yup.string().required('No te olvides del país'),
         nombreCompleto: Yup.string().required('No te olvides del nombre'),
         email: Yup.string().required('No te olvides del e-mail'),
-        direccion: Yup.string().required('No te olvides de la dirección'),
+        direccion: Yup.string().when('pais', {
+          is: (pais) => pais === 'AR',
+          then: (schema) => schema.required('No te olvides de la dirección'),
+        }),
         identificacionFiscal: Yup.string().when('pais', {
           is: (pais) => pais === 'AR',
           then: (schema) =>
