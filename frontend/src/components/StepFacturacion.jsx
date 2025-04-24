@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Field, ErrorMessage, useFormikContext } from 'formik';
 import { useWizard } from 'react-formik-step-wizard';
-import axios from 'axios';
 import { usePostHog } from 'posthog-js/react';
 import CustomErrorMessage from './CustomErrorMessage';
 import { ArrowRight, ArrowLeft, Info } from 'lucide-react';
@@ -844,10 +843,9 @@ const StepFacturacion = ({ idCurso }) => {
     form.appendChild(input);
   };
 
-
   let tabIndexCounter = 1;
   const { isValid, isSubmitting } = useFormikContext();
-  
+
   return (
     <Fragment>
       <h3 className="form-title">Datos para facturación</h3>
@@ -902,7 +900,7 @@ const StepFacturacion = ({ idCurso }) => {
           <CustomErrorMessage name="pais" />
         </div>
         <div className="form-element">
-          <label htmlFor="Direccion">Dirección</label>
+          <label htmlFor="Direccion">Dirección{paisEsArgentina && '*'}</label>
           <Field
             id="direccion"
             name="direccion"
