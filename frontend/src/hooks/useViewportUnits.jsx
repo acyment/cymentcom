@@ -8,8 +8,6 @@ const useViewportUnits = () => {
 
   useEffect(() => {
     const updateDimensions = () => {
-      console.log('Updated height:', window.innerHeight);
-      console.log('window.innerWidth:', window.innerWidth);
       setDimensions({
         width: window.innerWidth,
         height: window.innerHeight,
@@ -19,14 +17,12 @@ const useViewportUnits = () => {
     // Update on mount
     updateDimensions();
 
-    console.log('Adding resize and orientationchange listeners.');
     // Add event listeners
     window.addEventListener('resize', updateDimensions);
     window.addEventListener('orientationchange', updateDimensions);
 
     // Cleanup
     return () => {
-      console.log('Removing listeners.');
       window.removeEventListener('resize', updateDimensions);
       window.removeEventListener('orientationchange', updateDimensions);
     };
