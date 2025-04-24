@@ -846,7 +846,10 @@ const StepFacturacion = ({ idCurso }) => {
 
 
   let tabIndexCounter = 1;
+  const { isValid, isSubmitting } = useFormikContext();
+  
   return (
+    <Fragment>
       <h3 className="form-title">Datos para facturación</h3>
       <div className="form-row">
         <div className="form-element">
@@ -1009,6 +1012,7 @@ const StepFacturacion = ({ idCurso }) => {
           <ArrowRight />
         </button>
       </div>
+    </Fragment>
     </Fragment>
   );
 };
