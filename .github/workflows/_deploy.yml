@@ -48,7 +48,8 @@ jobs:
         with:
           envkey_MP_PUBLIC_KEY: ${{ secrets.MP_PUBLIC_KEY }}
           envkey_STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
-          envkey_GA_MEASUREMENT_ID: ${{ secrets.GA_MEASUREMENT_ID }}
+          envkey_POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          envkey_POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
           directory: .envs/.production
           file_name: .webpack
       - name: Create production .grafana
