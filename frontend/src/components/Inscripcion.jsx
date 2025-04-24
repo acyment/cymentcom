@@ -38,11 +38,52 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
       id: 'StepFacturacion',
 
       onSubmit: async (stepValues, allValues, actions) => {
-        await fetch(someUrl, {
-          method: 'POST',
-          body: JSON.stringify({ id: 'StepName', data: stepValues }),
-        });
-        return stepValues;
+        try {
+          const paisEsArgentina = stepValues.pais === 'AR';
+
+          const response = await axios.post(`/api/cursos/${idCurso}/inscripciones/`, {
+            procesador_pago: paisEsArgentina ? 'MP' : 'STRIPE',
+            nombre: allValues.StepParticipantes.nombre,
+            apellido: allValues.StepParticipantes.apellido,
+            email: allValues.StepParticipantes.email,
+            organizacion: allValues.StepParticipantes.organizacion,
+            rol: allValues.StepParticipantes.rol,
+            pais: stepValues.pais,
+            nombreCompleto: stepValues.nombreCompleto,
+            tipoIdentificacionFiscal: stepValues.tipoIdentificacionFiscal ?? '',
+            identificacionFiscal: stepValues.identificacionFiscal,
+            tipoFactura: stepValues.tipoFactura,
+            direccion: stepValues.direccion,
+            telefono: stepValues.telefono,
+            emailFacturacion: stepValues.email,
+          });
+
+          const idFactura = response.data.id_factura;
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = paisEsArgentina
+            ? '/api/create-mp-preference/'
+            : '/api/create-stripe-checkoutsession/';
+          
+          const addHiddenField = (form, name, value) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            form.appendChild(input);
+          };
+          
+          addHiddenField(form, 'id_factura', idFactura);
+          addHiddenField(form, 'allow_promotion_codes', true);
+          document.body.appendChild(form);
+          form.submit();
+
+          return stepValues;
+        } catch (error) {
+          console.error('Submission error:', error);
+          actions.setSubmitting(false);
+          throw error;
+        }
       },
       component: <StepFacturacion idCurso={idCurso} />,
       validationSchema: Yup.object({

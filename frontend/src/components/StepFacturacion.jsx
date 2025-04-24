@@ -844,46 +844,9 @@ const StepFacturacion = ({ idCurso }) => {
     form.appendChild(input);
   };
 
-  const submitPago = () => {
-    axios
-      .post('/api/cursos/' + idCurso + '/inscripciones/', {
-        procesador_pago: paisEsArgentina ? 'MP' : 'STRIPE',
-        nombre: valuesPreviousSteps.StepParticipantes.nombre,
-        apellido: valuesPreviousSteps.StepParticipantes.apellido,
-        email: valuesPreviousSteps.StepParticipantes.email,
-        organizacion: valuesPreviousSteps.StepParticipantes.organizacion,
-        rol: valuesPreviousSteps.StepParticipantes.rol,
-        pais: valuesCurrentStep.pais,
-        nombreCompleto: valuesCurrentStep.nombreCompleto,
-        tipoIdentificacionFiscal:
-          valuesCurrentStep.tipoIdentificacionFiscal ?? '',
-        identificacionFiscal: valuesCurrentStep.identificacionFiscal,
-        tipoFactura: valuesCurrentStep.tipoFactura,
-        direccion: valuesCurrentStep.direccion,
-        telefono: valuesCurrentStep.telefono,
-        emailFacturacion: valuesCurrentStep.email,
-      })
-      .then((response) => {
-        const idFactura = response.data.id_factura;
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = paisEsArgentina
-          ? '/api/create-mp-preference/'
-          : '/api/create-stripe-checkoutsession/';
-        addHiddenField(form, 'id_factura', idFactura);
-        addHiddenField(form, 'allow_promotion_codes', true);
-        document.body.appendChild(form);
-        form.submit();
-      })
-      .catch((error) => {
-        console.error('There was an error submitting the payment!', error);
-        alert('Error processing payment. Please try again.');
-      });
-  };
 
   let tabIndexCounter = 1;
   return (
-    <Fragment>
       <h3 className="form-title">Datos para facturación</h3>
       <div className="form-row">
         <div className="form-element">
@@ -1037,9 +1000,9 @@ const StepFacturacion = ({ idCurso }) => {
           Volver{'  '}
         </button>
         <button
-          type="button"
+          type="submit"
           className="BotonFormulario BotonContinuar"
-          onClick={submitPago}
+          disabled={!isValid || isSubmitting}
           tabIndex={tabIndexCounter++}
         >
           Continuar
