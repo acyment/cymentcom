@@ -571,6 +571,14 @@ class MPPaymentWebhookView(APIView):
         try:
             sdk = mercadopago.SDK(env("MP_ACCESS_TOKEN"))
             pago = sdk.payment().get(request.data["data"]["id"])
+
+            log = logger.bind(pago=pago)
+            log.info("payment_found")
+
+            if pago["response"]["status"] != "approved":
+                logger.warning("payment_not_approved")
+                return HttpResponse("Payment not approved", status=400)
+
             factura = Factura.objects.get(id=pago["response"]["external_reference"])
             factura.pagada = True
             factura.save()
