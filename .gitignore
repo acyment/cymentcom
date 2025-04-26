@@ -288,3 +288,4 @@ webpack-stats.json
 *.pnpm-store
 .lock
 *.pem
+certs/*

@@ -1,7 +1,11 @@
+name: local-dev
+
 volumes:
   cyment_com_local_postgres_data: {}
   cyment_com_local_postgres_data_backups: {}
   cyment_com_local_redis_data: {}
+  local_certs: {}
+  local_media: {}
 
 services:
   django: &django
@@ -15,6 +19,7 @@ services:
     volumes:
       - /app/.venv
       - .:/app:z
+      - local_media:/app/local-dev/media
     depends_on:
       - postgres
       - redis
@@ -94,6 +99,8 @@ services:
     container_name: cyment_com_local_node
     environment:
       NODE_ENV: development
+      VIRTUAL_HOST: my-dev.local
+      VIRTUAL_PORT: 3000
     depends_on:
       - django
     volumes:
@@ -106,3 +113,16 @@ services:
         # Expose browsersync UI: https://www.browsersync.io/docs/options/#option-ui
       - '3001:3001'
       - '8888:8888'
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy:alpine
+    container_name: nginx-proxy
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs
+    restart: always
+    depends_on:
+      - node

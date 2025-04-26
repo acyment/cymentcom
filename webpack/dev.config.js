@@ -8,11 +8,13 @@ module.exports = merge(commonConfig, {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
+    host: '0.0.0.0',
     port: 3000,
     historyApiFallback: {
       disableDotRule: true,
       index: '/',
     },
+    allowedHosts: 'all',
     proxy: [
       {
         context: ['/'],
@@ -25,6 +27,7 @@ module.exports = merge(commonConfig, {
         warnings: false,
         runtimeErrors: true,
       },
+      webSocketURL: 'wss://my-dev.local/ws',
     },
     // We need hot=false (Disable HMR) to set liveReload=true
     hot: false,
