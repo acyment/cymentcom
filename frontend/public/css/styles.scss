@@ -372,6 +372,26 @@ body {
   transform: translateX(-50%);
   bottom: 1%;
   z-index: 199;
+  transition: transform 0.2s ease-in-out;
+}
+
+.CircleButtonNegro {
+  /* Add transition here if you want it smooth for this class too */
+  transition: transform 0.2s ease-in-out;
+}
+.CircleButtonNegro:hover {
+  /* Apply the same or different hover effect */
+  transform: translateX(-50%) scale(1.1);
+}
+
+.CircleButton:hover {
+  /* Scale it up slightly, making sure to keep the translateX */
+  transform: translateX(-50%) scale(1.1); /* 1.1 means 10% larger */
+}
+
+.ToggleResumenCurso .CircleButton:hover {
+  /* Reset the properties changed by the general hover rule */
+  transform: translateX(-50%); /* Reset transform to original */
 }
 
 .CircleButton[data-state='closed'],
