@@ -37,4 +37,4 @@ pytest-django==4.11.1  # https://github.com/pytest-dev/pytest-django
 
 # Debugging
 # ------------------------------------------------------------------------------
-debugpy==1.5.1
+debugpy==1.8.2
