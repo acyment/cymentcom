@@ -756,10 +756,11 @@ ul {
   top: 50%;
   right: 3vw;
   transform: translateY(-50%);
+  transition: transform 0.2s ease-in-out;
 }
 
 .BotonInscripcion:hover {
-  background-color: #584bdb; // Color más oscuro en hover
+  transform: translateY(-50%) scale(1.05);
 }
 
 .NavigationMenuIndicator {
