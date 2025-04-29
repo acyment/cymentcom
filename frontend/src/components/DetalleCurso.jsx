@@ -38,6 +38,13 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
         </div>
       )}
       <hr className="Separador" />
+      <CostoCurso
+        costoUSD={tipoCurso.costo_usd}
+        costoARS={tipoCurso.costo_ars}
+        costoSinDescuentoARS={tipoCurso.costo_sin_descuento_ars}
+        costoSinDescuentoUSD={tipoCurso.costo_sin_descuento_usd}
+      />
+      <hr className="Separador" />
       <ResilientMuxPlayer
         streamType="on-demand"
         playbackId={tipoCurso.video}
@@ -64,12 +71,6 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
 
       <p className="SubtituloDetalleCurso">FAQ</p>
       <FAQ faqEntries={tipoCurso.faq_entries} />
-      <CostoCurso
-        costoUSD={tipoCurso.costo_usd}
-        costoARS={tipoCurso.costo_ars}
-        costoSinDescuentoARS={tipoCurso.costo_sin_descuento_ars}
-        costoSinDescuentoUSD={tipoCurso.costo_sin_descuento_usd}
-      />
     </div>
   );
 });
