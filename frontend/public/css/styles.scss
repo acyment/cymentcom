@@ -107,7 +107,9 @@ body {
   top: 100%;
   overflow: hidden;
   z-index: 1;
-  transition: width, transform 250ms ease;
+  transition:
+    width,
+    transform 250ms ease;
 }
 .NavigationMenuIndicator[data-state='visible'] {
   animation: fadeIn 200ms ease;
@@ -349,6 +351,7 @@ body {
 
       &:hover {
         transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
       }
     }
 
@@ -590,7 +593,9 @@ ul {
   display: flex;
   flex-direction: column; /* Stack children vertically */
   align-items: center;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
   cursor: pointer;
 }
 
@@ -761,12 +766,16 @@ ul {
 
 .BotonInscripcion:hover {
   transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
 }
 
 .NavigationMenuIndicator {
   background-color: grey;
   height: 3px;
-  transition: width, transform, 250ms ease;
+  transition:
+    width,
+    transform,
+    250ms ease;
 }
 
 .IntervencionesAccordion {
@@ -944,7 +953,8 @@ h2 {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+  box-shadow:
+    hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
     hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
   position: fixed;
   top: 50%;
@@ -1083,14 +1093,18 @@ h2 {
 /* Focus state styling */
 .close-button:focus {
   background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(111, 76, 255, 0.5);
+  box-shadow:
+    0 0 0 2px white,
+    0 0 0 4px rgba(111, 76, 255, 0.5);
   transform: scale(1.1);
 }
 
 /* Focus-visible for better accessibility */
 .close-button:focus-visible {
   background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(111, 76, 255, 0.5);
+  box-shadow:
+    0 0 0 2px white,
+    0 0 0 4px rgba(111, 76, 255, 0.5);
   transform: scale(1.1);
 }
 
@@ -1181,7 +1195,9 @@ label {
   border-radius: 6px;
   font-size: 1.2vw;
   background-color: #f9f9f9;
-  transition: border 0.2s, box-shadow 0.2s;
+  transition:
+    border 0.2s,
+    box-shadow 0.2s;
   box-sizing: border-box;
 }
 
@@ -1436,7 +1452,9 @@ select,
   padding: 0.8rem 1.2rem; /* More padding for better touch target */
   font-weight: 500; /* Slightly bolder */
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s; /* Smooth hover effects */
+  transition:
+    background-color 0.2s,
+    transform 0.1s; /* Smooth hover effects */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1461,14 +1479,6 @@ select,
   background-color: $azul-violaceo;
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
-
-.BotonVolver:hover:not(:focus) {
-  background-color: rgba(108, 92, 231, 0.1);
-}
-
-.BotonContinuar:hover:not(:focus):not(:disabled) {
-  background-color: #5b42d5; /* A slightly darker purple */
 }
 
 .BotonContinuar:disabled {
@@ -1507,10 +1517,6 @@ select,
 .BotonFormulario:focus-visible {
   outline: 3px solid #4d90fe;
   box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.5);
-}
-
-.BotonFormulario:hover {
-  filter: brightness(1.5); /* Increase brightness by 50% */
 }
 
 .UnicoBotonSiguiente,
@@ -1637,7 +1643,8 @@ select,
   margin: 2rem auto; /* Centers and adds some margin */
   padding: 2rem; /* Corresponds to p-8 */
   background-color: #ffffff;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Corresponds to shadow-lg */
   border-radius: 0.5rem; /* Corresponds to rounded-lg */
   font-family: sans-serif; /* Basic font */
