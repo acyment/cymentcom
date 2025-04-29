@@ -345,9 +345,10 @@ body {
       cursor: pointer;
       text-align: center;
       margin-top: 1vw;
+      transition: transform 0.2s ease-in-out;
 
       &:hover {
-        background-color: #584bdb; // Color más oscuro en hover
+        transform: scale(1.05);
       }
     }
 
