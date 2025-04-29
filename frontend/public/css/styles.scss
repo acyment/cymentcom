@@ -1484,7 +1484,7 @@ select,
 
 .BotonFormulario:hover:not(:focus) {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
-  transform: translateY(-2px); /* Subtle lift effect */
+  transform: translateY(-2px) scale(1.02); /* Subtle lift effect + slight scale */
 }
 
 .BotonFormulario:focus {
