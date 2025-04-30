@@ -70,7 +70,7 @@ class InscribirParticipanteEnCurso(APIView):
             try:
                 curso = Curso.objects.get(id=curso_id)
             except ObjectDoesNotExist:
-                return JsonResponse({"error": f"Curso{id_curso} not found"}, status=404)
+                return JsonResponse({"error": f"Curso{curso_id} not found"}, status=404)
 
             data = json.loads(request.body)
             procesador_pago = data.get("procesador_pago")
