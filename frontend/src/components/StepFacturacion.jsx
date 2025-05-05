@@ -939,17 +939,17 @@ const StepFacturacion = ({ idCurso }) => {
         </div>
       </div>
 
-            <FormGroup title="Información fiscal">
-              <AnimatePresence mode='wait'>
-                {valuesCurrentStep.pais != null && (
-                  <motion.div
-                    key={paisEsArgentina ? 'ar' : 'other'} // Different key for each content type
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ overflow: 'hidden' }}
-                  >
+      <FormGroup title="Información fiscal">
+        <AnimatePresence mode="wait">
+          {valuesCurrentStep.pais != null && (
+            <motion.div
+              key={paisEsArgentina ? 'ar' : 'other'} // Different key for each content type
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              style={{ overflow: 'hidden' }}
+            >
               {paisEsArgentina ? (
                 <>
                   <div className="triple-form-row">
@@ -1034,10 +1034,10 @@ const StepFacturacion = ({ idCurso }) => {
                   </div>
                 </div>
               )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </FormGroup>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </FormGroup>
 
       <div className="DosBotonesFormulario">
         <button
