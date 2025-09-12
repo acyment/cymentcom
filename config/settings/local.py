@@ -21,6 +21,7 @@ ALLOWED_HOSTS = [
     "cymentcom.loca.lt",
     "my-dev.local",
     "app",
+    "node",
 ]
 
 # CACHES

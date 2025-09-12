@@ -1,5 +1,13 @@
 # Claude Code TDD Development Guide for Django + React E-commerce Site
 
+## Repo-Specific Notes
+
+- Docker Compose file: use `-f local.yml` for all commands.
+- Service names: `django` (backend), `node` (frontend), `playwright` (E2E), `postgres`, `redis`, `celeryworker`, `celerybeat`.
+- Frontend lives at the project root using Rspack (not a separate `frontend/` app).
+- E2E tests run via a dedicated Playwright container; use Just recipes: `just e2e`, `just e2e-mobile`, `just e2e-ui`, `just e2e-report`.
+- Node uses pnpm with a stable store at `/app/.pnpm-store` and a shared `node_modules` volume.
+
 ## Context: Legacy Code Without Tests
 
 This codebase was originally developed without TDD. Our approach:
@@ -63,7 +71,7 @@ All commands must be executed through Docker containers. Use `docker compose -f 
 
 ### Frontend: React
 - **React 18.x** with TypeScript
-- **Vite** for build tooling
+- **Rspack** for dev/build tooling (project root)
 - **React Testing Library** for component tests
 - **MSW** for API mocking
 - **Vitest** for test runner
@@ -74,12 +82,12 @@ All commands must be executed through Docker containers. Use `docker compose -f 
 - **Redis** for caching and sessions
 
 ### Docker Services
-All services run in containers. Common service names:
-- `web` - Django backend
-- `frontend` - React frontend
-- `db` - PostgreSQL database
+All services run in containers. Common service names (this repo):
+- `django` - Django backend
+- `node` - React frontend (Rspack dev server)
+- `postgres` - PostgreSQL database
 - `redis` - Redis cache
-- `celery` - Celery worker
+- `celeryworker`/`celerybeat` - Celery worker/scheduler
 
 ## YAGNI Principle - Minimalist Design
 
@@ -204,7 +212,7 @@ def calculate_discount(user_type: str, order_total: Decimal) -> Decimal:
    - Wait for user confirmation
 2. **Only after user approval**: Perform approved refactorings
 3. Only refactor when ALL tests are green
-4. Extract methods when they exceed 7 lines
+4. Extract methods when they exceed 10 lines
 5. Run tests after each refactoring step
 
 ## Development Rules
@@ -279,44 +287,15 @@ backend/
 
 ### React Frontend Structure
 
-```
-frontend/
-├── src/
-│   ├── features/           # Feature-based organization
-│   │   ├── products/
-│   │   │   ├── components/
-│   │   │   │   ├── ProductList/
-│   │   │   │   │   ├── ProductList.tsx
-│   │   │   │   │   ├── ProductList.test.tsx
-│   │   │   │   │   └── index.ts
-│   │   │   │   └── ProductCard/
-│   │   │   ├── hooks/
-│   │   │   │   └── useProducts.ts
-│   │   │   └── api/
-│   │   │       └── productsApi.ts
-│   │   ├── cart/
-│   │   │   ├── components/
-│   │   │   ├── hooks/
-│   │   │   └── context/
-│   │   │       └── CartContext.tsx
-│   │   └── checkout/
-│   ├── shared/
-│   │   ├── components/     # Shared UI components
-│   │   ├── hooks/         # Shared hooks
-│   │   └── utils/         # Utility functions
-│   └── core/
-│       ├── api/           # API client setup
-│       │   └── client.ts
-│       └── types/         # TypeScript types
-└── tests/
-    └── setup.ts
-```
+Note: This repository hosts the frontend at the project root using Rspack.
+Conventional feature-oriented structure still applies inside `src/`, but
+paths may differ from an isolated `frontend/` workspace.
 
 ### Code Quality Standards
 
 #### Method/Function Length
 
-- **Hard limit: 7 lines per method/function**
+- **Hard limit: 10 lines per method/function**
 - Extract helper functions aggressively
 - Each function should have ONE clear responsibility
 
@@ -591,27 +570,27 @@ Which refactorings would you like me to apply?"
 
 ## Integration Testing
 
-### Django + React Integration
+### Django + React Integration (Playwright)
 ```python
 # integration_tests/test_checkout.py
 @pytest.mark.integration
 class TestCheckoutIntegration:
     """Test full checkout flow with real API calls"""
 
-    def test_complete_checkout_flow(self, live_server, selenium):
-        """Test checkout from cart to order confirmation"""
+    def test_complete_checkout_flow(self, live_server, page):
+        """Test checkout from cart to order confirmation (Playwright)"""
         # Create test data
         user = UserFactory(email="test@example.com")
         ProductFactory(name="Test Product", price=50)
 
         # Navigate to site
-        selenium.get(f"{live_server.url}/products")
+        page.goto(f"{live_server.url}/products")
 
         # Add to cart
-        selenium.find_element(By.TEXT, "Add to Cart").click()
+        page.get_by_text("Add to Cart").click()
 
         # Go to checkout
-        selenium.find_element(By.TEXT, "Checkout").click()
+        page.get_by_text("Checkout").click()
 
         # Complete checkout...
         # Assertions...
@@ -625,55 +604,51 @@ class TestCheckoutIntegration:
 
 ```bash
 # Run all tests
-docker compose -f local.yml exec web pytest
+docker compose -f local.yml exec django pytest
 
 # Run specific test file
-docker compose -f local.yml exec web pytest apps/products/tests/test_models.py
+docker compose -f local.yml exec django pytest apps/products/tests/test_models.py
 
 # Run with coverage
-docker compose -f local.yml exec web pytest --cov=apps --cov-report=html
+docker compose -f local.yml exec django pytest --cov=apps --cov-report=html
 
 # Run only marked tests
-docker compose -f local.yml exec web pytest -m "not integration"
+docker compose -f local.yml exec django pytest -m "not integration"
 
 # Check code style
-docker compose -f local.yml exec web flake8
-docker compose -f local.yml exec web black . --check
+docker compose -f local.yml exec django flake8
+docker compose -f local.yml exec django black . --check
 
 # Database migrations
-docker compose -f local.yml exec web python manage.py makemigrations
-docker compose -f local.yml exec web python manage.py migrate
+docker compose -f local.yml exec django python manage.py makemigrations
+docker compose -f local.yml exec django python manage.py migrate
 
 # Django shell
-docker compose -f local.yml exec web python manage.py shell
+docker compose -f local.yml exec django python manage.py shell
 
 # Run management commands
-docker compose -f local.yml exec web python manage.py <command>
+docker compose -f local.yml exec django python manage.py <command>
 ```
 
 ### React Frontend (via Docker)
 
 ```bash
-# Run all tests
-docker compose -f local.yml exec frontend npm test
+# Run unit tests (Vitest)
+docker compose -f local.yml exec node npm test
 
 # Run tests in watch mode
-docker compose -f local.yml exec frontend npm test -- --watch
+docker compose -f local.yml exec node npm test -- --watch
 
 # Run with coverage
-docker compose -f local.yml exec frontend npm test -- --coverage
+docker compose -f local.yml exec node npm test -- --coverage
 
-# Type checking
-docker compose -f local.yml exec frontend npm run type-check
+# Lint / Type check / Build
+docker compose -f local.yml exec node npm run lint
+docker compose -f local.yml exec node npm run type-check
+docker compose -f local.yml exec node npm run build
 
-# Lint
-docker compose -f local.yml exec frontend npm run lint
-
-# Build
-docker compose -f local.yml exec frontend npm run build
-
-# Install dependencies
-docker compose -f local.yml exec frontend npm install
+# E2E (Playwright) via dedicated service
+docker compose -f local.yml run --rm playwright npm run e2e
 ```
 
 ### Full Stack
@@ -686,8 +661,8 @@ docker compose -f local.yml up
 docker compose -f local.yml up -d
 
 # View logs
-docker compose -f local.yml logs -f web
-docker compose -f local.yml logs -f frontend
+docker compose -f local.yml logs -f django
+docker compose -f local.yml logs -f node
 
 # Stop all services
 docker compose -f local.yml down
@@ -696,7 +671,7 @@ docker compose -f local.yml down
 docker compose -f local.yml build
 
 # Run both backend and frontend tests
-docker compose -f local.yml exec web pytest && docker compose -f local.yml exec frontend npm test
+docker compose -f local.yml exec django pytest && docker compose -f local.yml exec node npm test
 
 # Commit your work (I'll remind you if forgotten)
 git add .
@@ -727,7 +702,7 @@ docker compose -f local.yml exec db psql -U postgres < backup.sql
 - [ ] Applied only approved refactorings
 - [ ] No Python/TypeScript errors
 - [ ] No linting errors
-- [ ] Methods are ≤7 lines
+- [ ] Methods are ≤10 lines
 - [ ] Components have ≤5 props
 - [ ] Django services handle business logic (not views)
 - [ ] API responses follow consistent format

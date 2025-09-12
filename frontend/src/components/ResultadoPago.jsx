@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'; // Removed useState as it wasn't used
+import React, { useEffect, useState } from 'react';
 import { useSearch, useNavigate } from '@tanstack/react-router';
 import HeaderDialogo from './HeaderDialogo';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -29,6 +29,9 @@ const ResultadoPago = () => {
   const statusClassName = isSuccess ? 'status-success' : 'status-failure';
 
   // --- EFFECT HOOKS ---
+  const [fetchedAmount, setFetchedAmount] = useState(null);
+  const provider = searchParams?.provider;
+  const paymentId = searchParams?.payment_id;
   useEffect(() => {
     console.log('ResultadoPago useEffect triggered.');
     const currentSearchParams = new URLSearchParams(window.location.search);
@@ -38,6 +41,25 @@ const ResultadoPago = () => {
     );
     // You could potentially force a state update here if needed, but try to avoid it
   }, []); // Empty dependency array means it runs once after mount
+
+  // Fetch details by provider/payment_id when present
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        if (provider && paymentId) {
+          const resp = await fetch(
+            `/api/payment-results/${provider}?payment_id=${encodeURIComponent(paymentId)}`,
+          );
+          if (!resp.ok) return;
+          const data = await resp.json();
+          if (data?.amount) setFetchedAmount(data.amount);
+        }
+      } catch {
+        // swallow for now; tests focus on happy path
+      }
+    };
+    fetchDetails();
+  }, [provider, paymentId]);
 
   // --- EVENT HANDLERS ---
   // Handler for when Radix requests an open state change (e.g., Esc, overlay click, Dialog.Close)
@@ -76,7 +98,11 @@ const ResultadoPago = () => {
       >
         <Dialog.Portal>
           <Dialog.Overlay className="DialogOverlay" />
-          <Dialog.Content className="DialogContent">
+          <Dialog.Content
+            className="DialogContent"
+            aria-label="Resultado de pago"
+            data-testid="resultado-dialog"
+          >
             <HeaderDialogo stepNumber={4} />
             <div className="form-container">
               <div className={`status-header ${statusClassName}`}>
@@ -121,6 +147,11 @@ const ResultadoPago = () => {
                       en breve.
                     </p>
                   )}
+                  {fetchedAmount && (
+                    <p>
+                      <strong>Importe confirmado:</strong> {fetchedAmount}
+                    </p>
+                  )}
                   {/* Log status directly if needed for debugging */}
                   {/* <p><strong>Status Raw:</strong> {status}</p> */}
                 </div>
@@ -161,7 +192,10 @@ const ResultadoPago = () => {
                 {isSuccess ? (
                   <Dialog.Close asChild>
                     {/* The Dialog.Close will trigger handleOpenChange */}
-                    <button className="BotonFormulario BotonContinuar">
+                    <button
+                      className="BotonFormulario BotonContinuar"
+                      aria-label="Listo"
+                    >
                       ¡Listo!
                     </button>
                   </Dialog.Close>

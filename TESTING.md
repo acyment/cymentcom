@@ -198,6 +198,33 @@ test('payment form submission', () => {
    - Business rule validation
    - State consistency
 
+## E2E Testing (Playwright via Docker)
+
+We run end-to-end responsive and flow checks with Playwright in a dedicated container.
+
+Commands
+
+```bash
+# Just recipes (recommended)
+just e2e            # All projects (mobile/tablet/desktop)
+just e2e-mobile     # Mobile project only
+just e2e-ui         # Open the Playwright UI (http://localhost:9323)
+just e2e-report     # Serve the latest HTML report (http://localhost:9323)
+
+# Raw docker commands
+docker compose -f local.yml run --rm playwright npm run e2e
+docker compose -f local.yml run --rm playwright npm run e2e:mobile
+
+# Override base URL if needed (defaults to http://node:3000 inside Compose)
+docker compose -f local.yml run --rm -e E2E_BASE_URL=http://django:8000 playwright npm run e2e
+```
+
+Notes
+
+- Playwright image is pinned to match `@playwright/test` version in `package.json`.
+- Reports and traces are written to `playwright-report/` and `test-results/` (gitignored).
+- Responsive guardrails check for horizontal overflow on critical routes.
+
 ### 🟡 **MEDIUM PRIORITY**
 
 5. **User Experience**

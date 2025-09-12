@@ -58,6 +58,9 @@ module.exports = {
   resolve: {
     modules: ['node_modules'],
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+      '@': path.resolve(__dirname, '../frontend/src'),
+    },
   },
   optimization: {
     realContentHash: true,

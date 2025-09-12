@@ -63,6 +63,9 @@ jobs:
           path: coverage
           if-no-files-found: warn
 
+      - name: Build Frontend (Rspack)
+        run: docker compose -f local.yml run --no-deps --rm node pnpm build
+
       - name: Tear down the Stack and Prune Docker System
         if: always() # Ensure this runs even if previous steps fail
         run: |

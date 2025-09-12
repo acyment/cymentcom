@@ -19,6 +19,18 @@ $azul-violaceo: #7854fa;
   src: url('../fonts/Rubik-VariableFont_wght.ttf');
 }
 
+$bp-xs: 0;
+$bp-sm: 480px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1440px;
+
+@mixin down($bp) {
+  @media (max-width: $bp) {
+    @content;
+  }
+}
+
 $navbar-height: 6vw;
 $main-padding-left: 8vw;
 $negative-main-padding-left: -($main-padding-left);
@@ -36,6 +48,21 @@ body {
   position: relative;
   line-height: 1.25;
   letter-spacing: 0.0001em;
+}
+
+/* Utility for toggling nav visibility without inline styles */
+#site-nav.is-hidden {
+  display: none;
+}
+
+/* Accessibility helpers */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
 }
 
 .header {
@@ -79,6 +106,8 @@ body {
   list-style: none;
   margin: 0;
   padding: 0;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
 .NavigationMenuTrigger,
@@ -97,6 +126,24 @@ body {
   text-decoration: none;
   line-height: 1;
   display: inline;
+}
+
+/* Mobile adjustments */
+@include down($bp-md) {
+  .header {
+    padding-left: 4vw;
+    padding-right: 4vw;
+  }
+
+  .Logo {
+    max-width: 22vw;
+  }
+
+  .NavigationMenuTrigger,
+  .NavigationMenuLink {
+    font-size: 3.6vw;
+    padding: 0 3vw;
+  }
 }
 
 .NavigationMenuIndicator {

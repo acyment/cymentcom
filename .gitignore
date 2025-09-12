@@ -291,3 +291,9 @@ webpack-stats.json
 certs/*
 # Ignore any file or folder with 'rsdoctor' in its name
 *rsdoctor*
+# Playwright artifacts
+playwright-report/
+test-results/
+
+# pnpm store cache (inside project for Docker stability)
+.pnpm-store/

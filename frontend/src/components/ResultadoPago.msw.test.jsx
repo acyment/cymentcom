@@ -1,82 +1,92 @@
 import React from 'react';
-import { render, screen } from '@/tests/utils';
-import {
-  Router,
-  RouterProvider,
-  createMemoryHistory,
-} from '@tanstack/react-router';
-import { routeTree } from '@/routes/routes';
+import { vi } from 'vitest';
+import { render, screen, waitFor, within } from '@/tests/utils';
 import { setupServer } from 'msw/node';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
+import ResultadoPago from './ResultadoPago';
+import * as RouterHooks from '@tanstack/react-router';
 
 // NOTE: These are characterization-style integration tests demonstrating MSW usage
 // for when ResultadoPago starts fetching details by ID. They are skipped until
 // the component implements that behavior.
 
 const handlers = [
-  rest.get('/api/payment-results/:provider', (req, res, ctx) => {
-    const { provider } = req.params;
-    const paymentId = req.url.searchParams.get('payment_id');
+  http.get('/api/payment-results/:provider', ({ request, params }) => {
+    const url = new URL(request.url);
+    const paymentId = url.searchParams.get('payment_id');
     if (!paymentId) {
-      return res(ctx.status(400), ctx.json({ error: 'missing payment_id' }));
+      return HttpResponse.json(
+        { error: 'missing payment_id' },
+        { status: 400 },
+      );
     }
-    return res(
-      ctx.status(200),
-      ctx.json({
-        provider,
-        id: paymentId,
-        status: 'approved',
-        amount: 'USD 99.99',
-      }),
+    const { provider } = params;
+    return HttpResponse.json(
+      { provider, id: paymentId, status: 'approved', amount: 'USD 99.99' },
+      { status: 200 },
     );
   }),
 ];
 
 const server = setupServer(...handlers);
 
-function renderAt(url) {
-  const history = createMemoryHistory({ initialEntries: [url] });
-  const router = new Router({ routeTree, history });
-  const ui = <RouterProvider router={router} />;
-  return { router, history, ui };
-}
+// Mock router hooks so we can render the component directly
+vi.mock('@tanstack/react-router', () => ({
+  useSearch: vi.fn(),
+  useNavigate: vi.fn(() => vi.fn()),
+}));
 
-describe.skip('ResultadoPago + MSW integration (pending fetch implementation)', () => {
+describe('ResultadoPago + MSW integration (fetch by id)', () => {
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
   it('fetches and renders details based on payment_id and provider', async () => {
-    // Imagine ResultadoPago reads provider/payment_id and fetches
-    const url =
-      '/payment-result?status=approved&provider=stripe&payment_id=pi_123';
-    const { ui } = renderAt(url);
-    render(ui);
-
+    RouterHooks.useSearch.mockReturnValue({
+      status: 'approved',
+      provider: 'stripe',
+      payment_id: 'pi_123',
+      nombre_participante: 'Ana',
+      nombre_curso: 'Curso',
+      fecha_curso: '2025-01-01',
+      monto: 'USD 99.99',
+    });
+    render(<ResultadoPago />);
     // Base UI from query params
     await screen.findByText('¡Pago Exitoso!');
-
-    // And once the fetch resolves, details appear (example assertion)
-    // e.g., expect details returned by the API to be displayed
-    // await screen.findByText('USD 99.99')
+    const dialog = await screen.findByRole('dialog');
+    // Amount from MSW response should be displayed (text split across nodes)
+    await waitFor(() => {
+      const matches = within(dialog).queryAllByText((_, node) =>
+        node?.textContent?.includes('Importe confirmado: USD 99.99'),
+      );
+      expect(matches.length).toBeGreaterThan(0);
+    });
   });
 
-  it('shows an error state when API fails', async () => {
+  it('does not show fetched amount when API fails', async () => {
     server.use(
-      rest.get('/api/payment-results/:provider', (_req, res, ctx) =>
-        res(ctx.status(500), ctx.json({ error: 'server error' })),
+      http.get('/api/payment-results/:provider', () =>
+        HttpResponse.json({ error: 'server error' }, { status: 500 }),
       ),
     );
 
-    const url =
-      '/payment-result?status=approved&provider=mp&payment_id=pay_123';
-    const { ui } = renderAt(url);
-    render(ui);
-
-    // Base UI shows success
+    RouterHooks.useSearch.mockReturnValue({
+      status: 'approved',
+      provider: 'mp',
+      payment_id: 'pay_123',
+      nombre_participante: 'Ana',
+      nombre_curso: 'Curso',
+      fecha_curso: '2025-01-01',
+      monto: 'USD 99.99',
+    });
+    render(<ResultadoPago />);
     await screen.findByText('¡Pago Exitoso!');
-
-    // When component handles API errors, assert the error UI here
-    // await screen.findByText(/No pudimos recuperar los detalles del pago/i)
+    // No fetched amount should be shown on error
+    await waitFor(() => {
+      expect(
+        screen.queryByText(/Importe confirmado:/i),
+      ).not.toBeInTheDocument();
+    });
   });
 });

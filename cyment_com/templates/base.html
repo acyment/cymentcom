@@ -41,6 +41,11 @@
     {% endblock javascript %}
   </head>
   <body>
+    <header id="site-header">
+      <button id="menu-toggle" aria-label="Menu" aria-expanded="false">Menu</button>
+      <nav id="site-nav" aria-label="Primary" class="is-hidden">
+      </nav>
+    </header>
     <div id="main">
       <div id="app"></div>
     </div>
@@ -55,6 +60,32 @@
     </script>
       {% endcomment %}
     {% endblock inline_javascript %}
+    <script>
+      (function() {
+        function initMenu() {
+          const btn = document.getElementById('menu-toggle');
+          const nav = document.getElementById('site-nav');
+          if (!btn || !nav) return;
+          const close = () => {
+            btn.setAttribute('aria-expanded', 'false');
+            nav.classList.add('is-hidden');
+          };
+          const open = () => {
+            btn.setAttribute('aria-expanded', 'true');
+            nav.classList.remove('is-hidden');
+          };
+          btn.addEventListener('click', () => (btn.getAttribute('aria-expanded') === 'true' ? close() : open()));
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') close();
+          });
+        }
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initMenu);
+        } else {
+          initMenu();
+        }
+      })();
+    </script>
     {% render_bundle 'main' 'js' 'DEFAULT' %}
   </body>
 </html>
