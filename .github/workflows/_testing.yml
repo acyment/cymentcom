@@ -34,11 +34,34 @@ jobs:
       - name: Run DB Migrations
         run: docker compose -f local.yml run --rm django python manage.py migrate
 
-      - name: Run Django Tests
-        run: docker compose -f local.yml run django pytest
+      - name: Run Django Tests with Coverage
+        run: docker compose -f local.yml run --rm django pytest --cov=cyment_com --cov=cursos --cov-report=html
+
+      - name: Upload Backend Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-htmlcov
+          path: htmlcov
+          if-no-files-found: warn
 
       - name: Tear down the Stack
         run: docker compose -f local.yml down
+
+      - name: Install Frontend Dependencies
+        run: docker compose -f local.yml run --no-deps --rm node pnpm install
+
+      - name: Run Frontend Tests (Vitest)
+        run: docker compose -f local.yml run --no-deps --rm node pnpm test:run
+
+      - name: Run Frontend Coverage
+        run: docker compose -f local.yml run --no-deps --rm node pnpm test:coverage
+
+      - name: Upload Frontend Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: coverage
+          if-no-files-found: warn
 
       - name: Tear down the Stack and Prune Docker System
         if: always() # Ensure this runs even if previous steps fail

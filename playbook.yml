@@ -114,5 +114,39 @@
         mode: '0755'
         recurse: yes
 
+    - name: Create src folder in user's home
+      ansible.builtin.file:
+        path: '/home/{{ created_username }}/src'
+        state: directory
+        owner: '{{ created_username }}'
+        group: '{{ created_username }}'
+        mode: '0755'
+
+    - name: Ensure .config/fish directory exists for user
+      ansible.builtin.file:
+        path: '/home/{{ created_username }}/.config/fish'
+        state: directory
+        owner: '{{ created_username }}'
+        group: '{{ created_username }}'
+        mode: '0755'
+        # recurse: yes # Usually not needed here unless fixing existing bad perms
+
+    - name: Set COMPOSE_BAKE env variable in Fish config
+      ansible.builtin.lineinfile:
+        path: '/home/{{ created_username }}/.config/fish/config.fish'
+        line: 'set -Ux COMPOSE_BAKE true'
+        create: true # Create config.fish if it doesn't exist
+        owner: '{{ created_username }}'
+        group: '{{ created_username }}'
+        mode: '0644' # Standard file permissions for config files
+
+    - name: Set vm.overcommit_memory for Redis/Performance
+      ansible.posix.sysctl:
+        name: vm.overcommit_memory
+        value: '1'
+        sysctl_file: /etc/sysctl.d/99-overcommit-memory.conf # Use /etc/sysctl.d/
+        state: present
+        reload: yes # Apply the setting immediately without requiring a reboot for it to take effect
+
     - name: Unconditionally reboot the machine with all defaults
       ansible.builtin.reboot:

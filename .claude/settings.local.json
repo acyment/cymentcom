@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm add:*)",
+      "Bash(mkdir:*)",
+      "Bash(pnpm test:*)",
+      "Bash(rm:*)",
+      "Bash(git checkout:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(rg:*)",
+      "Bash(docker compose:*)"
+    ],
+    "deny": []
+  }
+}
