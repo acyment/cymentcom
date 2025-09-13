@@ -114,12 +114,7 @@ body {
 .btn:focus-visible {
   @include focus-ring();
 }
-.NavigationMenuLink:focus-visible {
-  @include focus-ring();
-}
-.MobileNavItem:focus-visible {
-  @include focus-ring();
-}
+/* Nav focus ring handled by .nav-link:focus-visible in _nav.scss */
 
 /* Ensure mobile drawer nav items are comfortably large */
 

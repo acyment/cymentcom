@@ -15,7 +15,7 @@
   margin: 0;
   padding: 0;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: $space-3;
 }
 
 /* Base nav link */
@@ -26,6 +26,10 @@
   line-height: 1;
   @include type-scale(18px, 1.8vw, 26px);
   color: var(--violet-11);
+}
+
+.nav-link:focus-visible {
+  @include focus-ring();
 }
 
 /* Drawer variant */
@@ -42,9 +46,7 @@
 }
 
 .NavigationMenuLink {
-  display: inline;
   text-decoration: none;
-  line-height: 1;
 }
 
 /* Ensure mobile drawer nav items are comfortably large */
