@@ -82,7 +82,7 @@ body {
   top: 0;
   width: 100%;
   background-color: white; /* Optional: Add a background color */
-  z-index: 2999;
+  z-index: $z-header;
   height: $navbar-height;
 }
 
@@ -347,7 +347,7 @@ body {
 
       &:hover {
         transform: scale(1.05);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+        @include shadow(2);
       }
     }
 
@@ -371,7 +371,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   bottom: 1%;
-  z-index: 199;
+  z-index: $z-fab;
   transition: transform 0.2s ease-in-out;
 }
 
@@ -1477,7 +1477,7 @@ select,
 .BotonContinuar {
   background-color: $azul-violaceo;
   color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  @include shadow(1);
 }
 
 .BotonContinuar:disabled {
@@ -1492,8 +1492,8 @@ select,
 }
 
 .BotonFormulario:hover:not(:focus) {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
-  transform: translateY(-2px) scale(1.02); /* Subtle lift effect + slight scale */
+  @include shadow(2);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .BotonFormulario:focus {
