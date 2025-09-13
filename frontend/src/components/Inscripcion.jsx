@@ -19,6 +19,12 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
     posthog?.capture('funnel_start', { course_id: idCurso });
   }, [idCurso]);
 
+  // Tag the underlying form for explicit selection elsewhere
+  useEffect(() => {
+    const form = document.querySelector('form');
+    if (form) form.setAttribute('data-inscripcion-form', 'true');
+  }, []);
+
   const trackFunnelStep = (step) => {
     posthog?.capture(step);
   };

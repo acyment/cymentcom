@@ -29,7 +29,11 @@ const NavMenu = () => {
       <div className="NavigationMenuRoot">
         <Dialog.Root open={open} onOpenChange={setOpen}>
           <Dialog.Trigger asChild>
-            <button aria-label="Menu" className="NavigationMenuLink">
+            <button
+              data-testid="menu-toggle"
+              aria-label="Menu"
+              className="NavigationMenuLink"
+            >
               Menu
             </button>
           </Dialog.Trigger>

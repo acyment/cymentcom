@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { openInscripcionForFirstCourse } from './support/actions';
 
 test.describe('Inscripción dialog behavior (mobile)', () => {
   test('overlay tap closes and focus returns to trigger', async ({
@@ -6,13 +7,11 @@ test.describe('Inscripción dialog behavior (mobile)', () => {
   }, testInfo) => {
     if (testInfo.project.name !== 'mobile') test.skip();
 
-    await page.goto('/');
-    const items = page.locator('.ToggleResumenCurso');
-    if ((await items.count()) === 0) test.skip(true, 'No courses present');
-
-    await items.first().click();
-    const trigger = page.getByRole('button', { name: /inscribirme/i });
-    await trigger.click();
+    const opened = await openInscripcionForFirstCourse(page);
+    if (!opened) test.skip(true, 'No courses present');
+    const trigger = (await page.getByTestId('inscripcion-open').count())
+      ? page.getByTestId('inscripcion-open')
+      : page.getByRole('button', { name: /inscribirme/i });
 
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
@@ -30,13 +29,8 @@ test.describe('Inscripción dialog behavior (mobile)', () => {
   }, testInfo) => {
     if (testInfo.project.name !== 'mobile') test.skip();
 
-    await page.goto('/');
-    const items = page.locator('.ToggleResumenCurso');
-    if ((await items.count()) === 0) test.skip(true, 'No courses present');
-
-    await items.first().click();
-    const trigger = page.getByRole('button', { name: /inscribirme/i });
-    await trigger.click();
+    const opened2 = await openInscripcionForFirstCourse(page);
+    if (!opened2) test.skip(true, 'No courses present');
 
     const overflow = await page.evaluate(
       () => getComputedStyle(document.body).overflow,

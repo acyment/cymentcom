@@ -6,7 +6,6 @@ import * as Dialog from '@radix-ui/react-dialog';
 import formatDate from 'intl-dateformat';
 
 const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
-  const header = document.querySelector('header');
   const [proximoCurso, setProximoCurso] = useState(null);
   const [fechaCurso, setFechaCurso] = useState(null);
   const posthog = usePostHog();
@@ -24,17 +23,21 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
   const handleDialogOpenChange = (open) => {
     if (open) {
       turnOffHeaderStickiness();
+      document.body.style.overflow = 'hidden';
     } else {
       turnOnHeaderStickiness();
+      document.body.style.overflow = '';
     }
   };
 
   const turnOffHeaderStickiness = () => {
-    header.style.position = 'relative';
+    const headerEl = document.querySelector('header');
+    if (headerEl) headerEl.style.position = 'relative';
   };
 
   const turnOnHeaderStickiness = () => {
-    header.style.position = 'sticky';
+    const headerEl = document.querySelector('header');
+    if (headerEl) headerEl.style.position = 'sticky';
   };
 
   const calculateTimeDifference = (startTime, endTime) => {
@@ -140,6 +143,7 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
             <>
               <Dialog.Trigger asChild>
                 <button
+                  data-testid="inscripcion-open"
                   className="BotonInscripcion"
                   onClick={() => {
                     posthog.capture('Boton inscripcion ' + proximoCurso.id);
@@ -155,7 +159,11 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
 
                 <Dialog.Content className="DialogContent">
                   <Dialog.Close asChild>
-                    <button aria-label="Cerrar" className="close-button">
+                    <button
+                      data-testid="dialog-close"
+                      aria-label="Cerrar"
+                      className="close-button"
+                    >
                       ×
                     </button>
                   </Dialog.Close>

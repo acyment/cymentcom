@@ -8,8 +8,10 @@ import FieldWithInfo from './FieldWithInfo';
 import CircleLoader from 'react-spinners/CircleLoader';
 import { AnimatePresence, motion } from 'framer-motion';
 import FormGroup from './FormGroup';
+import { paises } from '@/constants/paises';
 
-const paises = [
+/* moved to @/constants/paises */
+/* const paises = [
   {
     label: 'Afganistán',
     value: 'AF',
@@ -794,7 +796,7 @@ const paises = [
     label: 'Zimbabwe',
     value: 'ZW',
   },
-];
+]; */
 
 const StepFacturacion = ({ idCurso }) => {
   const posthog = usePostHog();
@@ -818,16 +820,16 @@ const StepFacturacion = ({ idCurso }) => {
     const eligioArgentina = selectedPais === 'AR';
     setPaisEsArgentina(eligioArgentina);
 
-    const formElement = document.forms[0];
+    const formElement =
+      document.querySelector('form[data-inscripcion-form="true"]') ||
+      document.forms[0];
     if (formElement) {
       formElement.method = 'POST';
       formElement.action = eligioArgentina
         ? '/api/create-mp-preference/'
         : '/api/create-stripe-checkoutsession/';
     } else {
-      console.warn(
-        'StepFacturacion: Could not find form element to set action/method.',
-      );
+      // Suppress noisy console in production
     }
   }, [valuesCurrentStep.pais]);
 
