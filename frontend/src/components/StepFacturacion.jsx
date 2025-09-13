@@ -8,7 +8,7 @@ import FieldWithInfo from './FieldWithInfo';
 import CircleLoader from 'react-spinners/CircleLoader';
 import { AnimatePresence, motion } from 'framer-motion';
 import FormGroup from './FormGroup';
-import { paises } from '@/constants/paises';
+import { paises } from '@/components/CountryDropDown';
 
 /* moved to @/constants/paises */
 /* const paises = [
