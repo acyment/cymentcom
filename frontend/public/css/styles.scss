@@ -504,35 +504,52 @@ body {
 }
 
 .HeroCTARow {
+  position: relative;
+  z-index: 5;
   display: flex;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
-  margin: 12px 0;
+  align-items: center;
+  margin: 16px 0 20px;
 }
 
 .HeroCTA {
   position: relative;
-  z-index: 2;
+  z-index: 5;
   display: inline-block;
-  padding: 14px 24px;
-  font-size: clamp(16px, 4vw, 20px);
-  border-radius: 20px;
-  font-weight: 700;
-  line-height: 1.1;
+  padding: 16px 28px;
+  font-size: clamp(18px, 6.5vw, 28px);
+  border-radius: 28px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: 0.2px;
+  border: 0;
 }
 
 .HeroCTAPrimary {
-  background: $fondo-violaceo;
+  background: linear-gradient(
+    180deg,
+    rgba(120, 84, 250, 1) 0%,
+    rgba(102, 70, 242, 1) 55%,
+    rgba(79, 56, 230, 1) 100%
+  );
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .HeroCTASecondary {
   background: #fff;
   color: #111;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+}
+
+/* Ensure hero text doesn't overlap CTAs */
+.HeroText {
+  position: relative;
+  z-index: 1;
 }
 
 .Clientes {

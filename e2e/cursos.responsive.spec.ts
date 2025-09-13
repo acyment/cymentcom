@@ -10,7 +10,11 @@ test.describe('Cursos section responsiveness', () => {
     await page.goto('/');
 
     const cursos = page.locator('#cursos');
-    await cursos.scrollIntoViewIfNeeded();
+    await expect(cursos).toHaveCount(1);
+    await page.evaluate(() => {
+      const el = document.querySelector('#cursos');
+      el && el.scrollIntoView({ behavior: 'instant', block: 'start' });
+    });
     await expect(cursos).toBeVisible();
 
     await assertNoHOverflow(page);

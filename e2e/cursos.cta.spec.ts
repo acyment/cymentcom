@@ -7,7 +7,11 @@ test('mobile: “Inscribirme” CTA visible after selecting a course', async ({
   if (testInfo.project.name !== 'mobile') test.skip();
 
   await page.goto('/');
-  await page.locator('#cursos').scrollIntoViewIfNeeded();
+  await expect(page.locator('#cursos')).toHaveCount(1);
+  await page.evaluate(() => {
+    const el = document.querySelector('#cursos');
+    el && el.scrollIntoView({ behavior: 'instant', block: 'start' });
+  });
 
   const items = page.locator('.ToggleResumenCurso');
   const count = await items.count();

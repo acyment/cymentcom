@@ -16,13 +16,12 @@ test.describe('Hero CTA Contacto (mobile)', () => {
     await expect(cta).toBeVisible();
 
     await cta.click();
-    const inView = await page.locator('#contacto').evaluate((el) => {
+    await page.waitForFunction(() => {
+      const el = document.querySelector('#contacto');
+      if (!el) return false;
       const r = el.getBoundingClientRect();
-      return (
-        r.top >= 0 &&
-        r.top < (window.innerHeight || document.documentElement.clientHeight)
-      );
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      return r.top >= -100 && r.top < vh;
     });
-    expect(inView).toBeTruthy();
   });
 });

@@ -15,7 +15,11 @@ export async function openInscripcionForFirstCourse(
   await page.goto('/');
   await hideDebugToolbar(page);
   const cursos = page.locator('#cursos');
-  await cursos.scrollIntoViewIfNeeded();
+  await expect(cursos).toHaveCount(1);
+  await page.evaluate(() => {
+    const el = document.querySelector('#cursos');
+    el && el.scrollIntoView({ behavior: 'instant', block: 'start' });
+  });
   const items = page.locator('.ToggleResumenCurso');
   if ((await items.count()) === 0) return false; // caller should handle skip
   await items.first().click();
