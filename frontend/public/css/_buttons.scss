@@ -1,0 +1,23 @@
+.btn {
+  @include pill();
+  @include type-scale(20px, 7vw, 34px);
+  font-weight: 800;
+  padding: clamp(14px, 2.5vw, 20px) clamp(24px, 4.5vw, 34px);
+  border: 0;
+  position: relative;
+  z-index: $z-cta;
+}
+
+.btn--primary {
+  @include gradient-cta();
+  @include shadow(3);
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+.btn--secondary {
+  background: #fff;
+  color: #111;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  @include shadow(2);
+}

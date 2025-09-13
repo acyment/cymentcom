@@ -1,0 +1,26 @@
+@mixin type-scale($min, $vw, $max) {
+  font-size: clamp($min, $vw, $max);
+  line-height: 1.1;
+}
+
+@mixin pill($radius: $radius-pill) {
+  border-radius: $radius;
+}
+
+@mixin shadow($level: 2) {
+  @if $level == 1 {
+    box-shadow: $shadow-1;
+  } @else if $level == 2 {
+    box-shadow: $shadow-2;
+  } @else if $level == 3 {
+    box-shadow: $shadow-3;
+  }
+}
+
+@mixin gradient-cta(
+  $s: $color-primary-100,
+  $m: $color-primary-200,
+  $e: $color-primary-300
+) {
+  background: linear-gradient(180deg, $s 0%, $m 55%, $e 100%);
+}

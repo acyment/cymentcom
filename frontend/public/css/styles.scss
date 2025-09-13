@@ -2,6 +2,9 @@
 @import '@radix-ui/colors/green.css';
 @import '@radix-ui/colors/mauve.css';
 @import '@radix-ui/colors/violet.css';
+@import './variables';
+@import './mixins';
+@import './buttons';
 
 $fondo-violaceo: linear-gradient(
   to right top,
@@ -505,45 +508,24 @@ body {
 
 .HeroCTARow {
   position: relative;
-  z-index: 5;
+  z-index: $z-cta;
   display: flex;
-  gap: 16px;
+  gap: $space-5;
   flex-wrap: wrap;
   align-items: center;
-  margin: 16px 0 20px;
+  margin: $space-5 0 $space-6;
 }
 
 .HeroCTA {
-  position: relative;
-  z-index: 5;
-  display: inline-block;
-  padding: 16px 28px;
-  font-size: clamp(18px, 6.5vw, 28px);
-  border-radius: 28px;
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: 0.2px;
-  border: 0;
+  @extend .btn;
 }
 
 .HeroCTAPrimary {
-  background: linear-gradient(
-    180deg,
-    rgba(120, 84, 250, 1) 0%,
-    rgba(102, 70, 242, 1) 55%,
-    rgba(79, 56, 230, 1) 100%
-  );
-  color: #fff;
-  box-shadow:
-    0 10px 24px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  @extend .btn--primary;
 }
 
 .HeroCTASecondary {
-  background: #fff;
-  color: #111;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  @extend .btn--secondary;
 }
 
 /* Ensure hero text doesn't overlap CTAs */
@@ -1019,10 +1001,7 @@ ul {
   height: auto;
 }
 
-@import '@radix-ui/colors/black-alpha.css';
-@import '@radix-ui/colors/green.css';
-@import '@radix-ui/colors/mauve.css';
-@import '@radix-ui/colors/violet.css';
+/* duplicate color imports removed */
 
 .DialogOverlay {
   background-color: var(--black-a9);
