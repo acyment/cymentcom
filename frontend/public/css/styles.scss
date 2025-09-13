@@ -120,7 +120,7 @@ body {
   user-select: none;
   line-height: 1;
   border-radius: 4px;
-  font-size: 1.6vw;
+  @include type-scale(14px, 1.2vw, 18px);
   color: var(--violet-11);
 }
 
@@ -144,7 +144,7 @@ body {
 
   .NavigationMenuTrigger,
   .NavigationMenuLink {
-    font-size: 3.6vw;
+    @include type-scale(16px, 3.6vw, 20px);
     padding: 0 3vw;
   }
 }
