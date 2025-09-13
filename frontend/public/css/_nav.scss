@@ -1,0 +1,73 @@
+.NavigationMenuRoot {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  z-index: 1;
+  font-weight: lighter;
+}
+
+.NavigationMenuList {
+  display: flex;
+  justify-content: baseline;
+  background-color: white;
+  border-radius: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.NavigationMenuTrigger,
+.NavigationMenuLink {
+  padding: 0 $space-4;
+  outline: none;
+  user-select: none;
+  line-height: 1;
+  border-radius: 4px;
+  /* Desktop/base nav size bumped */
+  @include type-scale(18px, 1.8vw, 26px);
+  color: var(--violet-11);
+}
+
+.NavigationMenuLink {
+  display: block;
+  text-decoration: none;
+  line-height: 1;
+  display: inline;
+}
+
+/* Ensure mobile drawer nav items are comfortably large */
+.MobileNavItem {
+  @include type-scale(20px, 5.5vw, 26px);
+  font-weight: 700;
+}
+
+.NavigationMenuIndicator {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 10px;
+  top: 100%;
+  overflow: hidden;
+  z-index: 1;
+  transition:
+    width,
+    transform 250ms ease;
+}
+.NavigationMenuIndicator[data-state='visible'] {
+  animation: fadeIn 200ms ease;
+}
+.NavigationMenuIndicator[data-state='hidden'] {
+  animation: fadeOut 200ms ease;
+}
+
+.Arrow {
+  position: relative;
+  top: 70%;
+  background-color: white;
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+  border-top-left-radius: 2px;
+}

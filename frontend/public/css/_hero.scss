@@ -1,0 +1,19 @@
+.HeroCTARow {
+  position: relative;
+  z-index: $z-cta;
+  display: flex;
+  gap: $space-5;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: $space-5 0 $space-6;
+}
+
+.HeroCTA {
+  @extend .btn;
+}
+.HeroCTAPrimary {
+  @extend .btn--primary;
+}
+.HeroCTASecondary {
+  @extend .btn--secondary;
+}
