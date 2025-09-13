@@ -503,13 +503,36 @@ body {
   display: flex;
 }
 
+.HeroCTARow {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
 .HeroCTA {
   position: relative;
   z-index: 2;
   display: inline-block;
-  padding: 10px 16px;
-  font-size: 16px;
-  margin: 12px 0;
+  padding: 14px 24px;
+  font-size: clamp(16px, 4vw, 20px);
+  border-radius: 20px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.HeroCTAPrimary {
+  background: $fondo-violaceo;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.HeroCTASecondary {
+  background: #fff;
+  color: #111;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 .Clientes {

@@ -54,15 +54,26 @@ const Hero = () => {
             </RoughNotation>
             .
           </p>
-          <button
-            className="HeroCTA BotonFormulario BotonContinuar"
-            onClick={() => {
-              const el = document.querySelector('#cursos');
-              el && el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }}
-          >
-            Ver cursos
-          </button>
+          <div className="HeroCTARow">
+            <button
+              className="HeroCTA HeroCTAPrimary"
+              onClick={() => {
+                const el = document.querySelector('#cursos');
+                el && el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+            >
+              Ver cursos
+            </button>
+            <button
+              className="HeroCTA HeroCTASecondary"
+              onClick={() => {
+                const el = document.querySelector('#contacto');
+                el && el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+            >
+              Contacto
+            </button>
+          </div>
           <img src="static/images/hero.jpg" className="HeroImage"></img>
         </section>
       </AccordionHeader>
