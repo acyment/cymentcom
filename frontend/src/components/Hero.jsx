@@ -55,7 +55,7 @@ const Hero = () => {
             .
           </p>
           <button
-            className="HeroCTA BotonFormulario"
+            className="HeroCTA BotonFormulario BotonContinuar"
             onClick={() => {
               const el = document.querySelector('#cursos');
               el && el.scrollIntoView({ behavior: 'smooth', block: 'start' });
