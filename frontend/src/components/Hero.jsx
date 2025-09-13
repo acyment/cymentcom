@@ -54,6 +54,15 @@ const Hero = () => {
             </RoughNotation>
             .
           </p>
+          <button
+            className="HeroCTA BotonFormulario"
+            onClick={() => {
+              const el = document.querySelector('#cursos');
+              el && el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
+          >
+            Ver cursos
+          </button>
           <img src="static/images/hero.jpg" className="HeroImage"></img>
         </section>
       </AccordionHeader>
