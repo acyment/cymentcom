@@ -6,6 +6,9 @@ import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
 import axios from 'axios';
 import CircleLoader from 'react-spinners/CircleLoader';
+import * as Dialog from '@radix-ui/react-dialog';
+import Inscripcion from './Inscripcion';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 const Cursos = () => {
   const [tiposCurso, setTiposCurso] = useState([]);
@@ -69,6 +72,84 @@ const Cursos = () => {
     }
   }, [selectedCourse, triggerScroll]); // Depend on selectedCourse and triggerScroll
 
+  const isMobile = useIsMobile('(max-width: 767px)');
+
+  // Mobile-first prototype: stacked cards
+  if (isMobile) {
+    return (
+      <div
+        id="cursos"
+        className="CursosAccordion NavigationBarScrollOffset"
+        ref={refListaCursos}
+      >
+        {loading ? (
+          <div
+            className="LoaderContainer"
+            style={{ display: 'flex', justifyContent: 'center', padding: 40 }}
+          >
+            <CircleLoader color="#36D7B7" size={60} />
+          </div>
+        ) : (
+          <div className="CursosCardList">
+            {Object.values(tiposCurso).map((tipoCurso) => (
+              <div key={tipoCurso.nombre_corto} className="CourseCard">
+                <img
+                  className="CourseCardImage"
+                  src={`static/images/${tipoCurso.foto}`}
+                  alt={tipoCurso.nombre_corto}
+                  loading="lazy"
+                />
+                <div className="CourseCardBody">
+                  <h3 className="CourseCardTitle">
+                    {tipoCurso.nombre_completo}
+                  </h3>
+                  <p className="CourseCardSummary">
+                    {tipoCurso.resumen_una_linea}
+                  </p>
+                  <div className="CourseCardActions">
+                    <details className="CourseCardDetails">
+                      <summary className="CourseCardPrimary">
+                        Ver fechas
+                      </summary>
+                      <div className="CourseCardDetailsBody">
+                        <p>
+                          Próximas fechas:{' '}
+                          {tipoCurso.upcoming_courses?.length || 0}
+                        </p>
+                        <Dialog.Root>
+                          <Dialog.Trigger asChild>
+                            <button
+                              data-testid="inscripcion-open"
+                              className="btn btn--primary"
+                            >
+                              Inscribirme
+                            </button>
+                          </Dialog.Trigger>
+                          <Dialog.Portal>
+                            <Dialog.Overlay className="DialogOverlay" />
+                            <Dialog.Content className="DialogContent">
+                              <Inscripcion
+                                idCurso={tipoCurso?.upcoming_courses?.[0]?.id}
+                                nombreCorto={tipoCurso.nombre_corto}
+                                costoUSD={tipoCurso.costo_usd}
+                                costoARS={tipoCurso.costo_ars}
+                              />
+                            </Dialog.Content>
+                          </Dialog.Portal>
+                        </Dialog.Root>
+                      </div>
+                    </details>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Desktop: keep existing carousel behavior
   return (
     <div
       id="cursos"
@@ -98,6 +179,7 @@ const Cursos = () => {
               <ToggleGroup.Item
                 className="ToggleResumenCurso"
                 value={tipoCurso.nombre_corto}
+                key={tipoCurso.nombre_corto}
               >
                 <div className="ContenedorImagenResumenCurso">
                   <img

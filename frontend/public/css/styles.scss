@@ -472,6 +472,56 @@ body {
   flex-wrap: wrap;
 }
 
+/* Mobile course card prototype */
+.CursosCardList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+  padding-inline: clamp(16px, 5vw, 40px);
+}
+.CourseCard {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+}
+.CourseCardImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+.CourseCardBody {
+  padding: $space-5;
+}
+.CourseCardTitle {
+  font-weight: 700;
+  margin: 0 0 $space-3 0;
+}
+.CourseCardSummary {
+  margin: 0 0 $space-4 0;
+  font-weight: 300;
+}
+.CourseCardActions {
+  display: flex;
+  gap: $space-4;
+}
+.CourseCardDetails summary {
+  list-style: none;
+  cursor: pointer;
+  display: inline-block;
+  padding: $space-3 $space-5;
+  border-radius: 9999px;
+  background: #f4f4f5;
+}
+.CourseCardDetailsBody {
+  padding-top: $space-4;
+  display: flex;
+  gap: $space-4;
+  align-items: center;
+}
+
 .ResumenCursosCarousel {
   display: flex;
   justify-content: space-evenly;
