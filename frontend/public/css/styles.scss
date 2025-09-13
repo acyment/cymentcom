@@ -104,10 +104,9 @@ body {
     max-width: 22vw;
   }
 
-  .NavigationMenuTrigger,
-  .NavigationMenuLink {
+  .nav-link {
     @include type-scale(20px, 4.6vw, 24px);
-    padding: 0 $space-5;
+    padding-inline: $nav-padding-inline-mobile;
   }
 }
 

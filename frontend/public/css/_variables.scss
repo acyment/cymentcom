@@ -21,3 +21,7 @@ $z-overlay: 1000;
 $z-header: 2999;
 $z-cta: 10;
 $z-fab: 200;
+
+/* Navigation spacing tokens */
+$nav-padding-inline-desktop: $space-4; /* 16px */
+$nav-padding-inline-mobile: $space-5; /* 20px */

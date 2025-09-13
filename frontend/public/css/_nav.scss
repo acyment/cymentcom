@@ -18,28 +18,39 @@
   gap: 0.6rem;
 }
 
-.NavigationMenuTrigger,
-.NavigationMenuLink {
-  padding: 0 $space-4;
-  outline: none;
-  user-select: none;
-  line-height: 1;
+/* Base nav link */
+.nav-link {
+  display: inline-block;
+  padding-inline: $nav-padding-inline-desktop;
   border-radius: 4px;
-  /* Desktop/base nav size bumped */
+  line-height: 1;
   @include type-scale(18px, 1.8vw, 26px);
   color: var(--violet-11);
 }
 
-.NavigationMenuLink {
+/* Drawer variant */
+.nav-link--drawer {
   display: block;
+  padding-block: $space-4;
+  padding-inline: $nav-padding-inline-mobile;
+}
+
+/* Map real selectors to the base */
+.NavigationMenuTrigger,
+.NavigationMenuLink {
+  @extend .nav-link;
+}
+
+.NavigationMenuLink {
+  display: inline;
   text-decoration: none;
   line-height: 1;
-  display: inline;
 }
 
 /* Ensure mobile drawer nav items are comfortably large */
 .MobileNavItem {
-  @include type-scale(20px, 5.5vw, 26px);
+  @extend .nav-link;
+  @extend .nav-link--drawer;
   font-weight: 700;
 }
 
