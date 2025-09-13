@@ -154,6 +154,11 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
                 <Dialog.Overlay className="DialogOverlay" />
 
                 <Dialog.Content className="DialogContent">
+                  <Dialog.Close asChild>
+                    <button aria-label="Cerrar" className="close-button">
+                      ×
+                    </button>
+                  </Dialog.Close>
                   <Inscripcion
                     idCurso={proximoCurso.id}
                     nombreCorto={nombreCorto}
