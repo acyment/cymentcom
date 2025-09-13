@@ -24,3 +24,10 @@
 ) {
   background: linear-gradient(180deg, $s 0%, $m 55%, $e 100%);
 }
+
+@mixin focus-ring($color: #4d90fe, $offset: 2px, $width: 3px) {
+  outline: none;
+  box-shadow: 0 0 0 $width rgba($color, 0.5);
+  outline: $width solid $color;
+  outline-offset: $offset;
+}

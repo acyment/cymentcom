@@ -75,8 +75,7 @@ body {
   align-items: center;
   padding-top: 3vh;
   padding-bottom: 3vh;
-  padding-left: 6vw;
-  padding-right: 3vw;
+  padding-inline: clamp(16px, 5vw, 40px);
   position: sticky;
   top: 0;
   width: 100%;
@@ -115,12 +114,13 @@ body {
 
 .NavigationMenuTrigger,
 .NavigationMenuLink {
-  padding: 0 1.8vw;
+  padding: 0 $space-4;
   outline: none;
   user-select: none;
   line-height: 1;
   border-radius: 4px;
-  @include type-scale(14px, 1.2vw, 18px);
+  /* Desktop/base nav size bumped */
+  @include type-scale(18px, 1.8vw, 26px);
   color: var(--violet-11);
 }
 
@@ -134,8 +134,7 @@ body {
 /* Mobile adjustments */
 @include down($bp-md) {
   .header {
-    padding-left: 4vw;
-    padding-right: 4vw;
+    padding-inline: clamp(16px, 4vw, 28px);
   }
 
   .Logo {
@@ -144,9 +143,27 @@ body {
 
   .NavigationMenuTrigger,
   .NavigationMenuLink {
-    @include type-scale(16px, 3.6vw, 20px);
-    padding: 0 3vw;
+    /* Mobile nav entries bumped for readability */
+    @include type-scale(20px, 4.6vw, 24px);
+    padding: 0 $space-5;
   }
+}
+
+/* Unified focus-visible ring */
+.btn:focus-visible {
+  @include focus-ring();
+}
+.NavigationMenuLink:focus-visible {
+  @include focus-ring();
+}
+.MobileNavItem:focus-visible {
+  @include focus-ring();
+}
+
+/* Ensure mobile drawer nav items are comfortably large */
+.MobileNavItem {
+  @include type-scale(20px, 5.5vw, 26px);
+  font-weight: 700;
 }
 
 .NavigationMenuIndicator {
