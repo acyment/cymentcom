@@ -4,6 +4,7 @@ import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import * as Dialog from '@radix-ui/react-dialog';
 import { RoughNotation } from 'react-rough-notation';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { Menu as MenuIcon } from 'lucide-react';
 import { BP_MD } from '@/styles/breakpoints';
 
 const NavMenu = () => {
@@ -12,11 +13,16 @@ const NavMenu = () => {
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile(`(max-width: ${BP_MD}px)`);
 
-  const menuItems = [
+  const desktopItems = [
     { href: '#hero', text: 'Alan' },
     { href: '#cursos', text: 'Cursos' },
     { href: '#intervenciones', text: 'Intervenciones' },
     { href: '#agilidadProfunda', text: 'Agilidad profunda' },
+    { href: '#contacto', text: 'Contacto' },
+  ];
+  const mobileItems = [
+    { href: '#hero', text: 'Inicio' },
+    { href: '#cursos', text: 'Cursos' },
     { href: '#contacto', text: 'Contacto' },
   ];
 
@@ -31,10 +37,10 @@ const NavMenu = () => {
           <Dialog.Trigger asChild>
             <button
               data-testid="menu-toggle"
-              aria-label="Menu"
+              aria-label="Abrir menú"
               className="NavigationMenuLink"
             >
-              Menu
+              <MenuIcon aria-hidden="true" />
             </button>
           </Dialog.Trigger>
           <Dialog.Portal>
@@ -46,12 +52,12 @@ const NavMenu = () => {
               <Dialog.Description className="visually-hidden">
                 Navigation options
               </Dialog.Description>
-              <nav>
+              <nav aria-label="Navegación principal">
                 <ul className="NavigationMenuList">
-                  {menuItems.map((item, index) => (
+                  {mobileItems.map((item, index) => (
                     <li key={index}>
                       <a
-                        className="NavigationMenuLink"
+                        className="NavigationMenuLink MobileNavItem"
                         href={item.href}
                         onClick={() => {
                           trackSectionView(item.text.toLowerCase());
@@ -74,7 +80,7 @@ const NavMenu = () => {
   return (
     <NavigationMenu.Root className="NavigationMenuRoot">
       <NavigationMenu.List className="NavigationMenuList">
-        {menuItems.map((item, index) => (
+        {desktopItems.map((item, index) => (
           <NavigationMenu.Item key={index}>
             <NavigationMenu.Link
               className="NavigationMenuLink"

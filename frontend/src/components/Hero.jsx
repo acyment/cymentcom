@@ -4,11 +4,13 @@ import { AccordionHeader } from '@radix-ui/react-accordion';
 import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
 import { usePostHog } from 'posthog-js/react';
 import Clientes from './Clientes';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAccordionScroll } from '../hooks/useAccordionScroll';
 
 const Hero = () => {
   const posthog = usePostHog();
   const { contentRef, headerRef } = useAccordionScroll();
+  const isMobile = useIsMobile();
 
   return (
     <Accordion.Item
@@ -96,7 +98,7 @@ const Hero = () => {
             </ul>
             <img src="static/images/firulete.svg" className="Firulete"></img>
           </div>
-          <Clientes></Clientes>
+          {!isMobile && <Clientes />}
         </section>
       </Accordion.Content>
     </Accordion.Item>
