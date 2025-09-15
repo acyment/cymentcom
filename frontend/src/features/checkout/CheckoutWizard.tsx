@@ -82,12 +82,24 @@ export function CheckoutWizard({
   useEffect(() => {
     const el = contentRef.current;
     if (!el) return;
+    // Rehydrate uncontrolled inputs with stored values when switching steps
+    const fields = el.querySelectorAll(
+      'input[name], textarea[name], select[name]',
+    ) as NodeListOf<HTMLInputElement>;
+    fields.forEach((field) => {
+      const name = field.getAttribute('name') || '';
+      if (name && Object.prototype.hasOwnProperty.call(values, name)) {
+        const v = (values as any)[name] ?? '';
+        if ((field as any).value !== v) (field as any).value = v;
+      }
+    });
+
     const h2 = el.querySelector('h2') as HTMLElement | null;
     if (h2) {
       if (!h2.hasAttribute('tabindex')) h2.setAttribute('tabindex', '-1');
       h2.focus();
     }
-  }, [index]);
+  }, [index, values]);
 
   const StepComp = current.component;
 
