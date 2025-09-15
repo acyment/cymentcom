@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { RoughNotation } from 'react-rough-notation';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { BP_MD } from '@/styles/breakpoints';
 
 const Contacto = () => {
   const [activeItem, setActiveItem] = useState(null);
@@ -14,11 +16,15 @@ const Contacto = () => {
     { href: 'https://www.youtube.com/@cyment-fluid-orgs', text: 'YouTube' },
   ];
 
+  const isMobile = useIsMobile(`(max-width: ${BP_MD}px)`);
+
   return (
     <div className="AreaContacto NavigationBarScrollOffset" id="contacto">
       <div className="ContactoLeftSection">
         <h3 className="TituloSeccionAccordion">Contacto</h3>
-        <NavigationMenu.Root>
+        <NavigationMenu.Root
+          className={`NavigationMenuRoot ${isMobile ? 'NavigationMenuRoot--mobile' : ''}`}
+        >
           <NavigationMenu.List className="LinksContacto">
             {menuItems.map((item, index) => (
               <NavigationMenu.Item key={index}>
@@ -27,7 +33,7 @@ const Contacto = () => {
                   show={activeItem === index}
                   color="#7b68ee"
                   strokeWidth={1}
-                  padding={8}
+                  padding={isMobile ? 2 : 8}
                   className="RoughNotation"
                 >
                   {' '}
@@ -42,7 +48,9 @@ const Contacto = () => {
                 </RoughNotation>
               </NavigationMenu.Item>
             ))}
-            <NavigationMenu.Indicator className="NavigationMenuIndicator" />
+            {!isMobile && (
+              <NavigationMenu.Indicator className="NavigationMenuIndicator" />
+            )}
           </NavigationMenu.List>
           <NavigationMenu.Viewport />
         </NavigationMenu.Root>
