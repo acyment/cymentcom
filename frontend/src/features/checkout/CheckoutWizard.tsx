@@ -31,18 +31,12 @@ export function CheckoutWizard({
   });
   const contentRef = useRef<HTMLDivElement | null>(null);
 
-  // Capture input changes within the step content (uncontrolled inputs)
-  useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    const handler = (ev: Event) => {
-      const t = ev.target as HTMLInputElement | HTMLTextAreaElement | null;
-      if (t && 'name' in t && t.name) {
-        setValues((prev) => ({ ...prev, [t.name]: (t as any).value }));
-      }
-    };
-    el.addEventListener('input', handler, true);
-    return () => el.removeEventListener('input', handler, true);
+  // Capture input changes within the step content (uncontrolled inputs) via React event delegation
+  const handleInput = useCallback((ev: React.FormEvent) => {
+    const t = ev.target as HTMLInputElement | HTMLTextAreaElement | null;
+    if (t && 'name' in t && t.name) {
+      setValues((prev) => ({ ...prev, [t.name]: (t as any).value }));
+    }
   }, []);
 
   const current = steps[index];
@@ -139,7 +133,7 @@ export function CheckoutWizard({
 
   return (
     <form onSubmit={handleSubmit} aria-label="Checkout wizard">
-      <div ref={contentRef}>
+      <div ref={contentRef} onInput={handleInput}>
         <StepComp />
       </div>
       <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
