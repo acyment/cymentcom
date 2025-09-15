@@ -49,8 +49,40 @@ vi.mock('axios', () => ({
   },
 }));
 
-// Mock react-rough-notation to avoid SVG APIs not present in JSDOM
-vi.mock('react-rough-notation', () => ({
-  RoughNotation: ({ children, className }) =>
-    React.createElement('span', { className }, children),
+// Polyfill minimal SVG APIs used by animation libs (e.g., rough-notation)
+const safeDefine = (proto, name, fn) => {
+  if (proto && !proto[name]) {
+    Object.defineProperty(proto, name, { value: fn, configurable: true });
+  }
+};
+
+// Basic geometry stubs
+safeDefine(globalThis.SVGElement?.prototype, 'getBBox', () => ({
+  x: 0,
+  y: 0,
+  width: 100,
+  height: 24,
 }));
+
+// Fallback to SVGElement if SVGGraphicsElement isn’t defined in JSDOM
+const GraphicsProto =
+  globalThis.SVGGraphicsElement?.prototype || globalThis.SVGElement?.prototype;
+safeDefine(GraphicsProto, 'getCTM', () => ({
+  a: 1,
+  b: 0,
+  c: 0,
+  d: 1,
+  e: 0,
+  f: 0,
+}));
+
+// Path length used by RoughNotation’s underline/circle calculations
+const PathProto =
+  globalThis.SVGPathElement?.prototype || globalThis.SVGElement?.prototype;
+safeDefine(PathProto, 'getTotalLength', () => 100);
+
+// Optional: text metrics used by some libraries
+const TextProto =
+  globalThis.SVGTextContentElement?.prototype ||
+  globalThis.SVGElement?.prototype;
+safeDefine(TextProto, 'getComputedTextLength', () => 80);
