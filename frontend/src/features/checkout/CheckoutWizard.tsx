@@ -31,13 +31,31 @@ export function CheckoutWizard({
   });
   const contentRef = useRef<HTMLDivElement | null>(null);
 
-  // Capture input changes within the step content (uncontrolled inputs) via React event delegation
-  const handleInput = useCallback((ev: React.FormEvent) => {
-    const t = ev.target as HTMLInputElement | HTMLTextAreaElement | null;
-    if (t && 'name' in t && t.name) {
-      setValues((prev) => ({ ...prev, [t.name]: (t as any).value }));
-    }
-  }, []);
+  // Bind inputs by name to wizard state (lightweight controlled bridge)
+  const bindControls = useCallback(
+    (node: React.ReactNode): React.ReactNode => {
+      if (!React.isValidElement(node)) return node;
+      const props: any = node.props || {};
+      const isField =
+        (node.type === 'input' ||
+          node.type === 'textarea' ||
+          node.type === 'select') &&
+        typeof props.name === 'string' &&
+        props.name.length > 0;
+      const nextProps: any = {};
+      if (isField) {
+        const name = props.name as string;
+        nextProps.value = values[name] ?? '';
+        nextProps.onChange = (e: any) =>
+          setValues((prev) => ({ ...prev, [name]: e?.target?.value ?? '' }));
+      }
+      if (props.children) {
+        nextProps.children = React.Children.map(props.children, bindControls);
+      }
+      return React.cloneElement(node, nextProps);
+    },
+    [values],
+  );
 
   const current = steps[index];
 
@@ -137,9 +155,7 @@ export function CheckoutWizard({
 
   return (
     <form onSubmit={handleSubmit} aria-label="Checkout wizard">
-      <div ref={contentRef} onInput={handleInput}>
-        <StepComp />
-      </div>
+      <div ref={contentRef}>{bindControls(<StepComp />) as any}</div>
       <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
         <button type="button" onClick={goBack} disabled={index === 0}>
           Back
