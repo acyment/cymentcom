@@ -118,7 +118,11 @@ export function CheckoutWizard({
       const name = field.getAttribute('name') || '';
       if (name && Object.prototype.hasOwnProperty.call(values, name)) {
         const v = (values as any)[name] ?? '';
-        if ((field as any).value !== v) (field as any).value = v;
+        if ((field as any).value !== v) {
+          (field as any).value = v;
+          // also set defaultValue to help JSDOM/testing-library reflect value reliably
+          (field as any).defaultValue = v;
+        }
       }
     });
 
