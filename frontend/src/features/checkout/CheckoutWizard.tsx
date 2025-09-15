@@ -4,6 +4,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  useLayoutEffect,
 } from 'react';
 
 export type CheckoutWizardStep = {
@@ -56,27 +57,40 @@ export function CheckoutWizard({
     }
   }, [current, values]);
 
-  const syncFromDom = useCallback(() => {
+  const readDomValues = useCallback(() => {
     const el = contentRef.current;
-    if (!el) return;
+    if (!el) return values;
     const fields = el.querySelectorAll(
       'input[name], textarea[name], select[name]',
     ) as NodeListOf<HTMLInputElement>;
-    setValues((prev) => {
-      const next = { ...prev };
-      fields.forEach((field) => {
-        const name = field.getAttribute('name') || '';
-        if (name) (next as any)[name] = (field as any).value;
-      });
-      return next;
+    const next = { ...values };
+    fields.forEach((field) => {
+      const name = field.getAttribute('name') || '';
+      if (name) (next as any)[name] = (field as any).value;
     });
-  }, []);
+    return next;
+  }, [values]);
+
+  const validateCandidate = useCallback(
+    (candidate: Record<string, any>) => {
+      if (!current?.validationSchema) return true;
+      try {
+        current.validationSchema.validateSync(candidate, { abortEarly: false });
+        return true;
+      } catch (_) {
+        return false;
+      }
+    },
+    [current],
+  );
 
   const goNext = useCallback(() => {
-    syncFromDom();
-    if (!isCurrentValid) return;
+    const nextVals = readDomValues();
+    const ok = validateCandidate(nextVals);
+    if (!ok) return;
+    setValues(nextVals);
     setIndex((i) => Math.min(i + 1, steps.length - 1));
-  }, [isCurrentValid, steps.length, syncFromDom]);
+  }, [readDomValues, validateCandidate, steps.length]);
 
   const goBack = useCallback(() => {
     setIndex((i) => Math.max(i - 1, 0));
@@ -85,19 +99,21 @@ export function CheckoutWizard({
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      syncFromDom();
-      if (!isCurrentValid) return;
+      const nextVals = readDomValues();
+      const ok = validateCandidate(nextVals);
+      if (!ok) return;
+      setValues(nextVals);
       if (index < steps.length - 1) {
         goNext();
       } else {
-        onSubmit(values);
+        onSubmit(nextVals);
       }
     },
-    [goNext, index, isCurrentValid, onSubmit, steps.length, values],
+    [goNext, index, onSubmit, steps.length, readDomValues, validateCandidate],
   );
 
   // Focus first heading in the step for accessibility
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = contentRef.current;
     if (!el) return;
     // Rehydrate uncontrolled inputs with stored values when switching steps
