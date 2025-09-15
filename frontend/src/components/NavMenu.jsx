@@ -27,22 +27,22 @@ const NavMenu = () => {
   };
 
   const LinkContent = ({ text, index, isCurrent }) => {
-    // Desktop: underline current; circle on hover for others
+    // Underline current section on all viewports; otherwise show hover circle on desktop
+    if (isCurrent) {
+      return (
+        <RoughNotation
+          className="NavNotation NavNotation--current"
+          type="underline"
+          show
+          color="#7b68ee"
+          strokeWidth={2}
+          padding={2}
+        >
+          {text}
+        </RoughNotation>
+      );
+    }
     if (!isMobile) {
-      if (isCurrent) {
-        return (
-          <RoughNotation
-            className="NavNotation NavNotation--current"
-            type="underline"
-            show
-            color="#7b68ee"
-            strokeWidth={2}
-            padding={2}
-          >
-            {text}
-          </RoughNotation>
-        );
-      }
       return (
         <RoughNotation
           className="NavNotation"
@@ -56,7 +56,6 @@ const NavMenu = () => {
         </RoughNotation>
       );
     }
-    // Mobile: no annotations, plain text for robustness in tests and performance
     return text;
   };
 

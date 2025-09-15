@@ -1,6 +1,7 @@
 import { expect, afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import * as matchers from '@testing-library/jest-dom/matchers';
+import React from 'react';
 
 // Extend Vitest's expect with jest-dom matchers
 expect.extend(matchers);
@@ -46,4 +47,10 @@ vi.mock('axios', () => ({
       delete: vi.fn(() => Promise.resolve({ data: {} })),
     })),
   },
+}));
+
+// Mock react-rough-notation to avoid SVG APIs not present in JSDOM
+vi.mock('react-rough-notation', () => ({
+  RoughNotation: ({ children, className }) =>
+    React.createElement('span', { className }, children),
 }));
