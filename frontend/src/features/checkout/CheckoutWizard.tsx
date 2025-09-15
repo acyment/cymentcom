@@ -56,10 +56,27 @@ export function CheckoutWizard({
     }
   }, [current, values]);
 
+  const syncFromDom = useCallback(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    const fields = el.querySelectorAll(
+      'input[name], textarea[name], select[name]',
+    ) as NodeListOf<HTMLInputElement>;
+    setValues((prev) => {
+      const next = { ...prev };
+      fields.forEach((field) => {
+        const name = field.getAttribute('name') || '';
+        if (name) (next as any)[name] = (field as any).value;
+      });
+      return next;
+    });
+  }, []);
+
   const goNext = useCallback(() => {
+    syncFromDom();
     if (!isCurrentValid) return;
     setIndex((i) => Math.min(i + 1, steps.length - 1));
-  }, [isCurrentValid, steps.length]);
+  }, [isCurrentValid, steps.length, syncFromDom]);
 
   const goBack = useCallback(() => {
     setIndex((i) => Math.max(i - 1, 0));
@@ -68,6 +85,7 @@ export function CheckoutWizard({
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
+      syncFromDom();
       if (!isCurrentValid) return;
       if (index < steps.length - 1) {
         goNext();
