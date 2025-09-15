@@ -76,6 +76,25 @@ const Cursos = () => {
 
   // Mobile-first prototype: stacked cards
   if (isMobile) {
+    const formatDateRange = (curso) => {
+      try {
+        if (!curso?.fecha) return null;
+        const start = new Date(curso.fecha);
+        const end = new Date(start);
+        if (curso.cantidad_dias && curso.cantidad_dias > 1) {
+          end.setDate(start.getDate() + (curso.cantidad_dias - 1));
+        }
+        const fmtDay = (d) =>
+          d.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit' });
+        const monthYear = start.toLocaleDateString('es-AR', {
+          month: 'long',
+          year: 'numeric',
+        });
+        return `${fmtDay(start)} al ${fmtDay(end)} de ${monthYear}`;
+      } catch (e) {
+        return null;
+      }
+    };
     return (
       <div
         id="cursos"
@@ -112,31 +131,53 @@ const Cursos = () => {
                         Ver fechas
                       </summary>
                       <div className="CourseCardDetailsBody">
-                        <p>
-                          Próximas fechas:{' '}
-                          {tipoCurso.upcoming_courses?.length || 0}
-                        </p>
-                        <Dialog.Root>
-                          <Dialog.Trigger asChild>
-                            <button
-                              data-testid="inscripcion-open"
-                              className="btn btn--primary"
-                            >
-                              Inscribirme
-                            </button>
-                          </Dialog.Trigger>
-                          <Dialog.Portal>
-                            <Dialog.Overlay className="DialogOverlay" />
-                            <Dialog.Content className="DialogContent">
-                              <Inscripcion
-                                idCurso={tipoCurso?.upcoming_courses?.[0]?.id}
-                                nombreCorto={tipoCurso.nombre_corto}
-                                costoUSD={tipoCurso.costo_usd}
-                                costoARS={tipoCurso.costo_ars}
-                              />
-                            </Dialog.Content>
-                          </Dialog.Portal>
-                        </Dialog.Root>
+                        {tipoCurso.upcoming_courses &&
+                        tipoCurso.upcoming_courses.length > 0 ? (
+                          <ul className="CourseDateList">
+                            {tipoCurso.upcoming_courses.map((c) => (
+                              <li key={c.id} className="CourseDateRow">
+                                <div className="CourseDateText">
+                                  <strong>
+                                    {formatDateRange(c) || 'Fecha a confirmar'}
+                                  </strong>
+                                  {c.hora_inicio && c.hora_fin && (
+                                    <span>
+                                      {' '}
+                                      • {c.hora_inicio}–{c.hora_fin}
+                                    </span>
+                                  )}
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p>
+                            No hay próximas fechas. Únete a la lista de espera.
+                          </p>
+                        )}
+                        <div className="CourseStickyBar">
+                          <Dialog.Root>
+                            <Dialog.Trigger asChild>
+                              <button
+                                data-testid="inscripcion-open"
+                                className="btn btn--primary"
+                              >
+                                Inscribirme
+                              </button>
+                            </Dialog.Trigger>
+                            <Dialog.Portal>
+                              <Dialog.Overlay className="DialogOverlay" />
+                              <Dialog.Content className="DialogContent">
+                                <Inscripcion
+                                  idCurso={tipoCurso?.upcoming_courses?.[0]?.id}
+                                  nombreCorto={tipoCurso.nombre_corto}
+                                  costoUSD={tipoCurso.costo_usd}
+                                  costoARS={tipoCurso.costo_ars}
+                                />
+                              </Dialog.Content>
+                            </Dialog.Portal>
+                          </Dialog.Root>
+                        </div>
                       </div>
                     </details>
                   </div>
