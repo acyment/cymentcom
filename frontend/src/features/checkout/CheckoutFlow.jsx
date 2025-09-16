@@ -4,7 +4,7 @@ import Inscripcion from '@/components/Inscripcion';
 
 export function CheckoutFlow() {
   // Expect course details via search to render the real form
-  const search = useSearch({ from: '/' as any }) as any;
+  const search = useSearch({ from: '/' });
   const idCurso = search?.idCurso || search?.course_id;
   const nombreCorto = search?.nombreCorto || search?.course_name;
   const costoUSD = search?.costoUSD || search?.price_usd;

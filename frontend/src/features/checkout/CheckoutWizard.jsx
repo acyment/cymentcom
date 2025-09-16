@@ -2,25 +2,14 @@ import React, { useEffect } from 'react';
 import { Wizard as RFWizard, useWizard } from 'react-formik-step-wizard';
 import { useFormikContext } from 'formik';
 
-export type CheckoutWizardStep = {
-  id: string;
-  title: string;
-  component: React.ComponentType<any>;
-  validationSchema?: any;
-};
-
-export type CheckoutWizardProps = {
-  initialValues?: Record<string, any>;
-  steps: CheckoutWizardStep[];
-  onSubmit: (values: any) => void;
-};
+// JS wrapper around react-formik-step-wizard
 
 function FocusOnStepChange() {
   const { activeStep } = useWizard();
-  const { validateForm } = useFormikContext<any>();
+  const { validateForm } = useFormikContext();
   useEffect(() => {
     // Focus heading for a11y
-    const h2 = document.querySelector('h2') as HTMLElement | null;
+    const h2 = document.querySelector('h2');
     if (h2) {
       if (!h2.hasAttribute('tabindex')) h2.setAttribute('tabindex', '-1');
       h2.focus();
@@ -33,7 +22,7 @@ function FocusOnStepChange() {
 
 function Footer() {
   const { isFirstStep, isLastStep, goToPreviousStep } = useWizard();
-  const { isValid } = useFormikContext<any>();
+  const { isValid } = useFormikContext();
   return (
     <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
       <button type="button" onClick={goToPreviousStep} disabled={isFirstStep}>
@@ -46,7 +35,7 @@ function Footer() {
   );
 }
 
-export function CheckoutWizard({ steps, onSubmit }: CheckoutWizardProps) {
+export function CheckoutWizard({ steps, onSubmit }) {
   const rfSteps = steps.map((s) => ({
     id: s.id,
     component: <s.component />,

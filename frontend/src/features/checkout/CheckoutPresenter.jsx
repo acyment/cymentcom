@@ -1,21 +1,12 @@
 import React, { useEffect, useCallback } from 'react';
 
-export type CheckoutPresenterProps = {
-  variant: 'modal' | 'fullscreen';
-  open: boolean;
-  onClose: () => void;
-  title?: string;
-  children?: React.ReactNode;
-};
-
-// Minimal stub that will intentionally fail tests until we implement behavior.
 export function CheckoutPresenter({
   variant,
   open,
   onClose,
   title = 'Checkout',
   children,
-}: CheckoutPresenterProps) {
+}) {
   // Scroll lock only when modal is open
   useEffect(() => {
     if (variant === 'modal' && open) {
@@ -29,7 +20,7 @@ export function CheckoutPresenter({
   }, [variant, open]);
 
   const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
+    (e) => {
       if (variant === 'modal' && open && e.key === 'Escape') {
         e.stopPropagation();
         onClose();

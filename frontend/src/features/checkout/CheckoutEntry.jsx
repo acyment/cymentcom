@@ -4,18 +4,13 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { BP_MD } from '@/styles/breakpoints';
 import { CheckoutPresenter } from '@/features/checkout/CheckoutPresenter';
 
-type Props = {
-  title?: string;
-  children?: React.ReactNode;
-};
-
-export function CheckoutEntry({ title = 'Checkout', children }: Props) {
+export function CheckoutEntry({ title = 'Checkout', children }) {
   const isMobile = useIsMobile(`(max-width: ${BP_MD}px)`);
   const navigate = useNavigate();
   const location = useLocation();
-  const search = useSearch({ from: '/' as any }) as any;
+  const search = useSearch({ from: '/' });
 
-  const variant: 'modal' | 'fullscreen' = isMobile ? 'fullscreen' : 'modal';
+  const variant = isMobile ? 'fullscreen' : 'modal';
   const open = isMobile
     ? location?.pathname === '/checkout'
     : !!search?.checkout;
