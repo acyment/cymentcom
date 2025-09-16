@@ -452,17 +452,18 @@ body {
 .HeroCTARow {
   width: 30%;
   padding-left: $main-padding-left;
-  margin-top: clamp(20px, 3.5vw, 36px); /* bigger gap from paragraph */
+  margin-top: clamp(26px, 4.5vw, 48px); /* increase gap from paragraph */
   display: flex;
-  gap: $space-6; /* wider gap between buttons */
+  gap: clamp(16px, 4.6vw, 40px); /* increase gap between buttons */
   justify-content: center; /* center buttons within the text block */
 }
 
 .HeroCTA {
   @extend .btn;
-  /* Slightly larger for hero prominence */
-  @include type-scale(22px, 7.6vw, 36px);
-  padding: clamp(14px, 2.8vw, 22px) clamp(26px, 5vw, 36px);
+  /* Larger for hero prominence */
+  @include type-scale(24px, 8.2vw, 40px);
+  padding: clamp(16px, 3.2vw, 26px) clamp(30px, 5.8vw, 40px);
+  font-weight: 600; /* slightly lighter than base btn */
 }
 .HeroCTAPrimary {
   @extend .btn--primary;
@@ -477,7 +478,7 @@ body {
     width: calc(100% - $main-padding-left);
     padding-left: $main-padding-left;
     justify-content: center;
-    gap: $space-6; /* bigger spacing on mobile too */
+    gap: clamp(16px, 5.2vw, 44px); /* bigger spacing on mobile too */
   }
 }
 
