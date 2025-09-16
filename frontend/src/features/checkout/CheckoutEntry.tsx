@@ -28,6 +28,14 @@ export function CheckoutEntry({ title = 'Checkout', children }: Props) {
     }
   };
 
+  const mobileHeader = (
+    <div style={{ display: 'flex', justifyContent: 'flex-end', padding: 8 }}>
+      <button type="button" aria-label="Close" onClick={handleClose}>
+        Close
+      </button>
+    </div>
+  );
+
   return (
     <CheckoutPresenter
       variant={variant}
@@ -35,6 +43,7 @@ export function CheckoutEntry({ title = 'Checkout', children }: Props) {
       onClose={handleClose}
       title={title}
     >
+      {isMobile ? mobileHeader : null}
       {children ?? null}
     </CheckoutPresenter>
   );

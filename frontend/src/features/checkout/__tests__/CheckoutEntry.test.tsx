@@ -56,7 +56,8 @@ describe('CheckoutEntry variant + navigation', () => {
       await screen.findByTestId('checkout-fullscreen'),
     ).toBeInTheDocument();
 
-    await userEvent.keyboard('{Escape}');
+    // Click explicit mobile close button
+    await userEvent.click(screen.getByRole('button', { name: /close/i }));
 
     expect(navigate).toHaveBeenCalledWith({ to: '/', replace: true });
   });
