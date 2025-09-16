@@ -1,39 +1,36 @@
 import React from 'react';
-import * as Yup from 'yup';
-import { Field } from 'formik';
-import { CheckoutWizard } from './CheckoutWizard';
+import { useSearch } from '@tanstack/react-router';
+import Inscripcion from '@/components/Inscripcion';
 
 export function CheckoutFlow() {
-  const steps = [
-    {
-      id: 'info',
-      title: 'Info',
-      component: () => (
-        <div>
-          <h2>Step 1: Info</h2>
-          <label htmlFor="name">Name</label>
-          <Field id="name" name="name" />
-        </div>
-      ),
-      validationSchema: Yup.object({ name: Yup.string().required('Required') }),
-    },
-    {
-      id: 'contact',
-      title: 'Contact',
-      component: () => (
-        <div>
-          <h2>Step 2: Contact</h2>
-          <label htmlFor="email">Email</label>
-          <Field id="email" name="email" />
-        </div>
-      ),
-      validationSchema: Yup.object({
-        email: Yup.string().email('Invalid').required('Required'),
-      }),
-    },
-  ];
+  // Expect course details via search to render the real form
+  const search = useSearch({ from: '/' as any }) as any;
+  const idCurso = search?.idCurso || search?.course_id;
+  const nombreCorto = search?.nombreCorto || search?.course_name;
+  const costoUSD = search?.costoUSD || search?.price_usd;
+  const costoARS = search?.costoARS || search?.price_ars;
 
-  return <CheckoutWizard steps={steps} onSubmit={() => {}} />;
+  if (!idCurso || (!costoUSD && !costoARS)) {
+    return (
+      <div style={{ padding: 16 }}>
+        <h2>Seleccioná un curso para continuar</h2>
+        <p>
+          No encontramos los datos del curso. Abrí el checkout desde un curso o
+          pasá los parámetros en la URL (por ejemplo: idCurso, nombreCorto,
+          costoUSD/costoARS).
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <Inscripcion
+      idCurso={idCurso}
+      nombreCorto={nombreCorto}
+      costoUSD={costoUSD}
+      costoARS={costoARS}
+    />
+  );
 }
 
 export default CheckoutFlow;
