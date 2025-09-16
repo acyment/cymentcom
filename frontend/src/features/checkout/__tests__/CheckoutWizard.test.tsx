@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as Yup from 'yup';
 import { Field } from 'formik';
@@ -62,8 +62,8 @@ describe('CheckoutWizard', () => {
     ).toBeInTheDocument();
 
     // Next disabled until valid
-    const nextBtn = screen.getByRole('button', { name: /next/i });
-    expect(nextBtn).toBeDisabled();
+    const nextBtn = await screen.findByRole('button', { name: /next/i });
+    await waitFor(() => expect(nextBtn).toBeDisabled());
 
     // Fill valid value
     await user.type(screen.getByLabelText(/name/i), 'Ada');
@@ -120,8 +120,8 @@ describe('CheckoutWizard', () => {
     await user.click(screen.getByRole('button', { name: /next/i }));
 
     // Step 2 requires valid email
-    const submitBtn = screen.getByRole('button', { name: /submit/i });
-    expect(submitBtn).toBeDisabled();
+    const submitBtn = await screen.findByRole('button', { name: /submit/i });
+    await waitFor(() => expect(submitBtn).toBeDisabled());
 
     await user.type(screen.getByLabelText(/email/i), 'ada@example.com');
 
