@@ -462,7 +462,7 @@ body {
   @extend .btn;
   /* Slight bump but keep single-line fit */
   @include type-scale(23px, 7.6vw, 38px);
-  padding: clamp(15px, 2.9vw, 24px) clamp(26px, 5vw, 36px);
+  padding: clamp(15px, 2.9vw, 24px) clamp(24px, 4.6vw, 34px); /* shave horizontal padding a bit to avoid wrap */
   font-weight: 600; /* slightly lighter than base btn */
   white-space: nowrap; /* prevent label from wrapping */
 }
@@ -1980,7 +1980,7 @@ select,
   .HeroCopy {
     display: flex;
     flex-direction: column;
-    width: 40%; /* give the paragraph a little more room */
+    width: 42%; /* slightly wider copy column */
     padding-left: $main-padding-left;
     padding-top: 7%;
   }
@@ -1995,7 +1995,7 @@ select,
     justify-content: center; /* keep centered within text column */
   }
   .HeroImage {
-    width: 60%; /* enlarge photo on desktop */
+    width: 58%; /* balance with wider copy column */
     margin-left: 0;
     align-self: flex-end;
   }
