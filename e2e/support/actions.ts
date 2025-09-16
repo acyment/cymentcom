@@ -29,6 +29,23 @@ export async function openInscripcionForFirstCourse(
     : page.getByRole('button', { name: /inscribirme/i });
   await expect(trigger).toBeVisible();
   await trigger.click();
-  await expect(page.getByRole('dialog')).toBeVisible();
-  return true;
+  // Support both desktop modal and mobile fullscreen routing
+  const dialog = page.getByRole('dialog');
+  const fullscreen = page.getByTestId('checkout-fullscreen');
+  const fieldNombre = page.getByLabel('Nombre*');
+  const opened = await Promise.race([
+    dialog
+      .waitFor({ state: 'visible' })
+      .then(() => true)
+      .catch(() => false),
+    fullscreen
+      .waitFor({ state: 'visible' })
+      .then(() => true)
+      .catch(() => false),
+    fieldNombre
+      .waitFor({ state: 'visible' })
+      .then(() => true)
+      .catch(() => false),
+  ]);
+  return !!opened;
 }
