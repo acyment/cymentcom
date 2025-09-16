@@ -448,6 +448,36 @@ body {
   z-index: 1;
 }
 
+/* Hero CTAs: align under paragraph block */
+.HeroCTARow {
+  width: 30%;
+  padding-left: $main-padding-left;
+  margin-top: 1.2rem;
+  display: flex;
+  gap: $space-4;
+  justify-content: center; /* center buttons within the text block */
+}
+
+.HeroCTA {
+  @extend .btn;
+}
+.HeroCTAPrimary {
+  @extend .btn--primary;
+}
+.HeroCTASecondary {
+  @extend .btn--secondary;
+}
+
+/* Mobile: keep CTAs centered and readable */
+@include down($bp-md) {
+  .HeroCTARow {
+    width: calc(100% - $main-padding-left);
+    padding-left: $main-padding-left;
+    justify-content: center;
+    gap: $space-4;
+  }
+}
+
 .Clientes {
   margin-left: -10%;
   padding-right: 7em;
