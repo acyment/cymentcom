@@ -153,8 +153,22 @@ export function CheckoutWizard({
 
   const StepComp = current.component;
 
+  const handleFormChange = useCallback((ev: any) => {
+    const t = ev?.target as HTMLInputElement | HTMLTextAreaElement | null;
+    if (t && 'name' in t && t.name) {
+      const name = t.name;
+      const value = (t as any).value ?? '';
+      setValues((prev) => ({ ...prev, [name]: value }));
+    }
+  }, []);
+
   return (
-    <form onSubmit={handleSubmit} aria-label="Checkout wizard">
+    <form
+      onSubmit={handleSubmit}
+      onChange={handleFormChange}
+      onInput={handleFormChange}
+      aria-label="Checkout wizard"
+    >
       <div ref={contentRef}>{bindControls(<StepComp />) as any}</div>
       <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
         <button type="button" onClick={goBack} disabled={index === 0}>
