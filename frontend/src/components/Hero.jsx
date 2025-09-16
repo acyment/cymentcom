@@ -26,8 +26,8 @@ const Hero = () => {
       }}
     >
       <AccordionHeader ref={headerRef} className="NavigationBarScrollOffset">
-        <section>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <section className="HeroSection">
+          <div className="HeroCopy">
             <p className="HeroText">
               <b className="HeroTextBold">Alan</b> explica la agilidad como
               nadie. Transmite ideas complejas en poco tiempo de{' '}
@@ -78,7 +78,7 @@ const Hero = () => {
               </button>
             </div>
           </div>
-          <img src="static/images/hero.jpg" className="HeroImage"></img>
+          <img src="static/images/hero.jpg" className="HeroImage" />
         </section>
       </AccordionHeader>
       <Accordion.Trigger className="CircleButton"></Accordion.Trigger>
