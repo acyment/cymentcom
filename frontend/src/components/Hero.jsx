@@ -26,8 +26,8 @@ const Hero = () => {
       }}
     >
       <AccordionHeader ref={headerRef} className="NavigationBarScrollOffset">
-        <section className="HeroSection">
-          <div className="HeroCopy">
+        <section>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             <p className="HeroText">
               <b className="HeroTextBold">Alan</b> explica la agilidad como
               nadie. Transmite ideas complejas en poco tiempo de{' '}

@@ -1970,33 +1970,4 @@ select,
 .form-group-content {
   width: 100%;
 }
-/* Desktop: lay out copy and photo on one row */
-@media (min-width: 769px) {
-  .HeroSection {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-  }
-  .HeroCopy {
-    display: flex;
-    flex-direction: column;
-    width: 42%; /* slightly wider copy column */
-    padding-left: $main-padding-left;
-    padding-top: 7%;
-  }
-  .HeroText {
-    position: static; /* override absolute on desktop */
-    width: auto;
-    padding-left: 0;
-  }
-  .HeroCTARow {
-    width: 100%;
-    padding-left: 0;
-    justify-content: center; /* keep centered within text column */
-  }
-  .HeroImage {
-    width: 58%; /* balance with wider copy column */
-    margin-left: 0;
-    align-self: flex-end;
-  }
-}
+/* Remove desktop flex override: keep original big image and overlayed text/CTAs */
