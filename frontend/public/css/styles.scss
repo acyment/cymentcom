@@ -486,6 +486,20 @@ body {
   }
 }
 
+/* Desktop: ensure CTAs stay on one row, slightly smaller and lighter */
+@media (min-width: 769px) {
+  .HeroCTARow {
+    justify-content: flex-start;
+    gap: clamp(12px, 2.6vw, 24px);
+    flex-wrap: nowrap;
+  }
+  .HeroCTA {
+    @include type-scale(20px, 6.2vw, 32px);
+    padding: clamp(12px, 2.2vw, 20px) clamp(20px, 4vw, 30px);
+    font-weight: 500;
+  }
+}
+
 .Clientes {
   margin-left: -10%;
   padding-right: 7em;
