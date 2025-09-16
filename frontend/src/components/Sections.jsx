@@ -6,6 +6,8 @@ import Intervenciones from './Intervenciones';
 import AgilidadProfunda from './AgilidadProfunda';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { Outlet } from '@tanstack/react-router';
+import { CheckoutEntry } from '@/features/checkout/CheckoutEntry';
+import CheckoutFlow from '@/features/checkout/CheckoutFlow';
 
 const Sections = () => {
   const isMobile = useIsMobile();
@@ -16,6 +18,10 @@ const Sections = () => {
       {!isMobile && <Intervenciones />}
       {!isMobile && <AgilidadProfunda />}
       <Outlet />
+      {/* Mount checkout entry so desktop can open via ?checkout=1 */}
+      <CheckoutEntry title="Checkout">
+        <CheckoutFlow />
+      </CheckoutEntry>
     </Accordion.Root>
   );
 };
