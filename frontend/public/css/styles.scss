@@ -454,15 +454,15 @@ body {
   padding-left: $main-padding-left;
   margin-top: clamp(26px, 4.5vw, 48px); /* increase gap from paragraph */
   display: flex;
-  gap: clamp(14px, 3.2vw, 28px); /* tighten gap so both fit in one row */
+  gap: clamp(15px, 3.8vw, 32px); /* a bit more space while staying one row */
   justify-content: center; /* center buttons within the text block */
 }
 
 .HeroCTA {
   @extend .btn;
-  /* Larger for hero prominence */
-  @include type-scale(22px, 7.2vw, 36px);
-  padding: clamp(14px, 2.6vw, 22px) clamp(24px, 4.6vw, 34px);
+  /* Slight bump but keep single-line fit */
+  @include type-scale(23px, 7.6vw, 38px);
+  padding: clamp(15px, 2.9vw, 24px) clamp(26px, 5vw, 36px);
   font-weight: 600; /* slightly lighter than base btn */
   white-space: nowrap; /* prevent label from wrapping */
 }
@@ -1975,11 +1975,12 @@ select,
   .HeroSection {
     display: flex;
     align-items: flex-end;
+    justify-content: space-between;
   }
   .HeroCopy {
     display: flex;
     flex-direction: column;
-    width: 36%;
+    width: 40%; /* give the paragraph a little more room */
     padding-left: $main-padding-left;
     padding-top: 7%;
   }
@@ -1994,7 +1995,7 @@ select,
     justify-content: center; /* keep centered within text column */
   }
   .HeroImage {
-    width: 64%;
+    width: 60%; /* enlarge photo on desktop */
     margin-left: 0;
     align-self: flex-end;
   }
