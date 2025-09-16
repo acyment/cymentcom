@@ -15,14 +15,8 @@ SECRET_KEY = env(
     default="6HlIZs0DubfMQwIG4OvemBE05F3f9mUwQjZ0Jv7TCS5ulscFE8kJSq1zSmYtEeaH",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "cymentcom.loca.lt",
-    "my-dev.local",
-    "app",
-    "node",
-]
+# Allow all hosts in local development so LAN devices can access via IP
+ALLOWED_HOSTS = ["*"]
 
 # CACHES
 # ------------------------------------------------------------------------------

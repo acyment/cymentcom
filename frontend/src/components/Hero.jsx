@@ -27,52 +27,56 @@ const Hero = () => {
     >
       <AccordionHeader ref={headerRef} className="NavigationBarScrollOffset">
         <section>
-          <p className="HeroText">
-            <b className="HeroTextBold">Alan</b> explica la agilidad como nadie.
-            Transmite ideas complejas en poco tiempo de{' '}
-            <RoughNotation
-              color="#7b68ee"
-              type="underline"
-              show="true"
-              animate="true"
-              iterations={8}
-              padding={[0, 5]}
-            >
-              manera interactiva
-            </RoughNotation>
-            . Domina la oscilación entre lo filosófico y lo pragmático. Se
-            adapta sin sobresaltos a{' '}
-            <RoughNotation
-              padding={[5, 17]}
-              strokeWidth={2}
-              color="#7b68ee"
-              type="circle"
-              show="true"
-              animate="true"
-            >
-              cualquier tipo de público
-            </RoughNotation>
-            .
-          </p>
-          <div className="HeroCTARow">
-            <button
-              className="HeroCTA HeroCTAPrimary"
-              onClick={() => {
-                const el = document.querySelector('#cursos');
-                el && el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }}
-            >
-              Ver cursos
-            </button>
-            <button
-              className="HeroCTA HeroCTASecondary"
-              onClick={() => {
-                const el = document.querySelector('#contacto');
-                el && el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }}
-            >
-              Contacto
-            </button>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <p className="HeroText">
+              <b className="HeroTextBold">Alan</b> explica la agilidad como
+              nadie. Transmite ideas complejas en poco tiempo de{' '}
+              <RoughNotation
+                color="#7b68ee"
+                type="underline"
+                show="true"
+                animate="true"
+                iterations={8}
+                padding={[0, 5]}
+              >
+                manera interactiva
+              </RoughNotation>
+              . Domina la oscilación entre lo filosófico y lo pragmático. Se
+              adapta sin sobresaltos a{' '}
+              <RoughNotation
+                padding={[5, 17]}
+                strokeWidth={2}
+                color="#7b68ee"
+                type="circle"
+                show="true"
+                animate="true"
+              >
+                cualquier tipo de público
+              </RoughNotation>
+              .
+            </p>
+            <div className="HeroCTARow">
+              <button
+                className="HeroCTA HeroCTAPrimary"
+                onClick={() => {
+                  const el = document.querySelector('#cursos');
+                  el &&
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+              >
+                Ver cursos
+              </button>
+              <button
+                className="HeroCTA HeroCTASecondary"
+                onClick={() => {
+                  const el = document.querySelector('#contacto');
+                  el &&
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+              >
+                Contacto
+              </button>
+            </div>
           </div>
           <img src="static/images/hero.jpg" className="HeroImage"></img>
         </section>

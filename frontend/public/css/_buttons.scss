@@ -1,23 +1,41 @@
 .btn {
-  @include pill();
+  @include pill($radius-cta);
   @include type-scale(20px, 7vw, 34px);
-  font-weight: 800;
-  padding: clamp(14px, 2.5vw, 20px) clamp(24px, 4.5vw, 34px);
+  font-weight: 700; /* slightly lighter to match original */
+  padding: clamp(12px, 2.3vw, 18px) clamp(22px, 4vw, 30px);
   border: 0;
   position: relative;
   z-index: $z-cta;
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
 }
 
 .btn--primary {
-  @include gradient-cta();
-  @include shadow(3);
+  background-color: $azul-violaceo; /* flat color, no gradient */
+  @include shadow(2);
   color: #fff;
-  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
 }
 
 .btn--secondary {
   background: #fff;
   color: #111;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  @include shadow(2);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  @include shadow(1);
+}
+
+/* Hover/active states */
+.btn--primary:hover {
+  background-color: darken($azul-violaceo, 5%);
+}
+.btn--primary:active {
+  background-color: darken($azul-violaceo, 8%);
+  transform: translateY(1px);
+}
+.btn--secondary:hover {
+  background: #f8f8f8;
+}
+.btn--secondary:active {
+  background: #f0f0f0;
+  transform: translateY(1px);
 }

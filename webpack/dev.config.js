@@ -19,6 +19,9 @@ module.exports = merge(commonConfig, {
       {
         context: ['/'],
         target: 'http://django:8000',
+        changeOrigin: true, // Present django as origin to avoid ALLOWED_HOSTS issues
+        // xfwd helps Django see the original client IP when proxied
+        xfwd: true,
       },
     ],
     client: {
@@ -27,7 +30,9 @@ module.exports = merge(commonConfig, {
         warnings: false,
         runtimeErrors: true,
       },
-      webSocketURL: 'wss://my-dev.local/ws',
+      // Allow LAN devices to connect without hard-coding a hostname
+      // Rspack will infer ws://<current-host>:<dev-port>/ws
+      webSocketURL: 'auto://0.0.0.0:0/ws',
     },
     // We need hot=false (Disable HMR) to set liveReload=true
     hot: false,

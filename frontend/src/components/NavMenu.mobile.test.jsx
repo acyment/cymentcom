@@ -27,45 +27,22 @@ function mockMatchMedia({ mobile = false } = {}) {
 }
 
 describe('NavMenu (mobile behavior)', () => {
-  it('shows hamburger and hides inline menu on mobile', async () => {
+  it('shows inline nav with key links and no hamburger on mobile', async () => {
     mockMatchMedia({ mobile: true });
     render(<NavMenu />);
 
-    const burger = await screen.findByRole('button', { name: /menu/i });
-    expect(burger).toBeInTheDocument();
-
-    expect(screen.queryByText('Cursos')).not.toBeInTheDocument();
-    expect(screen.queryByText('Contacto')).not.toBeInTheDocument();
-  });
-
-  it('opens overlay with links when hamburger is clicked', async () => {
-    mockMatchMedia({ mobile: true });
-    render(<NavMenu />);
-
-    const burger = await screen.findByRole('button', { name: /menu/i });
-    await userEvent.click(burger);
-
-    const dialog = await waitFor(() => screen.getByRole('dialog'), {
-      timeout: 2000,
-    });
+    // No hamburger button
+    expect(
+      screen.queryByRole('button', { name: /menu/i }),
+    ).not.toBeInTheDocument();
+    // Inline links are present
+    expect(
+      await screen.findByRole('link', { name: 'Inicio' }),
+    ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Cursos' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Contacto' })).toBeInTheDocument();
-    expect(dialog).toBeInTheDocument();
-  });
-
-  it('closes overlay on Escape', async () => {
-    mockMatchMedia({ mobile: true });
-    render(<NavMenu />);
-
-    const burger = await screen.findByRole('button', { name: /menu/i });
-    await userEvent.click(burger);
-    await waitFor(() => screen.getByRole('dialog'), { timeout: 2000 });
-
-    await userEvent.keyboard('{Escape}');
-    // Radix removes dialog from DOM on close
-    await waitFor(() => {
-      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    });
+    // No dialog is rendered
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 });
 
@@ -82,4 +59,25 @@ describe('NavMenu (desktop behavior)', () => {
     ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Contacto' })).toBeInTheDocument();
   });
+});
+
+it('renders annotations: desktop shows, mobile shows current underline only', async () => {
+  // Desktop: annotations present (current underline, hover circles can exist)
+  mockMatchMedia({ mobile: false });
+  const { unmount } = render(<NavMenu />);
+  expect(
+    await screen.findByRole('link', { name: 'Cursos' }),
+  ).toBeInTheDocument();
+  expect(document.querySelector('.NavNotation')).toBeInTheDocument();
+
+  // Mobile: only the current item has underline annotation
+  unmount();
+  mockMatchMedia({ mobile: true });
+  render(<NavMenu />);
+  expect(
+    await screen.findByRole('link', { name: 'Inicio' }),
+  ).toBeInTheDocument();
+  const current = document.querySelector('.NavNotation--current');
+  expect(current).toBeInTheDocument();
+  expect(document.querySelectorAll('.NavNotation').length).toBe(1);
 });

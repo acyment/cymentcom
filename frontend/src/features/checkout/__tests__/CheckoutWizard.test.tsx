@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as Yup from 'yup';
+import { Field } from 'formik';
 import { CheckoutWizard } from '@/features/checkout/CheckoutWizard';
 
 function StepOne() {
@@ -10,7 +11,7 @@ function StepOne() {
     <div>
       <h2>Step 1: Info</h2>
       <label htmlFor="name">Name</label>
-      <input id="name" name="name" />
+      <Field id="name" name="name" />
     </div>
   );
 }
@@ -20,7 +21,7 @@ function StepTwo() {
     <div>
       <h2>Step 2: Contact</h2>
       <label htmlFor="email">Email</label>
-      <input id="email" name="email" />
+      <Field id="email" name="email" />
     </div>
   );
 }

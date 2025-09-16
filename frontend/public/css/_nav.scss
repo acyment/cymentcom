@@ -32,13 +32,6 @@
   @include focus-ring();
 }
 
-/* Drawer variant */
-.nav-link--drawer {
-  display: block;
-  padding-block: $space-4;
-  padding-inline: $nav-padding-inline-mobile;
-}
-
 /* Map real selectors to the base */
 .NavigationMenuTrigger,
 .NavigationMenuLink {
@@ -49,12 +42,18 @@
   text-decoration: none;
 }
 
-/* Ensure mobile drawer nav items are comfortably large */
-.MobileNavItem {
-  @extend .nav-link;
-  @extend .nav-link--drawer;
-  font-weight: 700;
+/* Mobile inline nav variant: larger type for tap targets */
+.NavigationMenuRoot--mobile {
+  .NavigationMenuList {
+    gap: $space-4; // slightly larger gap on mobile
+  }
+  .NavigationMenuLink {
+    @include type-scale(16px, 4vw, 22px);
+    padding-inline: 12px;
+  }
 }
+
+/* Drawer variant and MobileNavItem removed (no longer used) */
 
 .NavigationMenuIndicator {
   display: flex;

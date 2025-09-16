@@ -97,10 +97,11 @@
     "e2e:report": "playwright show-report",
     "dev": "npx rspack serve --config webpack/dev.config.js",
     "build": "npx rspack --config webpack/prod.config.js",
-    "test": "vitest",
+    "test": "vitest && npm run test:smoke",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:smoke": "vitest run frontend/src/tests/build.styles.smoke.test.ts"
   },
   "packageManager": "pnpm@10.8.1"
 }
