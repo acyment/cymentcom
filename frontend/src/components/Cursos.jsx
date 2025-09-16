@@ -6,8 +6,7 @@ import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
 import axios from 'axios';
 import CircleLoader from 'react-spinners/CircleLoader';
-import * as Dialog from '@radix-ui/react-dialog';
-import Inscripcion from './Inscripcion';
+import { useOpenCheckout } from '@/features/checkout/useOpenCheckout';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
 const Cursos = () => {
@@ -76,6 +75,7 @@ const Cursos = () => {
 
   // Mobile-first prototype: stacked cards
   if (isMobile) {
+    const openCheckout = useOpenCheckout();
     const formatDateRange = (curso) => {
       try {
         if (!curso?.fecha) return null;
@@ -156,27 +156,20 @@ const Cursos = () => {
                           </p>
                         )}
                         <div className="CourseStickyBar">
-                          <Dialog.Root>
-                            <Dialog.Trigger asChild>
-                              <button
-                                data-testid="inscripcion-open"
-                                className="btn btn--primary"
-                              >
-                                Inscribirme
-                              </button>
-                            </Dialog.Trigger>
-                            <Dialog.Portal>
-                              <Dialog.Overlay className="DialogOverlay" />
-                              <Dialog.Content className="DialogContent">
-                                <Inscripcion
-                                  idCurso={tipoCurso?.upcoming_courses?.[0]?.id}
-                                  nombreCorto={tipoCurso.nombre_corto}
-                                  costoUSD={tipoCurso.costo_usd}
-                                  costoARS={tipoCurso.costo_ars}
-                                />
-                              </Dialog.Content>
-                            </Dialog.Portal>
-                          </Dialog.Root>
+                          <button
+                            data-testid="inscripcion-open"
+                            className="btn btn--primary"
+                            onClick={() =>
+                              openCheckout({
+                                idCurso: tipoCurso?.upcoming_courses?.[0]?.id,
+                                nombreCorto: tipoCurso.nombre_corto,
+                                costoUSD: tipoCurso.costo_usd,
+                                costoARS: tipoCurso.costo_ars,
+                              })
+                            }
+                          >
+                            Inscribirme
+                          </button>
                         </div>
                       </div>
                     </details>

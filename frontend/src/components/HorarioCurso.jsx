@@ -1,8 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { usePostHog } from 'posthog-js/react';
 
-import Inscripcion from './Inscripcion';
-import * as Dialog from '@radix-ui/react-dialog';
+import { useOpenCheckout } from '@/features/checkout/useOpenCheckout';
 import formatDate from 'intl-dateformat';
 
 const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
@@ -20,25 +19,7 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
     }
   }, [proximosCursos]);
 
-  const handleDialogOpenChange = (open) => {
-    if (open) {
-      turnOffHeaderStickiness();
-      document.body.style.overflow = 'hidden';
-    } else {
-      turnOnHeaderStickiness();
-      document.body.style.overflow = '';
-    }
-  };
-
-  const turnOffHeaderStickiness = () => {
-    const headerEl = document.querySelector('header');
-    if (headerEl) headerEl.style.position = 'relative';
-  };
-
-  const turnOnHeaderStickiness = () => {
-    const headerEl = document.querySelector('header');
-    if (headerEl) headerEl.style.position = 'sticky';
-  };
+  const openCheckout = useOpenCheckout();
 
   const calculateTimeDifference = (startTime, endTime) => {
     // Create Date objects from the time strings
@@ -134,54 +115,28 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
             {proximoCurso && proximoCurso.hora_fin} hs.
           </p>
         </div>
-        <Dialog.Root
-          onOpenChange={handleDialogOpenChange}
-          modal={true}
-          closeOnInteractOutside={false}
-        >
-          {proximoCurso ? (
-            <>
-              <Dialog.Trigger asChild>
-                <button
-                  data-testid="inscripcion-open"
-                  className="BotonInscripcion"
-                  onClick={() => {
-                    posthog.capture('Boton inscripcion ' + proximoCurso.id);
-                  }}
-                  autofocus={true}
-                >
-                  Inscribirme
-                </button>
-              </Dialog.Trigger>
-
-              <Dialog.Portal>
-                <Dialog.Overlay className="DialogOverlay" />
-
-                <Dialog.Content className="DialogContent">
-                  <Dialog.Close asChild>
-                    <button
-                      data-testid="dialog-close"
-                      aria-label="Cerrar"
-                      className="close-button"
-                    >
-                      ×
-                    </button>
-                  </Dialog.Close>
-                  <Inscripcion
-                    idCurso={proximoCurso.id}
-                    nombreCorto={nombreCorto}
-                    costoUSD={costoUSD}
-                    costoARS={costoARS}
-                  />
-                </Dialog.Content>
-              </Dialog.Portal>
-            </>
-          ) : (
-            <button className="BotonInscripcion" disabled>
-              Cargando...
-            </button>
-          )}
-        </Dialog.Root>
+        {proximoCurso ? (
+          <button
+            data-testid="inscripcion-open"
+            className="BotonInscripcion"
+            onClick={() => {
+              posthog.capture('Boton inscripcion ' + proximoCurso.id);
+              openCheckout({
+                idCurso: proximoCurso.id,
+                nombreCorto,
+                costoUSD,
+                costoARS,
+              });
+            }}
+            autoFocus={true}
+          >
+            Inscribirme
+          </button>
+        ) : (
+          <button className="BotonInscripcion" disabled>
+            Cargando...
+          </button>
+        )}
       </div>
       <p className="ResumenDetalleCurso">
         {proximoCurso ? (
