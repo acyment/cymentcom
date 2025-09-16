@@ -61,22 +61,20 @@ describe('NavMenu (desktop behavior)', () => {
   });
 });
 
-it('renders annotations: desktop shows, mobile shows current underline only', async () => {
-  // Desktop: annotations present (current underline, hover circles can exist)
+it('annotations: desktop shows hover-only circle, mobile shows current underline', async () => {
+  // Desktop: no annotation until hover
   mockMatchMedia({ mobile: false });
   const { unmount } = render(<NavMenu />);
-  expect(
-    await screen.findByRole('link', { name: 'Cursos' }),
-  ).toBeInTheDocument();
+  const cursos = await screen.findByRole('link', { name: 'Cursos' });
+  expect(document.querySelector('.NavNotation')).not.toBeInTheDocument();
+  await userEvent.hover(cursos);
   expect(document.querySelector('.NavNotation')).toBeInTheDocument();
 
   // Mobile: only the current item has underline annotation
   unmount();
   mockMatchMedia({ mobile: true });
   render(<NavMenu />);
-  expect(
-    await screen.findByRole('link', { name: 'Inicio' }),
-  ).toBeInTheDocument();
+  await screen.findByRole('link', { name: 'Inicio' });
   const current = document.querySelector('.NavNotation--current');
   expect(current).toBeInTheDocument();
   expect(document.querySelectorAll('.NavNotation').length).toBe(1);

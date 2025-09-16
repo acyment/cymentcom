@@ -27,8 +27,8 @@ const NavMenu = () => {
   };
 
   const LinkContent = ({ text, index, isCurrent }) => {
-    // Underline current section on all viewports; otherwise show hover circle on desktop
-    if (isCurrent) {
+    // Mobile: underline the current section for context
+    if (isMobile && isCurrent) {
       return (
         <RoughNotation
           className="NavNotation NavNotation--current"
@@ -42,6 +42,7 @@ const NavMenu = () => {
         </RoughNotation>
       );
     }
+    // Desktop: no underline; show circle only on hover
     if (!isMobile) {
       return (
         <RoughNotation
