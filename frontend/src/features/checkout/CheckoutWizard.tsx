@@ -17,13 +17,17 @@ export type CheckoutWizardProps = {
 
 function FocusOnStepChange() {
   const { activeStep } = useWizard();
+  const { validateForm } = useFormikContext<any>();
   useEffect(() => {
+    // Focus heading for a11y
     const h2 = document.querySelector('h2') as HTMLElement | null;
     if (h2) {
       if (!h2.hasAttribute('tabindex')) h2.setAttribute('tabindex', '-1');
       h2.focus();
     }
-  }, [activeStep?.id]);
+    // Ensure validation runs so isValid reflects required fields on mount
+    validateForm();
+  }, [activeStep?.id, validateForm]);
   return null;
 }
 
