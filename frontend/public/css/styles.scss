@@ -481,29 +481,14 @@ body {
 
 /* Mobile: keep CTAs centered and readable */
 @include down($bp-md) {
-  /* On mobile, don't overlay copy; let it flow and use full width */
-  .HeroCopy {
-    position: static;
-    width: auto;
-    padding-left: clamp(16px, 5vw, 24px);
-    padding-right: clamp(12px, 4vw, 20px);
-    padding-top: clamp(12px, 5vw, 20px);
-    margin-bottom: clamp(10px, 4vw, 18px);
-  }
-  /* Restore comfortable mobile typography for hero paragraph */
-  .HeroText {
-    font-size: clamp(15px, 4.4vw, 19px);
-    line-height: 1.45;
-    max-width: 40ch;
-    color: white;
-  }
+  /* Revert overlay behavior for mobile hero copy (no special override) */
   .HeroCTARow {
     width: calc(100% - $main-padding-left);
     padding-left: $main-padding-left;
     justify-content: flex-start;
     gap: clamp(8px, 3.2vw, 16px); /* smaller gap on mobile */
     margin-top: clamp(10px, 2.6vw, 18px); /* reduce space above buttons */
-    flex-wrap: nowrap;
+    /* no wrap enforcement here; rely on content sizing */
   }
   .HeroCTA {
     /* make mobile CTAs even more compact */
