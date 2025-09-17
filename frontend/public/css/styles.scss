@@ -488,6 +488,14 @@ body {
     padding-left: clamp(16px, 5vw, 24px);
     padding-right: clamp(12px, 4vw, 20px);
     padding-top: clamp(12px, 5vw, 20px);
+    margin-bottom: clamp(10px, 4vw, 18px);
+  }
+  /* Restore comfortable mobile typography for hero paragraph */
+  .HeroText {
+    font-size: clamp(15px, 4.4vw, 19px);
+    line-height: 1.45;
+    max-width: 40ch;
+    color: white;
   }
   .HeroCTARow {
     width: calc(100% - $main-padding-left);
