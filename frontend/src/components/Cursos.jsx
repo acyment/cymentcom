@@ -73,28 +73,28 @@ const Cursos = () => {
 
   const isMobile = useIsMobile('(max-width: 767px)');
 
+  const formatDateRange = (curso) => {
+    try {
+      if (!curso?.fecha) return null;
+      const start = new Date(curso.fecha);
+      const end = new Date(start);
+      if (curso.cantidad_dias && curso.cantidad_dias > 1) {
+        end.setDate(start.getDate() + (curso.cantidad_dias - 1));
+      }
+      const fmtDay = (d) =>
+        d.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit' });
+      const monthYear = start.toLocaleDateString('es-AR', {
+        month: 'long',
+        year: 'numeric',
+      });
+      return `${fmtDay(start)} al ${fmtDay(end)} de ${monthYear}`;
+    } catch (e) {
+      return null;
+    }
+  };
+
   // Mobile-first prototype: stacked cards
   if (isMobile) {
-    const openCheckout = useOpenCheckout();
-    const formatDateRange = (curso) => {
-      try {
-        if (!curso?.fecha) return null;
-        const start = new Date(curso.fecha);
-        const end = new Date(start);
-        if (curso.cantidad_dias && curso.cantidad_dias > 1) {
-          end.setDate(start.getDate() + (curso.cantidad_dias - 1));
-        }
-        const fmtDay = (d) =>
-          d.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit' });
-        const monthYear = start.toLocaleDateString('es-AR', {
-          month: 'long',
-          year: 'numeric',
-        });
-        return `${fmtDay(start)} al ${fmtDay(end)} de ${monthYear}`;
-      } catch (e) {
-        return null;
-      }
-    };
     return (
       <div
         id="cursos"
@@ -156,20 +156,7 @@ const Cursos = () => {
                           </p>
                         )}
                         <div className="CourseStickyBar">
-                          <button
-                            data-testid="inscripcion-open"
-                            className="btn btn--primary"
-                            onClick={() =>
-                              openCheckout({
-                                idCurso: tipoCurso?.upcoming_courses?.[0]?.id,
-                                nombreCorto: tipoCurso.nombre_corto,
-                                costoUSD: tipoCurso.costo_usd,
-                                costoARS: tipoCurso.costo_ars,
-                              })
-                            }
-                          >
-                            Inscribirme
-                          </button>
+                          <MobileEnrollButton tipoCurso={tipoCurso} />
                         </div>
                       </div>
                     </details>
@@ -253,3 +240,23 @@ const Cursos = () => {
 };
 
 export default Cursos;
+
+function MobileEnrollButton({ tipoCurso }) {
+  const openCheckout = useOpenCheckout();
+  return (
+    <button
+      data-testid="inscripcion-open"
+      className="btn btn--primary"
+      onClick={() =>
+        openCheckout({
+          idCurso: tipoCurso?.upcoming_courses?.[0]?.id,
+          nombreCorto: tipoCurso.nombre_corto,
+          costoUSD: tipoCurso.costo_usd,
+          costoARS: tipoCurso.costo_ars,
+        })
+      }
+    >
+      Inscribirme
+    </button>
+  );
+}
