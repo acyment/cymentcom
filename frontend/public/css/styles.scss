@@ -485,7 +485,13 @@ body {
     width: calc(100% - $main-padding-left);
     padding-left: $main-padding-left;
     justify-content: flex-start;
-    gap: clamp(14px, 4.6vw, 36px); /* keep generous but tighter gap on mobile */
+    gap: clamp(10px, 3.8vw, 20px); /* smaller gap on mobile */
+    margin-top: clamp(14px, 3vw, 22px); /* reduce space above buttons */
+  }
+  .HeroCTA {
+    @include type-scale(16px, 5vw, 22px); /* smaller mobile label */
+    padding: clamp(10px, 2.2vw, 16px) clamp(16px, 4vw, 24px);
+    font-weight: 500;
   }
 }
 
