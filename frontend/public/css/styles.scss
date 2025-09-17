@@ -81,6 +81,9 @@ body {
   background-color: white; /* Optional: Add a background color */
   z-index: $z-header;
   height: $navbar-height;
+  /* Subtle separation against white sections */
+  border-bottom: 1px solid rgba(120, 84, 250, 0.12);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
 }
 
 .Logo {
