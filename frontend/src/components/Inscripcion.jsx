@@ -8,10 +8,11 @@ import StepFacturacion from './StepFacturacion';
 import * as Yup from 'yup';
 import HeaderDialogo from './HeaderDialogo';
 import axios from 'axios';
+import { formatPrice } from '@/utils/formatPrice';
 
 export const AppContext = React.createContext({});
 
-const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
+const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS, onClose }) => {
   const posthog = usePostHog();
 
   // Track funnel start
@@ -131,7 +132,7 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
 
   function HeaderInscripcion() {
     const { stepNumber } = useWizard();
-    return <HeaderDialogo stepNumber={stepNumber} />;
+    return <HeaderDialogo stepNumber={stepNumber} onClose={onClose} />;
   }
 
   function StepWrapper({ nombreCorto, costoUSD, costoARS }) {
@@ -156,19 +157,19 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS }) => {
             {paisEsArgentina === null ? (
               <>
                 <span>
-                  Costo para Argentina: <b>{costoARS} ARS + IVA</b>
+                  Costo para Argentina: <b>{formatPrice(costoARS)} ARS + IVA</b>
                 </span>
                 <span>
-                  Costo otros países: <b>{costoUSD} USD</b>
+                  Costo otros países: <b>{formatPrice(costoUSD)} USD</b>
                 </span>
               </>
             ) : paisEsArgentina ? (
               <span>
-                Costo: <b>{costoARS} ARS + IVA</b>
+                Costo: <b>{formatPrice(costoARS)} ARS + IVA</b>
               </span>
             ) : (
               <span>
-                Costo: <b>{costoUSD} USD</b>
+                Costo: <b>{formatPrice(costoUSD)} USD</b>
               </span>
             )}
           </div>
