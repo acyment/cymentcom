@@ -4,7 +4,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 vi.mock('@tanstack/react-router', () => ({
-  useSearch: vi.fn(),
   useLocation: vi.fn(),
   useNavigate: vi.fn(),
 }));
@@ -25,8 +24,10 @@ describe('CheckoutEntry variant + navigation', () => {
   it('desktop: shows modal when ?checkout=1 and closes by clearing the param', async () => {
     const navigate = vi.fn();
     useIsMobileMock.mockReturnValue(false);
-    (RouterHooks.useSearch as any).mockReturnValue({ checkout: 1 });
-    (RouterHooks.useLocation as any).mockReturnValue({ pathname: '/' });
+    (RouterHooks.useLocation as any).mockReturnValue({
+      pathname: '/',
+      search: { checkout: 1 },
+    });
     (RouterHooks.useNavigate as any).mockReturnValue(navigate);
 
     render(<CheckoutEntry title="Checkout" />);
@@ -46,8 +47,10 @@ describe('CheckoutEntry variant + navigation', () => {
   it('mobile: shows fullscreen when path is /checkout and closes to /', async () => {
     const navigate = vi.fn();
     useIsMobileMock.mockReturnValue(true);
-    (RouterHooks.useLocation as any).mockReturnValue({ pathname: '/checkout' });
-    (RouterHooks.useSearch as any).mockReturnValue({});
+    (RouterHooks.useLocation as any).mockReturnValue({
+      pathname: '/checkout',
+      search: {},
+    });
     (RouterHooks.useNavigate as any).mockReturnValue(navigate);
 
     render(<CheckoutEntry title="Checkout" />);
@@ -57,7 +60,9 @@ describe('CheckoutEntry variant + navigation', () => {
     ).toBeInTheDocument();
 
     // Click explicit mobile close button
-    await userEvent.click(screen.getByRole('button', { name: /close/i }));
+    await userEvent.click(
+      screen.getByRole('button', { name: /cerrar checkout/i }),
+    );
 
     expect(navigate).toHaveBeenCalledWith({ to: '/', replace: true });
   });

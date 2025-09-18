@@ -1,11 +1,21 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useRef } from 'react';
 import { usePostHog } from 'posthog-js/react';
-import { Field, useFormikContext } from 'formik'; // Import useFormikContext
+import { Field, useFormikContext } from 'formik';
 import CustomErrorMessage from './CustomErrorMessage';
 import { ArrowRight } from 'lucide-react';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { BP_MD } from '@/styles/breakpoints';
 
 const StepParticipantes = ({ idCurso }) => {
   const posthog = usePostHog();
+  const isMobile = useIsMobile(`(max-width: ${BP_MD}px)`);
+  const firstFieldRef = useRef(null);
+
+  useEffect(() => {
+    if (!isMobile && firstFieldRef.current) {
+      firstFieldRef.current.focus();
+    }
+  }, [isMobile]);
   const { submitForm, setTouched, isSubmitting, isValid, errors } =
     useFormikContext(); // Access Formik context
 
@@ -40,7 +50,8 @@ const StepParticipantes = ({ idCurso }) => {
               name="nombre"
               type="text"
               className="form-control"
-              autoFocus={true}
+              autoFocus={!isMobile}
+              innerRef={firstFieldRef}
             />
             <CustomErrorMessage name="nombre" />
           </div>

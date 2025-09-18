@@ -1,3 +1,4 @@
+import React from 'react';
 import { createRoute } from '@tanstack/react-router';
 import { Route as rootRoute } from './root';
 import Sections from '../components/Sections';
@@ -22,15 +23,17 @@ const paymentResultRoute = createRoute({
   }),
 });
 
+const checkoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'checkout',
+  component: () => (
+    <CheckoutEntry title="Checkout">
+      <CheckoutFlow />
+    </CheckoutEntry>
+  ),
+});
+
 export const routeTree = rootRoute.addChildren([
   indexRoute.addChildren([paymentResultRoute]),
-  createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/checkout',
-    component: () => (
-      <CheckoutEntry title="Checkout">
-        <CheckoutFlow />
-      </CheckoutEntry>
-    ),
-  }),
+  checkoutRoute,
 ]);

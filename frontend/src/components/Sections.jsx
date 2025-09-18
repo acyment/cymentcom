@@ -18,10 +18,12 @@ const Sections = () => {
       {!isMobile && <Intervenciones />}
       {!isMobile && <AgilidadProfunda />}
       <Outlet />
-      {/* Mount checkout entry so desktop can open via ?checkout=1 */}
-      <CheckoutEntry title="Checkout">
-        <CheckoutFlow />
-      </CheckoutEntry>
+      {/* Desktop keeps the inline modal experience via query param */}
+      {!isMobile && (
+        <CheckoutEntry title="Checkout">
+          <CheckoutFlow />
+        </CheckoutEntry>
+      )}
     </Accordion.Root>
   );
 };

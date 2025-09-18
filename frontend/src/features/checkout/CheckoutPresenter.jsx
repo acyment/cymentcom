@@ -38,8 +38,21 @@ export function CheckoutPresenter({
 
   if (variant === 'fullscreen') {
     return (
-      <div data-testid="checkout-fullscreen" style={{ minHeight: '100dvh' }}>
-        {children}
+      <div className="CheckoutFullscreen" data-testid="checkout-fullscreen">
+        <header
+          className="CheckoutMobileHeader"
+          data-testid="checkout-mobile-header"
+        >
+          <button
+            type="button"
+            className="CheckoutMobileHeader__close"
+            onClick={onClose}
+            aria-label="Cerrar checkout"
+          >
+            ←<span className="CheckoutMobileHeader__label">Cerrar</span>
+          </button>
+        </header>
+        <div className="CheckoutFullscreen__content">{children}</div>
       </div>
     );
   }
