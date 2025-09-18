@@ -1345,7 +1345,6 @@ label {
 
 @include down($bp-md) {
   .HeaderModal {
-    padding: clamp(20px, 6vw, 28px);
     gap: clamp(12px, 4vw, 20px);
   }
 
@@ -1360,8 +1359,8 @@ label {
     gap: clamp(6px, 2.8vw, 10px);
     padding: clamp(6px, 2.2vw, 12px) clamp(3px, 1.8vw, 8px)
       clamp(16px, 5vw, 24px);
-    margin-bottom: clamp(16px, 5vw, 24px);
     padding-left: clamp(8px, 3vw, 16px);
+    margin-bottom: 0;
   }
 
   .progress-indicator::-webkit-scrollbar {
