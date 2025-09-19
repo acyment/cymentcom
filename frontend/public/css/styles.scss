@@ -30,15 +30,7 @@ $bp-md: 768px;
 $bp-lg: 1024px;
 $bp-xl: 1440px;
 
-@mixin down($bp) {
-  @media (max-width: $bp) {
-    @content;
-  }
-}
-
 $navbar-height: 6vw;
-$main-padding-left: 8vw;
-$negative-main-padding-left: -($main-padding-left);
 
 html {
   scroll-behavior: smooth;
@@ -116,36 +108,6 @@ body {
 /* Nav focus ring handled by .nav-link:focus-visible in _nav.scss */
 
 /* Ensure mobile drawer nav items are comfortably large */
-
-.HeroAccordion {
-  width: 100%;
-  background-color: black;
-  position: relative;
-}
-
-.HeroText {
-  font-size: 2.6vw;
-  font-weight: 100;
-  color: white;
-}
-
-.HeroCopy {
-  position: absolute;
-  width: 30%;
-  padding-top: 7%;
-  padding-left: $main-padding-left;
-  z-index: 1;
-}
-
-.HeroTextBold {
-  color: $azul-violaceo;
-}
-
-.HeroImage {
-  display: block;
-  margin-left: $negative-main-padding-left;
-  width: 100%;
-}
 
 .FAQAccordion {
   width: 100%;
@@ -417,102 +379,6 @@ body {
   background-size: contain;
 }
 
-.HeroContent {
-  background-color: white;
-  font-size: 2.2vw;
-  font-weight: 100;
-  padding-left: 5%;
-  padding-top: 1%;
-  // margin-left: $negative-main-padding-left;
-}
-
-.HeroContentTitle {
-  color: $azul-violaceo;
-  font-weight: 500;
-  display: inline-block;
-}
-
-.HeroContentList {
-  width: 55%;
-  list-style: none; /* Remove default bullets */
-  list-style-image: url('../images/bullet.svg');
-}
-
-.Firulete {
-  max-width: 10%;
-  max-height: 10%;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-.HeroContentListContainer {
-  display: flex;
-}
-
-/* Ensure hero copy overlays the image */
-.HeroCopy {
-  z-index: 1;
-}
-
-/* Hero CTAs: align under paragraph block */
-.HeroCTARow {
-  width: 100%;
-  padding-left: 0;
-  margin-top: clamp(26px, 4.5vw, 48px); /* increase gap from paragraph */
-  display: flex;
-  gap: clamp(15px, 3.8vw, 32px); /* a bit more space while staying one row */
-  justify-content: flex-start; /* left-align with paragraph edge */
-}
-
-.HeroCTA {
-  @extend .btn;
-  /* Slight bump but keep single-line fit */
-  @include type-scale(23px, 7.6vw, 38px);
-  padding: clamp(15px, 2.9vw, 24px) clamp(24px, 4.6vw, 34px); /* shave horizontal padding a bit to avoid wrap */
-  font-weight: 600; /* slightly lighter than base btn */
-  white-space: nowrap; /* prevent label from wrapping */
-}
-.HeroCTAPrimary {
-  @extend .btn--primary;
-}
-.HeroCTASecondary {
-  @extend .btn--secondary;
-}
-
-/* Mobile: keep CTAs centered and readable */
-@include down($bp-md) {
-  /* Revert overlay behavior for mobile hero copy (no special override) */
-  .HeroCTARow {
-    width: calc(100% - $main-padding-left);
-    padding-left: $main-padding-left;
-    justify-content: flex-start;
-    gap: clamp(8px, 3.2vw, 16px); /* smaller gap on mobile */
-    margin-top: clamp(10px, 2.6vw, 18px); /* reduce space above buttons */
-    /* no wrap enforcement here; rely on content sizing */
-  }
-  .HeroCTA {
-    /* make mobile CTAs even more compact */
-    @include type-scale(12px, 3.2vw, 16px);
-    line-height: 1.05;
-    padding: clamp(6px, 1.8vw, 10px) clamp(10px, 3vw, 16px);
-    font-weight: 500;
-  }
-}
-
-/* Desktop: ensure CTAs stay on one row, slightly smaller and lighter */
-@media (min-width: 769px) {
-  .HeroCTARow {
-    justify-content: flex-start;
-    gap: clamp(12px, 2.6vw, 24px);
-    flex-wrap: nowrap;
-  }
-  .HeroCTA {
-    @include type-scale(20px, 6.2vw, 32px);
-    padding: clamp(12px, 2.2vw, 20px) clamp(20px, 4vw, 30px);
-    font-weight: 500;
-  }
-}
-
 .Clientes {
   margin-left: -10%;
   padding-right: 7em;
@@ -552,6 +418,7 @@ body {
   display: block;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+  margin-top: 4vw;
 }
 .CourseCardBody {
   padding: $space-5;

@@ -67,7 +67,7 @@ const Hero = () => {
                 Ver cursos
               </button>
               <button
-                className="HeroCTA HeroCTASecondary"
+                className="HeroCTA HeroCTAPrimary"
                 onClick={() => {
                   const el = document.querySelector('#contacto');
                   el &&

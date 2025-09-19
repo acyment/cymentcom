@@ -1,19 +1,128 @@
+@import './variables';
+@import './mixins';
+
+$main-padding-left: 8vw !default;
+$negative-main-padding-left: -($main-padding-left) !default;
+
+.HeroAccordion {
+  width: 100%;
+  background-color: black;
+  position: relative;
+}
+
+.HeroText {
+  font-size: 2.6vw;
+  font-weight: 100;
+  color: white;
+}
+
+.HeroCopy {
+  position: absolute;
+  width: 30%;
+  padding-top: 7%;
+  padding-left: $main-padding-left;
+  z-index: 1;
+}
+
+.HeroTextBold {
+  color: $azul-violaceo;
+}
+
+.HeroImage {
+  display: block;
+  margin-left: $negative-main-padding-left;
+  width: 100%;
+}
+
+.HeroContent {
+  background-color: white;
+  font-size: 2.2vw;
+  font-weight: 100;
+  padding-left: 5%;
+  padding-top: 1%;
+}
+
+.HeroContentTitle {
+  color: $azul-violaceo;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.HeroContentList {
+  width: 55%;
+  list-style: none;
+  list-style-image: url('../images/bullet.svg');
+}
+
+.HeroContentListContainer {
+  display: flex;
+}
+
+.Firulete {
+  max-width: 10%;
+  max-height: 10%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .HeroCTARow {
   position: relative;
   z-index: $z-cta;
+  width: 100%;
+  padding-left: 0;
+  margin-top: clamp(26px, 4.5vw, 48px);
   display: flex;
-  gap: $space-5;
-  flex-wrap: wrap;
+  justify-content: space-between;
   align-items: center;
-  margin: $space-5 0 $space-6;
+  flex-wrap: wrap;
 }
 
 .HeroCTA {
   @extend .btn;
+  @include type-scale(23px, 7.6vw, 38px);
+  padding: clamp(15px, 2.9vw, 24px) clamp(24px, 4.6vw, 34px);
+  font-weight: 600;
+  white-space: nowrap;
 }
+
 .HeroCTAPrimary {
   @extend .btn--primary;
 }
+
 .HeroCTASecondary {
   @extend .btn--secondary;
+}
+
+@include down($bp-md) {
+  .HeroCTARow {
+    margin-top: clamp(10px, 2.6vw, 18px);
+  }
+
+  .HeroCTA {
+    @include type-scale(6px, 1vw, 6px);
+    line-height: 1.05;
+    padding: clamp(6px, 1.8vw, 10px) clamp(10px, 3vw, 16px);
+    font-weight: 400;
+  }
+}
+
+@media (min-width: 769px) {
+  .HeroCTARow {
+    gap: clamp(12px, 2.6vw, 24px);
+    flex-wrap: nowrap;
+  }
+
+  .HeroCTA {
+    @include type-scale(20px, 6.2vw, 32px);
+    padding: clamp(12px, 2.2vw, 20px) clamp(20px, 4vw, 30px);
+    font-weight: 400;
+    min-width: 13vw;
+  }
+}
+
+// Hide the floating plus button on mobile
+@include down($bp-md) {
+  .CircleButton {
+    display: none;
+  }
 }

@@ -103,7 +103,10 @@ const ResultadoPago = () => {
             aria-label="Resultado de pago"
             data-testid="resultado-dialog"
           >
-            <HeaderDialogo stepNumber={4} />
+            <HeaderDialogo
+              stepNumber={4}
+              onClose={() => handleOpenChange(false)}
+            />
             <div className="form-container">
               <div className={`status-header ${statusClassName}`}>
                 <img

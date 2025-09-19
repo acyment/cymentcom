@@ -1,10 +1,17 @@
 import React from 'react';
-import { useSearch } from '@tanstack/react-router';
+import { useLocation } from '@tanstack/react-router';
 import Inscripcion from '@/components/Inscripcion';
 
+const parseSearch = (rawSearch) => {
+  if (!rawSearch) return {};
+  return typeof rawSearch === 'string'
+    ? Object.fromEntries(new URLSearchParams(rawSearch))
+    : rawSearch;
+};
+
 export function CheckoutFlow() {
-  // Expect course details via search to render the real form
-  const search = useSearch({ from: '/' });
+  const location = useLocation();
+  const search = parseSearch(location?.search);
   const idCurso = search?.idCurso || search?.course_id;
   const nombreCorto = search?.nombreCorto || search?.course_name;
   const costoUSD = search?.costoUSD || search?.price_usd;

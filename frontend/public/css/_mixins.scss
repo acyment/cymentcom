@@ -17,6 +17,12 @@
   }
 }
 
+@mixin down($bp) {
+  @media (max-width: $bp) {
+    @content;
+  }
+}
+
 @mixin gradient-cta(
   $s: $color-primary-100,
   $m: $color-primary-200,

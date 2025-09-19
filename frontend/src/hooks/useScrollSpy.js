@@ -28,16 +28,20 @@ export function useScrollSpy(ids = [], options = {}) {
         }, holdMs);
         return;
       }
-      const scrollPos = window.scrollY + offset;
+      const scrollY = window.scrollY || 0;
+      const scrollPos = scrollY + offset;
       let current = ids[0] || null;
-      for (const id of ids) {
-        const el = document.getElementById(id);
-        if (!el) continue;
-        const elTop = el.offsetTop;
-        if (elTop <= scrollPos) {
-          current = id;
-        } else {
-          break;
+
+      if (scrollY > 0) {
+        for (const id of ids) {
+          const el = document.getElementById(id);
+          if (!el) continue;
+          const elTop = el.offsetTop;
+          if (elTop <= scrollPos) {
+            current = id;
+          } else {
+            break;
+          }
         }
       }
       // If at (or near) the bottom and the user actually scrolled, force last section

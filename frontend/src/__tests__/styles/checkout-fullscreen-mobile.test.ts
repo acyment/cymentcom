@@ -7,11 +7,8 @@ const scss = fs.readFileSync(
 );
 
 describe('Checkout fullscreen mobile styling', () => {
-  it('hides the desktop close button in mobile header', () => {
-    expect(scss).toMatch(
-      /@include down\(\$bp-md\)[\s\S]*?\.HeaderModal[\s\S]*?\.close-button\s*\{[\s\S]*?display:\s*none;/,
-    );
-  });
+  // In the new fullscreen flow, the desktop header isn't reused on mobile,
+  // so we no longer assert hiding the desktop close button.
 
   it('allows the progress indicator to wrap or scroll on mobile', () => {
     expect(scss).toMatch(
@@ -25,9 +22,10 @@ describe('Checkout fullscreen mobile styling', () => {
     );
   });
 
-  it('raises label legibility on mobile', () => {
+  it('raises form control legibility on mobile', () => {
+    // We now scale input font size directly for mobile
     expect(scss).toMatch(
-      /@include down\(\$bp-md\)[\s\S]*?\.form-element\s+label[\s\S]*?font-size:\s*clamp\([^)]*\);/,
+      /@include down\(\$bp-md\)[\s\S]*?\.form-control[\s\S]*?font-size:\s*4\.5vw;/,
     );
   });
 });
