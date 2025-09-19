@@ -5,6 +5,7 @@ import DetalleCurso from './DetalleCurso';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
 import axios from 'axios';
+import { formatCourseDateRange as fmtCourseRange } from '@/utils/courseDates';
 import CircleLoader from 'react-spinners/CircleLoader';
 import { useOpenCheckout } from '@/features/checkout/useOpenCheckout';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -73,25 +74,7 @@ const Cursos = () => {
 
   const isMobile = useIsMobile('(max-width: 767px)');
 
-  const formatDateRange = (curso) => {
-    try {
-      if (!curso?.fecha) return null;
-      const start = new Date(curso.fecha);
-      const end = new Date(start);
-      if (curso.cantidad_dias && curso.cantidad_dias > 1) {
-        end.setDate(start.getDate() + (curso.cantidad_dias - 1));
-      }
-      const fmtDay = (d) =>
-        d.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit' });
-      const monthYear = start.toLocaleDateString('es-AR', {
-        month: 'long',
-        year: 'numeric',
-      });
-      return `${fmtDay(start)} al ${fmtDay(end)} de ${monthYear}`;
-    } catch (e) {
-      return null;
-    }
-  };
+  const formatDateRange = (curso) => fmtCourseRange(curso);
 
   // Mobile-first prototype: stacked cards
   if (isMobile) {
