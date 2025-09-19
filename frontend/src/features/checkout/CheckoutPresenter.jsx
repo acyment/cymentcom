@@ -49,7 +49,7 @@ export function CheckoutPresenter({
             onClick={onClose}
             aria-label="Cerrar checkout"
           >
-            ←<span className="CheckoutMobileHeader__label">Cerrar</span>
+            ←
           </button>
         </header>
         <div className="CheckoutFullscreen__content">{children}</div>

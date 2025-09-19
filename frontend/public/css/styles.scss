@@ -1279,6 +1279,33 @@ label {
 }
 
 @include down($bp-md) {
+  /* Checkout mobile header: simple arrow-only control */
+  .CheckoutMobileHeader {
+    display: flex;
+    align-items: center;
+    height: clamp(40px, 10vw, 52px);
+    padding: 0 clamp(8px, 3.6vw, 14px);
+    background: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .CheckoutMobileHeader__close {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: $azul-violaceo;
+    font-size: clamp(18px, 6vw, 24px);
+    line-height: 1;
+    padding: clamp(6px, 2vw, 10px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .CheckoutMobileHeader__label {
+    display: none;
+  }
+
   .progress-indicator {
     overflow-x: auto;
     display: flex;
@@ -1318,12 +1345,18 @@ label {
     padding: clamp(14px, 4vw, 22px);
   }
 
+  /* Form labels: compact and legible on mobile */
+  label {
+    margin-bottom: 2px;
+    font-size: 2.8vw;
+  }
+
   .form-container h3.form-title {
     font-size: 4.5vw;
     font-weight: 600;
     text-align: center;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-top: 5vw;
+    margin-bottom: 5vw;
   }
 
   .form-row,
@@ -1338,9 +1371,10 @@ label {
     flex-direction: column;
     align-items: stretch;
     gap: clamp(6px, 2.4vw, 12px);
-    font-size: clamp(0.8rem, 3vw, 0.94rem);
+    font-size: clamp(0.4rem, 3vw, 0.94rem);
     border-radius: 12px;
     padding: clamp(8px, 3vw, 14px);
+    line-height: 0.8;
   }
 
   .CostoCursoInfo {
