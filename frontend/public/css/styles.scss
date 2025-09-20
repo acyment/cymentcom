@@ -720,11 +720,11 @@ ul {
 
 .MesFechaCurso {
   font-size: 2vw;
-  margin-top: 3.5vw;
+  margin-top: 2.5vw;
 }
 
 .DiaFechaCurso {
-  font-size: 5vw;
+  font-size: 4vw;
   margin-top: -1vw;
 }
 
@@ -1284,7 +1284,6 @@ label {
     display: flex;
     align-items: center;
     height: clamp(40px, 10vw, 52px);
-    padding: 0 clamp(8px, 3.6vw, 14px);
     background: #fff;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   }
