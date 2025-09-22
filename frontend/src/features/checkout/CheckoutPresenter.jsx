@@ -8,7 +8,8 @@ export function CheckoutPresenter({
   title = 'Checkout',
   children,
 }) {
-  const firstTabHandledRef = useRef(false);
+  // Intercept internal Tab traversal and perform focus move programmatically
+  // to avoid FocusScope's occasional containment fallback.
   // Scroll lock only when modal is open
   useEffect(() => {
     if (variant === 'modal' && open) {
@@ -70,39 +71,31 @@ export function CheckoutPresenter({
             e.preventDefault();
           }}
           onKeyDownCapture={(e) => {
-            // Stabilize the very first internal Tab only
             if (e.key !== 'Tab') return;
             const container = e.currentTarget;
             try {
-              if (!firstTabHandledRef.current) {
-                const selector =
-                  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-                const tabbables = Array.from(
-                  container.querySelectorAll(selector),
-                );
-                const active = document.activeElement;
-                const idx = tabbables.indexOf(active);
-                const step = e.shiftKey ? -1 : 1;
-                const nextEl = tabbables[idx + step];
-                if (nextEl && container.contains(nextEl)) {
-                  firstTabHandledRef.current = true;
-                  e.preventDefault();
-                  e.stopPropagation();
-                  requestAnimationFrame(() => {
-                    try {
-                      nextEl.focus();
-                    } catch {}
-                  });
-                }
+              const selector =
+                'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+              const tabbables = Array.from(
+                container.querySelectorAll(selector),
+              );
+              const active = document.activeElement;
+              const idx = tabbables.indexOf(active);
+              const step = e.shiftKey ? -1 : 1;
+              const nextEl = tabbables[idx + step];
+              if (nextEl && container.contains(nextEl)) {
+                e.preventDefault();
+                e.stopPropagation();
+                requestAnimationFrame(() => {
+                  try {
+                    nextEl.focus();
+                  } catch {}
+                });
               }
             } catch {}
           }}
           style={{ maxHeight: '90dvh', overflow: 'auto' }}
-          ref={(node) => {
-            if (!node) return;
-            // reset first-tab flag when content mounts
-            firstTabHandledRef.current = false;
-          }}
+          ref={() => {}}
         >
           {/* Hidden accessible title/description for a11y without moving focus */}
           <Dialog.Title asChild>
