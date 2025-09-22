@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 
 export function CheckoutPresenter({
@@ -8,6 +8,7 @@ export function CheckoutPresenter({
   title = 'Checkout',
   children,
 }) {
+  const firstTabHandledRef = useRef(false);
   // Scroll lock only when modal is open
   useEffect(() => {
     if (variant === 'modal' && open) {
@@ -63,8 +64,82 @@ export function CheckoutPresenter({
           aria-modal={true}
           aria-label={title}
           onInteractOutside={(e) => e.preventDefault()}
+          onOpenAutoFocus={(e) => {
+            // Experiment 1: prevent Radix from auto-focusing the first tabbable
+            // We rely on the step's own autoFocus (first input) to take initial focus.
+            e.preventDefault();
+          }}
+          onKeyDownCapture={(e) => {
+            // Stabilize the very first internal Tab only
+            if (e.key !== 'Tab') return;
+            const container = e.currentTarget;
+            try {
+              if (!firstTabHandledRef.current) {
+                const selector =
+                  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+                const tabbables = Array.from(
+                  container.querySelectorAll(selector),
+                );
+                const active = document.activeElement;
+                const idx = tabbables.indexOf(active);
+                const step = e.shiftKey ? -1 : 1;
+                const nextEl = tabbables[idx + step];
+                if (nextEl && container.contains(nextEl)) {
+                  firstTabHandledRef.current = true;
+                  e.preventDefault();
+                  e.stopPropagation();
+                  requestAnimationFrame(() => {
+                    try {
+                      nextEl.focus();
+                    } catch {}
+                  });
+                }
+              }
+            } catch {}
+          }}
           style={{ maxHeight: '90dvh', overflow: 'auto' }}
+          ref={(node) => {
+            if (!node) return;
+            // reset first-tab flag when content mounts
+            firstTabHandledRef.current = false;
+          }}
         >
+          {/* Hidden accessible title/description for a11y without moving focus */}
+          <Dialog.Title asChild>
+            <h2
+              style={{
+                position: 'absolute',
+                width: 1,
+                height: 1,
+                padding: 0,
+                margin: -1,
+                overflow: 'hidden',
+                clip: 'rect(0 0 0 0)',
+                whiteSpace: 'nowrap',
+                border: 0,
+              }}
+            >
+              {title}
+            </h2>
+          </Dialog.Title>
+          <Dialog.Description asChild>
+            <p
+              style={{
+                position: 'absolute',
+                width: 1,
+                height: 1,
+                padding: 0,
+                margin: -1,
+                overflow: 'hidden',
+                clip: 'rect(0 0 0 0)',
+                whiteSpace: 'nowrap',
+                border: 0,
+              }}
+            >
+              Completa los datos del formulario para continuar.
+            </p>
+          </Dialog.Description>
+          {children}
           <Dialog.Close asChild>
             <button
               type="button"
@@ -75,7 +150,6 @@ export function CheckoutPresenter({
               ×
             </button>
           </Dialog.Close>
-          {children}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

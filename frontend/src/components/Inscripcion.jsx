@@ -215,11 +215,10 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS, onClose }) => {
           />
         </div>
       </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar
-        className="ScrollAreaScrollbar"
-        orientation="vertical"
-      >
-        <ScrollArea.Thumb className="ScrollAreaThumb" />
+      <ScrollArea.Scrollbar asChild orientation="vertical">
+        <div className="ScrollAreaScrollbar" tabIndex={-1} aria-hidden="true">
+          <ScrollArea.Thumb className="ScrollAreaThumb" />
+        </div>
       </ScrollArea.Scrollbar>
     </ScrollArea.Root>
   );

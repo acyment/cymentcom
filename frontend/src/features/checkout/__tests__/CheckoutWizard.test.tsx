@@ -135,7 +135,7 @@ describe('CheckoutWizard', () => {
     });
   });
 
-  it('focuses step heading on step change (accessibility)', async () => {
+  it('announces step change via aria-live without moving focus to heading', async () => {
     const user = userEvent.setup();
     render(
       <CheckoutWizard
@@ -148,10 +148,14 @@ describe('CheckoutWizard', () => {
     await user.type(screen.getByLabelText(/name/i), 'Ada');
     await user.click(screen.getByRole('button', { name: /next/i }));
 
-    const step2Heading = screen.getByRole('heading', {
-      name: /step 2: contact/i,
-    });
-    expect(step2Heading).toBeInTheDocument();
-    expect(document.activeElement).toBe(step2Heading);
+    // Heading is present
+    expect(
+      screen.getByRole('heading', { name: /step 2: contact/i }),
+    ).toBeInTheDocument();
+
+    // We now announce step changes via aria-live instead of shifting focus
+    const announcer = screen.getByTestId('wizard-announcer');
+    // Our announcer uses the closest form title or the step id; here it's the id
+    expect(announcer).toHaveTextContent(/contact/i);
   });
 });

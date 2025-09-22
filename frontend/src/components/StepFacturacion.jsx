@@ -1,4 +1,10 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  Fragment,
+} from 'react';
 import { Field, ErrorMessage, useFormikContext } from 'formik';
 import { useWizard } from 'react-formik-step-wizard';
 import { usePostHog } from 'posthog-js/react';
@@ -849,7 +855,11 @@ const StepFacturacion = ({ idCurso }) => {
     setFieldValue,
   ]); // Dependencies array
 
-  useEffect(() => {
+  // Experiment 2: prefill billing fields once, synchronously before paint,
+  // to avoid re-renders during the user's first Tab traversal.
+  const hasPrefilledRef = useRef(false);
+  useLayoutEffect(() => {
+    if (hasPrefilledRef.current) return;
     if (activeStep && valuesPreviousSteps?.StepParticipantes) {
       const nombrePrev = valuesPreviousSteps.StepParticipantes.nombre || '';
       const apellidoPrev = valuesPreviousSteps.StepParticipantes.apellido || '';
@@ -857,9 +867,9 @@ const StepFacturacion = ({ idCurso }) => {
 
       const nombreCompletoPrev = `${nombrePrev} ${apellidoPrev}`.trim();
 
-      // Use setFieldValue to update the form state correctly
-      // Check if data exists and if the current field is empty or different
+      // Only set when empty to avoid clobbering edits
       if (nombreCompletoPrev && !valuesCurrentStep.nombreCompleto) {
+        // eslint-disable-next-line no-console
         console.log(
           'Setting nombreCompleto from previous step (only if empty):',
           nombreCompletoPrev,
@@ -867,14 +877,22 @@ const StepFacturacion = ({ idCurso }) => {
         setFieldValue('nombreCompleto', nombreCompletoPrev, false);
       }
       if (emailPrev && !valuesCurrentStep.email) {
+        // eslint-disable-next-line no-console
         console.log(
           'Setting email from previous step (only if empty):',
           emailPrev,
         );
         setFieldValue('email', emailPrev, false);
       }
+      hasPrefilledRef.current = true;
     }
-  }, [activeStep, valuesPreviousSteps, setFieldValue]);
+  }, [
+    activeStep,
+    valuesPreviousSteps,
+    valuesCurrentStep?.nombreCompleto,
+    valuesCurrentStep?.email,
+    setFieldValue,
+  ]);
 
   const { isValid, isSubmitting } = useFormikContext();
 
@@ -939,10 +957,10 @@ const StepFacturacion = ({ idCurso }) => {
         </div>
       </div>
       <FormGroup title="Información fiscal">
-        <AnimatePresence mode="wait">
-          {valuesCurrentStep.pais != null && (
+        {valuesCurrentStep.pais != null && (
+          <AnimatePresence mode="wait">
             <motion.div
-              key={paisEsArgentina ? 'ar' : 'other'} // Different key for each content type
+              key={paisEsArgentina ? 'ar' : 'other'}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
@@ -1013,29 +1031,23 @@ const StepFacturacion = ({ idCurso }) => {
                   </div>
                 </>
               ) : (
-                // Fragment might not be needed here
                 <div className="form-element">
-                  {' '}
-                  {/* Wrap in form-element for consistency? */}
-                  <label htmlFor="identificacionFiscal">
-                    Identificación
-                  </label>{' '}
+                  <label htmlFor="identificacionFiscal">Identificación</label>{' '}
                   <div className="input-container">
                     <FieldWithInfo
-                      id="identificacionFiscal" // ID can be useful for label's htmlFor
+                      id="identificacionFiscal"
                       name="identificacionFiscal"
                       type="text"
                       className="form-control"
                       tooltip="Identificación fiscal (RUC, RUT, etc. según corresponda) o identificación personal"
                     />
-                    {/* Add CustomErrorMessage if this field can have errors outside Argentina */}
                     <CustomErrorMessage name="identificacionFiscal" />
                   </div>
                 </div>
               )}
             </motion.div>
-          )}
-        </AnimatePresence>
+          </AnimatePresence>
+        )}
       </FormGroup>{' '}
       <div className="DosBotonesFormulario">
         <button

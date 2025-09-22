@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Wizard as RFWizard, useWizard } from 'react-formik-step-wizard';
 import { useFormikContext } from 'formik';
 
@@ -7,17 +7,47 @@ import { useFormikContext } from 'formik';
 function FocusOnStepChange() {
   const { activeStep } = useWizard();
   const { validateForm } = useFormikContext();
+  const [announcement, setAnnouncement] = useState('');
+
+  const srOnly = useMemo(
+    () => ({
+      position: 'absolute',
+      width: 1,
+      height: 1,
+      padding: 0,
+      margin: -1,
+      overflow: 'hidden',
+      clip: 'rect(0 0 0 0)',
+      whiteSpace: 'nowrap',
+      border: 0,
+    }),
+    [],
+  );
+
   useEffect(() => {
-    // Focus heading for a11y
-    const h2 = document.querySelector('h2');
-    if (h2) {
-      if (!h2.hasAttribute('tabindex')) h2.setAttribute('tabindex', '-1');
-      h2.focus();
-    }
+    // Announce step change without moving focus
+    const titleEl =
+      document.querySelector('.DialogContent h3.form-title') ||
+      document.querySelector('h3.form-title');
+    const text = (titleEl?.textContent || activeStep?.id || 'Paso actualizado')
+      .toString()
+      .trim();
+    setAnnouncement(text);
+
     // Ensure validation runs so isValid reflects required fields on mount
     validateForm();
   }, [activeStep?.id, validateForm]);
-  return null;
+
+  return (
+    <div
+      aria-live="polite"
+      role="status"
+      style={srOnly}
+      data-testid="wizard-announcer"
+    >
+      {announcement}
+    </div>
+  );
 }
 
 function Footer() {
