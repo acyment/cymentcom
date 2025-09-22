@@ -1,4 +1,5 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
 
 export function CheckoutPresenter({
   variant,
@@ -19,20 +20,7 @@ export function CheckoutPresenter({
     return undefined;
   }, [variant, open]);
 
-  const handleKeyDown = useCallback(
-    (e) => {
-      if (variant === 'modal' && open && e.key === 'Escape') {
-        e.stopPropagation();
-        onClose();
-      }
-    },
-    [variant, open, onClose],
-  );
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
+  // Radix Dialog handles Escape; no manual keydown handler needed.
 
   if (!open) return null;
 
@@ -58,40 +46,38 @@ export function CheckoutPresenter({
   }
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 3000,
-        display: 'grid',
-        placeItems: 'center',
+    <Dialog.Root
+      open={open}
+      modal
+      onOpenChange={(next) => {
+        if (!next) onClose();
       }}
     >
-      <div
-        data-testid="checkout-scrim"
-        onClick={onClose}
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'rgba(0,0,0,0.5)',
-        }}
-      />
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 1,
-          background: '#fff',
-          maxHeight: '90dvh',
-          width: 'min(720px, 96vw)',
-          borderRadius: 12,
-          overflow: 'auto',
-        }}
-      >
-        {children}
-      </div>
-    </div>
+      <Dialog.Portal>
+        <Dialog.Overlay
+          className="DialogOverlay"
+          data-testid="checkout-scrim"
+        />
+        <Dialog.Content
+          className="DialogContent"
+          aria-modal={true}
+          aria-label={title}
+          onInteractOutside={(e) => e.preventDefault()}
+          style={{ maxHeight: '90dvh', overflow: 'auto' }}
+        >
+          <Dialog.Close asChild>
+            <button
+              type="button"
+              className="close-button close-button--corner"
+              aria-label="Close"
+              title="Cerrar"
+            >
+              ×
+            </button>
+          </Dialog.Close>
+          {children}
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

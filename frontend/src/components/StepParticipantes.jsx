@@ -102,12 +102,6 @@ const StepParticipantes = ({ idCurso }) => {
         </div>
       </div>
 
-      <div className="form-row hidden">
-        <div className="form-element">
-          <label>Hidden</label>
-          <span className="form-control" />
-        </div>
-      </div>
       <button
         className="BotonFormulario UnicoBotonSiguiente BotonContinuar"
         type="button" // Changed from "submit" to "button"

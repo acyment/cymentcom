@@ -21,7 +21,7 @@ describe('CheckoutEntry variant + navigation', () => {
     vi.clearAllMocks();
   });
 
-  it('desktop: shows modal when ?checkout=1 and closes by clearing the param', async () => {
+  it('desktop: shows modal when ?checkout=1; scrim click does not close; ESC closes', async () => {
     const navigate = vi.fn();
     useIsMobileMock.mockReturnValue(false);
     (RouterHooks.useLocation as any).mockReturnValue({
@@ -35,8 +35,23 @@ describe('CheckoutEntry variant + navigation', () => {
     const dialog = await screen.findByRole('dialog', { name: /checkout/i });
     expect(dialog).toBeInTheDocument();
 
+    // Scrim click should NOT close anymore
     await userEvent.click(screen.getByTestId('checkout-scrim'));
+    expect(navigate).not.toHaveBeenCalled();
 
+    // Visible close button closes
+    await userEvent.click(screen.getByRole('button', { name: /close/i }));
+    expect(navigate).toHaveBeenCalledWith({
+      to: '/',
+      search: {},
+      replace: true,
+    });
+
+    // Reset mock for next assertion
+    navigate.mockReset();
+
+    // ESC closes
+    await userEvent.keyboard('{Escape}');
     expect(navigate).toHaveBeenCalledWith({
       to: '/',
       search: {},

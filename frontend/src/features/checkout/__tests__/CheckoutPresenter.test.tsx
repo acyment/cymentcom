@@ -17,7 +17,7 @@ describe('CheckoutPresenter', () => {
     document.body.style.overflow = '';
   });
 
-  it('renders modal variant with dialog semantics and locks scroll', () => {
+  it('renders modal variant with dialog semantics, locks scroll; scrim click does not close', () => {
     render(
       <CheckoutPresenter
         variant="modal"
@@ -33,9 +33,9 @@ describe('CheckoutPresenter', () => {
     expect(dialog).toBeInTheDocument();
     expect(dialog).toHaveAttribute('aria-modal', 'true');
 
-    // scrim click closes
+    // scrim click should NOT close
     fireEvent.click(screen.getByTestId('checkout-scrim'));
-    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onClose).not.toHaveBeenCalled();
 
     // body scroll locked
     expect(getBodyOverflow()).toBe('hidden');
@@ -51,6 +51,24 @@ describe('CheckoutPresenter', () => {
       />,
     );
     fireEvent.keyDown(document, { key: 'Escape' });
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows a visible close button that calls onClose', () => {
+    render(
+      <CheckoutPresenter
+        variant="modal"
+        open
+        onClose={onClose}
+        title="Checkout"
+      >
+        <h1>Checkout</h1>
+      </CheckoutPresenter>,
+    );
+
+    const btn = screen.getByRole('button', { name: /close/i });
+    expect(btn).toBeInTheDocument();
+    fireEvent.click(btn);
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 

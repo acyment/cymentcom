@@ -990,9 +990,11 @@ ul {
 /* duplicate color imports removed */
 
 .DialogOverlay {
-  background-color: var(--black-a9);
+  /* Use explicit rgba to avoid environment-specific alpha var issues */
+  background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   inset: 0;
+  z-index: 3000;
   animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1009,8 +1011,8 @@ h2 {
 }
 
 .DialogContent {
-  background-image: $fondo-violaceo;
-  background: white;
+  /* Solid panel; avoid any translucency or unintended blending */
+  background: #fff;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
@@ -1021,6 +1023,8 @@ h2 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  isolation: isolate; /* prevent overlay or page content blending */
+  z-index: 3001; /* ensure it sits above the overlay */
   animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1043,16 +1047,47 @@ h2 {
 /* Desktops and larger screens */
 @media only screen and (min-width: 1024px) {
   .DialogContent {
-    width: 65vw;
-    max-width: 65vw;
+    width: 75vw; /* wider dialog on desktop */
+    max-width: 75vw;
+  }
+
+  /* Reduce general typography while keeping field text larger */
+  .DialogContent .form-container {
+    font-size: clamp(14px, 1.1vw, 18px);
+  }
+  .DialogContent label {
+    font-size: clamp(12px, 0.95vw, 16px);
+  }
+  /* Keep input text larger for readability */
+  .DialogContent .form-control {
+    font-size: clamp(24px, 2.4vw, 34px);
+    padding: clamp(14px, 1.2vw, 18px) clamp(16px, 1.4vw, 22px);
+    min-height: clamp(52px, 4vw, 64px);
+    line-height: 1.2;
+  }
+  .DialogContent h3.form-title {
+    font-size: 1.5vw;
+  }
+  .DialogContent .step-label {
+    font-size: 14px;
+  }
+
+  /* Double the size of primary/secondary dialog buttons on desktop */
+  .DialogContent .BotonFormulario,
+  .DialogContent .BotonContinuar {
+    font-size: 2.25rem; /* ~2x */
+    padding: 1.6rem 2.4rem; /* ~2x */
+    min-height: clamp(64px, 5vw, 84px);
+    min-width: 18rem;
+    border-radius: 14px;
   }
 }
 
 /* Larger desktops */
 @media only screen and (min-width: 1440px) {
   .DialogContent {
-    width: 50vw;
-    max-width: 50vw;
+    width: 60vw; /* keep it broader on large screens too */
+    max-width: 60vw;
   }
 }
 .DialogContent:focus {
@@ -1169,6 +1204,36 @@ h2 {
   transform: scale(1.1);
 }
 
+/* Dark variant for light backgrounds (desktop modal content) */
+.close-button--dark {
+  color: #333;
+}
+
+.close-button--dark:hover,
+.close-button--dark:focus,
+.close-button--dark:focus-visible {
+  background: rgba(0, 0, 0, 0.06);
+  box-shadow: none;
+}
+
+/* Corner close for Radix dialog content (always visible) */
+.close-button--corner {
+  color: #fff;
+  background: rgba(0, 0, 0, 0.4);
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+}
+
+.close-button--corner:hover,
+.close-button--corner:focus,
+.close-button--corner:focus-visible {
+  background: rgba(0, 0, 0, 0.55);
+}
+
 .DialogDescription {
   margin: 10px 0 20px;
   color: white;
@@ -1213,6 +1278,27 @@ form {
   padding: 1rem;
   border: 1px solid #a0a0a0;
   margin-bottom: 1vw;
+}
+
+/* Ensure the two spans inside each column stack vertically on all sizes */
+.ColumnaCursoInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center spans horizontally */
+  text-align: center;
+}
+
+/* Make the three columns share space equally on desktop */
+.CursoInfo > .ColumnaCursoInfo {
+  flex: 1;
+}
+
+.CursoInfo > .CostoCursoInfo {
+  flex: 2; /* holds two inner columns so total = 3 equal parts */
+}
+
+.CursoInfo > .CostoCursoInfo > .ColumnaCursoInfo {
+  flex: 1;
 }
 
 .CostoCursoInfo {
@@ -1374,6 +1460,11 @@ label {
     border-radius: 12px;
     padding: clamp(8px, 3vw, 14px);
     line-height: 0.8;
+  }
+
+  .ColumnaCursoInfo {
+    display: flex;
+    flex-direction: column;
   }
 
   .CostoCursoInfo {

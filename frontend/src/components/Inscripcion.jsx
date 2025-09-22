@@ -150,27 +150,46 @@ const Inscripcion = ({ idCurso, nombreCorto, costoUSD, costoARS, onClose }) => {
     return (
       <div className="form-container">
         <div className="CursoInfo">
-          <span>
-            Curso elegido: <b>{nombreCorto}</b>
-          </span>
+          <div className="ColumnaCursoInfo">
+            <span>Curso elegido:</span>{' '}
+            <span>
+              <b>{nombreCorto}</b>
+            </span>
+          </div>
           <div className="CostoCursoInfo">
             {paisEsArgentina === null ? (
               <>
-                <span>
-                  Costo para Argentina: <b>{formatPrice(costoARS)} ARS + IVA</b>
-                </span>
-                <span>
-                  Costo otros países: <b>{formatPrice(costoUSD)} USD</b>
-                </span>
+                <div className="ColumnaCursoInfo">
+                  <span>Costo para Argentina:</span>
+                  <span>
+                    {' '}
+                    <b>{formatPrice(costoARS)} ARS + IVA</b>
+                  </span>
+                </div>
+                <div className="ColumnaCursoInfo">
+                  <span>Costo otros países:</span>
+                  <span>
+                    {' '}
+                    <b>{formatPrice(costoUSD)} USD</b>
+                  </span>
+                </div>
               </>
             ) : paisEsArgentina ? (
-              <span>
-                Costo: <b>{formatPrice(costoARS)} ARS + IVA</b>
-              </span>
+              <div className="ColumnaCursoInfo">
+                <span>Costo:</span>
+                <span>
+                  {' '}
+                  <b>{formatPrice(costoARS)} ARS + IVA</b>
+                </span>
+              </div>
             ) : (
-              <span>
-                Costo: <b>{formatPrice(costoUSD)} USD</b>
-              </span>
+              <div className="ColumnaCursoInfo">
+                <span>Costo:</span>
+                <span>
+                  {' '}
+                  <b>{formatPrice(costoUSD)} USD</b>
+                </span>
+              </div>
             )}
           </div>
         </div>
