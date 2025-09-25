@@ -87,9 +87,25 @@ const Cursos = () => {
         {loading ? (
           <div
             className="LoaderContainer"
-            style={{ display: 'flex', justifyContent: 'center', padding: 40 }}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column',
+              gap: '12px',
+              padding: 40,
+            }}
           >
             <CircleLoader color="#36D7B7" size={60} />
+            <p className="LoaderLegend" aria-live="polite">
+              <span className="LoaderLegendAccessible">Cargando...</span>
+              Cargando
+              <span className="LoaderLegendDots" aria-hidden="true">
+                <span className="LoaderLegendDot">.</span>
+                <span className="LoaderLegendDot">.</span>
+                <span className="LoaderLegendDot">.</span>
+              </span>
+            </p>
           </div>
         ) : (
           <div className="CursosCardList">
@@ -167,10 +183,22 @@ const Cursos = () => {
             style={{
               display: 'flex',
               justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column',
+              gap: '12px',
               padding: '40px',
             }}
           >
             <CircleLoader color="#36D7B7" size={60} />
+            <p className="LoaderLegend" aria-live="polite">
+              <span className="LoaderLegendAccessible">Cargando...</span>
+              Cargando
+              <span className="LoaderLegendDots" aria-hidden="true">
+                <span className="LoaderLegendDot">.</span>
+                <span className="LoaderLegendDot">.</span>
+                <span className="LoaderLegendDot">.</span>
+              </span>
+            </p>
           </div>
         ) : (
           <ToggleGroup.Root

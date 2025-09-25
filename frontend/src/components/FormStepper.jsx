@@ -2,7 +2,7 @@ import React from 'react';
 
 const FormStepper = ({
   activeStep,
-  labels = ['Participante', 'Facturación', 'Pago', 'Resultado'],
+  labels = ['Participante', 'Facturación', 'Pago'],
 }) => {
   // Derivar el número de pasos de la longitud de labels
   const stepsCount = labels.length;

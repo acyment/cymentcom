@@ -763,6 +763,55 @@ ul {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
 }
 
+.LoaderLegend {
+  color: #36d7b7;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 500;
+  position: relative;
+}
+
+.LoaderLegendDots {
+  display: inline-flex;
+  margin-left: 4px;
+}
+
+.LoaderLegendDot {
+  animation: loaderLegendPulse 1.2s infinite;
+  opacity: 0.2;
+  font-size: 1.2rem;
+}
+
+.LoaderLegendDot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.LoaderLegendDot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.LoaderLegendAccessible {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+@keyframes loaderLegendPulse {
+  0%,
+  60%,
+  100% {
+    opacity: 0.2;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+
 .NavigationMenuIndicator {
   background-color: grey;
   height: 3px;
@@ -1440,8 +1489,8 @@ label {
     font-size: 4.5vw;
     font-weight: 600;
     text-align: center;
-    margin-top: 5vw;
-    margin-bottom: 5vw;
+    margin-top: 3vw;
+    margin-bottom: 3vw;
   }
 
   .form-row,
@@ -1455,11 +1504,19 @@ label {
   .CursoInfo {
     flex-direction: column;
     align-items: stretch;
-    gap: clamp(6px, 2.4vw, 12px);
+    gap: clamp(3px, 0.7vw, 3px);
     font-size: clamp(0.4rem, 3vw, 0.94rem);
     border-radius: 12px;
-    padding: clamp(8px, 3vw, 14px);
+    padding: clamp(5px, 1vw, 5px);
     line-height: 0.8;
+  }
+
+  .CursoInfo b {
+    margin-top: 0.2em;
+  }
+
+  .ColumnaCursoInfo span + span {
+    margin-top: 0.2em; /* adds space only between spans, not before the first */
   }
 
   .ColumnaCursoInfo {
@@ -1469,7 +1526,7 @@ label {
 
   .CostoCursoInfo {
     display: grid;
-    gap: clamp(4px, 2vw, 10px);
+    gap: clamp(3px, 0.7vw, 3px);
   }
 
   .form-control {
