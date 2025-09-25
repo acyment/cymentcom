@@ -1,4 +1,4 @@
-FROM gplane/pnpm:10.8.1-node22-bullseye
+FROM gplane/pnpm:10.17.1-node22-bullseye
 
 WORKDIR /app
 

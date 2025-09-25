@@ -1,5 +1,5 @@
 FROM docker.io/python:3.12.9-slim-bookworm AS python
-FROM gplane/pnpm:10.8.1-node22-bullseye AS client-builder
+FROM gplane/pnpm:10.17.1-node22-bullseye AS client-builder
 ARG APP_HOME=/app
 WORKDIR ${APP_HOME}
 
