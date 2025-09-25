@@ -2,7 +2,7 @@ import React from 'react';
 import FormStepper from './FormStepper';
 
 const HeaderDialogo = ({ stepNumber, onClose }) => {
-  const stepLabels = ['Participante', 'Facturación', 'Pago', 'Resultado'];
+  const stepLabels = ['Participante', 'Facturación', 'Pago'];
   return (
     <div className="HeaderModal">
       <FormStepper activeStep={stepNumber} labels={stepLabels} />
