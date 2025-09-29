@@ -30,7 +30,7 @@ const Hero = () => {
           <div className="HeroCopy">
             <p className="HeroText">
               <b className="HeroTextBold">Alan</b> explica la agilidad como
-              nadie. Transmite ideas complejas en poco tiempo de{' '}
+              nadie. Transmite ideas complejas en poco tiempo de manera{' '}
               <RoughNotation
                 color="#7b68ee"
                 type="underline"
@@ -39,7 +39,7 @@ const Hero = () => {
                 iterations={8}
                 padding={[0, 5]}
               >
-                manera interactiva
+                interactiva
               </RoughNotation>
               . Domina la oscilación entre lo filosófico y lo pragmático. Se
               adapta sin sobresaltos a{' '}
@@ -78,7 +78,72 @@ const Hero = () => {
               </button>
             </div>
           </div>
-          <img src="static/images/hero.jpg" className="HeroImage" />
+          <picture>
+            {/* Desktop WebP */}
+            <source
+              type="image/webp"
+              media="(min-width: 1024px)"
+              srcSet={[
+                'static/images/hero-desktop-1920x960.webp 1920w',
+                'static/images/hero-desktop-1600x800.webp 1600w',
+              ].join(', ')}
+              sizes="(min-width: 1024px) 75vw, 100vw"
+            />
+            {/* Tablet WebP */}
+            <source
+              type="image/webp"
+              media="(min-width: 768px)"
+              srcSet={[
+                'static/images/hero-tablet-1600x1000.webp 1600w',
+                'static/images/hero-tablet-1200x750.webp 1200w',
+              ].join(', ')}
+              sizes="(min-width: 768px) 100vw, 100vw"
+            />
+            {/* Mobile WebP */}
+            <source
+              type="image/webp"
+              srcSet={[
+                'static/images/hero-mobile-1280.webp 1280w',
+                'static/images/hero-mobile-640.webp 640w',
+              ].join(', ')}
+              sizes="(max-width: 767px) 100vw, 0px"
+            />
+
+            {/* Desktop JPEG */}
+            <source
+              media="(min-width: 1024px)"
+              srcSet={[
+                'static/images/hero-desktop-1920x960.jpg 1920w',
+                'static/images/hero-desktop-1600x800.jpg 1600w',
+              ].join(', ')}
+              sizes="(min-width: 1024px) 75vw, 100vw"
+            />
+            {/* Tablet JPEG */}
+            <source
+              media="(min-width: 768px)"
+              srcSet={[
+                'static/images/hero-tablet-1600x1000.jpg 1600w',
+                'static/images/hero-tablet-1200x750.jpg 1200w',
+              ].join(', ')}
+              sizes="(min-width: 768px) 100vw, 100vw"
+            />
+
+            {/* Mobile fallback */}
+            <img
+              className="HeroImage"
+              src="static/images/hero-mobile-640.jpg"
+              srcSet={[
+                'static/images/hero-mobile-1280.jpg 1280w',
+                'static/images/hero-mobile-640.jpg 640w',
+              ].join(', ')}
+              sizes="(max-width: 767px) 100vw, 0px"
+              alt="Retrato del instructor"
+              fetchpriority="high"
+              decoding="async"
+              width={1280}
+              height={1280}
+            />
+          </picture>
         </section>
       </AccordionHeader>
       <Accordion.Trigger className="CircleButton"></Accordion.Trigger>
