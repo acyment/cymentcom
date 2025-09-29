@@ -153,8 +153,7 @@
           {% for inscripcion in inscripciones %}
           <mj-text padding="0 25px">
             - {{ inscripcion.alumno.nombre }} {{ inscripcion.alumno.apellido }}
-            {% if inscripcion.alumno.organizacion %}({{
-            inscripcion.alumno.organizacion }}){% endif %}
+            {% if inscripcion.alumno.organizacion %}({{ inscripcion.alumno.organizacion }}){% endif %}
           </mj-text>
           {% empty %}
           <mj-text padding="0 25px">
