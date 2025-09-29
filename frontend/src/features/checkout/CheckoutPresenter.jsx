@@ -34,19 +34,19 @@ export function CheckoutPresenter({
       const deferTwice = (fn) =>
         requestAnimationFrame(() => requestAnimationFrame(fn));
       deferTwice(() => {
-        const a = document.activeElement;
-        const isFormFocus =
-          a &&
-          (a.tagName === 'INPUT' ||
-            a.tagName === 'TEXTAREA' ||
-            a.tagName === 'SELECT' ||
-            a.getAttribute('contenteditable') === 'true' ||
-            a.getAttribute('role') === 'textbox');
-        if (!isFormFocus && window.scrollY !== 0) {
-          try {
+        try {
+          const root =
+            document.querySelector('.CheckoutFullscreen__content') || document;
+          const firstField = root.querySelector(
+            'input:not([disabled]):not([type="hidden"]), textarea:not([disabled]), select:not([disabled])',
+          );
+          if (firstField && typeof firstField.focus === 'function') {
+            firstField.focus({ preventScroll: true });
+          }
+          if (window.scrollY !== 0) {
             window.scrollTo({ top: 0, behavior: 'auto' });
-          } catch {}
-        }
+          }
+        } catch {}
       });
     }, []);
     return (
