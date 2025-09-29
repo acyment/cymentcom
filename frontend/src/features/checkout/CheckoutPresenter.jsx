@@ -28,11 +28,26 @@ export function CheckoutPresenter({
   if (!open) return null;
 
   if (variant === 'fullscreen') {
-    // Ensure the viewport is at the top when the fullscreen checkout opens (mobile)
+    // Ensure the viewport is at the top on open without stealing focus from the first field.
+    // Defer until after initial autofocus runs; only scroll if nothing is focused.
     useEffect(() => {
-      try {
-        window.scrollTo({ top: 0, behavior: 'auto' });
-      } catch {}
+      const deferTwice = (fn) =>
+        requestAnimationFrame(() => requestAnimationFrame(fn));
+      deferTwice(() => {
+        const a = document.activeElement;
+        const isFormFocus =
+          a &&
+          (a.tagName === 'INPUT' ||
+            a.tagName === 'TEXTAREA' ||
+            a.tagName === 'SELECT' ||
+            a.getAttribute('contenteditable') === 'true' ||
+            a.getAttribute('role') === 'textbox');
+        if (!isFormFocus && window.scrollY !== 0) {
+          try {
+            window.scrollTo({ top: 0, behavior: 'auto' });
+          } catch {}
+        }
+      });
     }, []);
     return (
       <div className="CheckoutFullscreen" data-testid="checkout-fullscreen">
