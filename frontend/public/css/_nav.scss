@@ -49,7 +49,8 @@
   }
   .NavigationMenuLink {
     /* Smaller, calmer mobile size */
-    @include type-scale(15px, 3.6vw, 18px);
+    @include type-scale(16px, 3.6vw, 18px);
+    font-weight: 300;
     padding-inline: 10px;
   }
 }
