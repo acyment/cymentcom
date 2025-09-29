@@ -868,6 +868,13 @@ ul {
   padding: 12px 0 0;
 }
 
+/* Mobile: remove connecting underline under pill nav */
+@include down($bp-md) {
+  .CourseDetailNav {
+    border-bottom: none;
+  }
+}
+
 .CourseDetailNav::-webkit-scrollbar {
   display: none;
 }
