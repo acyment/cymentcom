@@ -153,7 +153,7 @@ export function CheckoutPresenter({
               Completa los datos del formulario para continuar.
             </p>
           </Dialog.Description>
-          {children}
+          <div className="DialogViewport">{children}</div>
           <Dialog.Close asChild>
             <button
               type="button"
