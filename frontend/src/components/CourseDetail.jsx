@@ -137,6 +137,7 @@ export default function CourseDetail() {
   const headerOffsetRef = useRef(0);
   const navRef = useRef(null);
   const [headerHeight, setHeaderHeight] = useState(0);
+  const didInitialScrollRef = useRef(false);
 
   const courseSections = useMemo(
     () => [
@@ -150,6 +151,19 @@ export default function CourseDetail() {
   );
 
   useEffect(() => {
+    // Prevent the browser from restoring a mid-page scroll when arriving from the catalog
+    const prev =
+      typeof window !== 'undefined' && window.history
+        ? window.history.scrollRestoration
+        : undefined;
+    if (typeof window !== 'undefined' && window.history) {
+      try {
+        window.history.scrollRestoration = 'manual';
+      } catch (e) {
+        // ignore
+      }
+    }
+
     if (!headerRef.current) return undefined;
 
     const updatePadding = (height) => {
@@ -199,8 +213,29 @@ export default function CourseDetail() {
         '--course-detail-header-offset',
       );
       document.documentElement.style.scrollPaddingTop = '';
+      if (typeof window !== 'undefined' && window.history && prev) {
+        try {
+          window.history.scrollRestoration = prev;
+        } catch (e) {
+          // ignore
+        }
+      }
     };
   }, []);
+
+  // After header height is measured and offsets applied, ensure initial load starts at top
+  useEffect(() => {
+    if (didInitialScrollRef.current) return;
+    if (typeof window === 'undefined') return;
+    const hasHash = !!window.location.hash;
+    if (!hasHash) {
+      // Wait a frame so scroll-padding is effective, then scroll to top
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      });
+    }
+    didInitialScrollRef.current = true;
+  }, [headerHeight]);
 
   const handleSectionNav = useCallback((event) => {
     if (typeof window === 'undefined') return;
