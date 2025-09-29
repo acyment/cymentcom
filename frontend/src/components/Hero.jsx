@@ -87,7 +87,7 @@ const Hero = () => {
                 'static/images/hero-desktop-1920x960.webp 1920w',
                 'static/images/hero-desktop-1600x800.webp 1600w',
               ].join(', ')}
-              sizes="(min-width: 1024px) 75vw, 100vw"
+              sizes="100vw"
             />
             {/* Tablet WebP */}
             <source
@@ -116,7 +116,7 @@ const Hero = () => {
                 'static/images/hero-desktop-1920x960.jpg 1920w',
                 'static/images/hero-desktop-1600x800.jpg 1600w',
               ].join(', ')}
-              sizes="(min-width: 1024px) 75vw, 100vw"
+              sizes="100vw"
             />
             {/* Tablet JPEG */}
             <source
