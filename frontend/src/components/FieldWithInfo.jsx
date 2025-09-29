@@ -1,13 +1,12 @@
 import React from 'react';
 import { Field, useFormikContext } from 'formik';
-import { Info } from 'lucide-react';
+import InfoIcon from 'lucide-react/dist/esm/icons/info.js';
 import { Tooltip } from 'react-tooltip';
 
 const FieldWithInfo = ({ name, type, className, autoFocus, tooltip }) => {
   const { touched, errors } = useFormikContext();
   const fieldTouched = touched[name];
   const fieldError = errors[name];
-
   return (
     <div className="input-container">
       <Field
@@ -33,7 +32,7 @@ const FieldWithInfo = ({ name, type, className, autoFocus, tooltip }) => {
               cursor: 'default',
             }}
           >
-            <Info
+            <InfoIcon
               color="#666"
               size={20}
               tabIndex={-1}

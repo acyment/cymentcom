@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
+import ArrowLeftIcon from 'lucide-react/dist/esm/icons/arrow-left.js';
 
 export function CheckoutPresenter({
   variant,
@@ -39,7 +40,7 @@ export function CheckoutPresenter({
             onClick={onClose}
             aria-label="Cerrar checkout"
           >
-            ←
+            <ArrowLeftIcon aria-hidden="true" />
           </button>
         </header>
         <div className="CheckoutFullscreen__content">{children}</div>

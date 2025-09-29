@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useRef } from 'react';
 import { usePostHog } from 'posthog-js/react';
 import { Field, useFormikContext } from 'formik';
 import CustomErrorMessage from './CustomErrorMessage';
-import { ArrowRight } from 'lucide-react';
+import ArrowRightIcon from 'lucide-react/dist/esm/icons/arrow-right.js';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { BP_MD } from '@/styles/breakpoints';
 
@@ -10,7 +10,6 @@ const StepParticipantes = ({ idCurso }) => {
   const posthog = usePostHog();
   const isMobile = useIsMobile(`(max-width: ${BP_MD}px)`);
   const firstFieldRef = useRef(null);
-
   useEffect(() => {
     if (!isMobile && firstFieldRef.current) {
       firstFieldRef.current.focus();
@@ -109,7 +108,7 @@ const StepParticipantes = ({ idCurso }) => {
         onClick={handleSubmit} // Use our custom handler
       >
         Continuar
-        <ArrowRight />
+        <ArrowRightIcon aria-hidden="true" />
       </button>
     </Fragment>
   );
