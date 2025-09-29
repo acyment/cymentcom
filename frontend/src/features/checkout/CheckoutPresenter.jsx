@@ -28,6 +28,12 @@ export function CheckoutPresenter({
   if (!open) return null;
 
   if (variant === 'fullscreen') {
+    // Ensure the viewport is at the top when the fullscreen checkout opens (mobile)
+    useEffect(() => {
+      try {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      } catch {}
+    }, []);
     return (
       <div className="CheckoutFullscreen" data-testid="checkout-fullscreen">
         <header
