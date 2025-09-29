@@ -1301,6 +1301,7 @@ h2 {
   max-height: min(96svh, 96dvh, 96vh);
   box-sizing: border-box;
   overscroll-behavior: contain;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   box-shadow:
     hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
