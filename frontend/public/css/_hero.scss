@@ -22,6 +22,8 @@ $negative-main-padding-left: -($main-padding-left) !default;
   padding-top: 7%;
   padding-left: $main-padding-left;
   z-index: 1;
+  /* Enable container queries for children (e.g., CTA wrapping) */
+  container-type: inline-size;
 }
 
 .HeroTextBold {
@@ -96,6 +98,21 @@ $negative-main-padding-left: -($main-padding-left) !default;
 }
 
 @include down($bp-md) {
+  /* Stacked hero on narrow viewports: copy flows above image */
+  .HeroCopy {
+    position: static;
+    width: auto;
+    padding-left: clamp(16px, 5vw, 40px);
+    padding-right: clamp(16px, 5vw, 40px);
+    padding-top: clamp(12px, 4vw, 24px);
+    margin-bottom: clamp(8px, 2.6vw, 16px);
+  }
+
+  .HeroImage {
+    margin-left: 0; /* remove negative offset when stacked */
+    width: 100%;
+  }
+
   .HeroCTARow {
     margin-top: clamp(10px, 2.6vw, 18px);
     flex-wrap: wrap; /* only wrap on small screens */
@@ -108,6 +125,13 @@ $negative-main-padding-left: -($main-padding-left) !default;
     padding: clamp(10px, 3vw, 16px) clamp(16px, 5vw, 22px);
     min-height: 44px;
     font-weight: 500;
+  }
+}
+
+/* Container query: keep CTAs on one line when the copy column has room */
+@container (min-width: 420px) {
+  .HeroCTARow {
+    flex-wrap: nowrap;
   }
 }
 
