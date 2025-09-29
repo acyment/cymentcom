@@ -88,13 +88,30 @@ const Cursos = () => {
   };
 
   useEffect(() => {
-    if (triggerScroll) {
-      if (selectedCourse === '')
-        refListaCursos.current.scrollIntoView({ behavior: 'smooth' });
-      else if (refDetalleCurso.current)
-        refDetalleCurso.current.scrollIntoView({ behavior: 'smooth' });
-      setTriggerScroll(false); // Reset trigger after scroll
-    }
+    if (!triggerScroll) return;
+    let canceled = false;
+    const doScroll = async () => {
+      const smooth = { behavior: 'smooth' };
+      if (selectedCourse === '') {
+        refListaCursos.current?.scrollIntoView(smooth);
+      } else {
+        // DetalleCurso is lazy-loaded; wait briefly for it to mount
+        let tries = 0;
+        while (!canceled && !refDetalleCurso.current && tries < 20) {
+          await new Promise((r) => setTimeout(r, 50));
+          tries += 1;
+        }
+        // Fallback: query by class if ref hasn't attached yet
+        const el =
+          refDetalleCurso.current || document.querySelector('.DetalleCurso');
+        el?.scrollIntoView(smooth);
+      }
+      if (!canceled) setTriggerScroll(false);
+    };
+    doScroll();
+    return () => {
+      canceled = true;
+    };
   }, [selectedCourse, triggerScroll]); // Depend on selectedCourse and triggerScroll
 
   const isMobile = useIsMobile('(max-width: 767px)');
