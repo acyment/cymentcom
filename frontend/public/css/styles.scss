@@ -1383,13 +1383,14 @@ h2 {
   }
   /* Keep input text larger for readability */
   .DialogContent .form-control {
-    font-size: clamp(24px, 2.4vw, 34px);
-    padding: clamp(14px, 1.2vw, 18px) clamp(16px, 1.4vw, 22px);
-    min-height: clamp(52px, 4vw, 64px);
+    font-size: clamp(24px, 2.2vw, 32px);
+    padding: clamp(12px, 1vw, 16px) clamp(14px, 1.2vw, 20px);
+    min-height: clamp(46px, 3.5vw, 58px);
     line-height: 1.2;
   }
   .DialogContent h3.form-title {
     font-size: 1.5vw;
+    margin-bottom: 12px;
   }
   .DialogContent .step-label {
     font-size: 14px;
@@ -1398,11 +1399,32 @@ h2 {
   /* Double the size of primary/secondary dialog buttons on desktop */
   .DialogContent .BotonFormulario,
   .DialogContent .BotonContinuar {
-    font-size: 2.25rem; /* ~2x */
-    padding: 1.6rem 2.4rem; /* ~2x */
-    min-height: clamp(64px, 5vw, 84px);
+    font-size: 2.25rem; /* keep readable */
+    padding: 1.44rem 2.16rem; /* ~10% tighter */
+    min-height: clamp(58px, 4.5vw, 76px);
     min-width: 18rem;
     border-radius: 14px;
+  }
+
+  /* Trim desktop layout spacing inside the dialog */
+  .DialogContent .form-row,
+  .DialogContent .triple-form-row {
+    gap: clamp(12px, 1.2vw, 18px);
+    margin-bottom: 18px;
+  }
+
+  .DialogContent .CursoInfo {
+    padding: 0.75rem;
+  }
+
+  /* Tighten header paddings/gaps slightly on desktop */
+  .HeaderModal {
+    padding-top: 1.1vw;
+    gap: 16px;
+  }
+  .progress-indicator {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
   }
 }
 
