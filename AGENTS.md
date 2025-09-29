@@ -314,7 +314,7 @@ paths may differ from an isolated `frontend/` workspace.
 
 ### Visual Design Constraints
 
-- **Brand accent color**: use only `#7854fa` for accents, highlights, buttons, link/hover states, and interactive focus rings (besides black/white and neutral grays).
+- **Brand accent color**: use only `#7854fa` for accents, highlights, buttons, link/hover states, and interactive focus rings (besides black/white and neutral grays). Soft gradients are allowed as long as `#7854fa` remains the sole hue blended with neutrals (white/black/gray) and no additional colors.
 - **Avoid additional hues**: do not introduce green/teal/orange variants in new UI. When touching existing UI, prefer migrating greenish elements (e.g., loaders, chips) to `#7854fa`.
 - **Contrast**: ensure minimum 4.5:1 for text on backgrounds when applying `#7854fa` (use darker text on light backgrounds or white text on solid `#7854fa`).
 
