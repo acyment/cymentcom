@@ -3,6 +3,7 @@ const commonConfig = require('./common.config');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const { rspack } = require('@rspack/core');
+const { RsdoctorRspackPlugin } = require('@rsdoctor/rspack-plugin');
 const BundleAnalyzerPlugin =
   require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -42,6 +43,7 @@ module.exports = mergeProd(
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
       }),
+      ...(process.env.ENABLE_RSDOCTOR ? [new RsdoctorRspackPlugin()] : []),
     ],
   },
 ); // End of mergeProd call // End of smp.wrap

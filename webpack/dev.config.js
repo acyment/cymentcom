@@ -3,6 +3,7 @@ const commonConfig = require('./common.config');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const { rspack } = require('@rspack/core');
+const { RsdoctorRspackPlugin } = require('@rsdoctor/rspack-plugin');
 
 module.exports = merge(commonConfig, {
   mode: 'development',
@@ -43,6 +44,7 @@ module.exports = merge(commonConfig, {
       path: path.resolve(__dirname, '../.envs/.local/.webpack'),
     }),
     new rspack.DefinePlugin({ 'process.env.NODE_ENV': '"development"' }),
+    ...(process.env.ENABLE_RSDOCTOR ? [new RsdoctorRspackPlugin()] : []),
   ],
 });
 
