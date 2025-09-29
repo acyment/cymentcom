@@ -1316,9 +1316,11 @@ h2 {
 
 /* Dedicated scroll container inside the dialog */
 .DialogViewport {
-  max-height: min(96svh, 96dvh, 96vh);
+  /* Cap internal scroller height to keep overall dialog within viewport */
+  --_dialog_cap: min(96svh, 96dvh, 96vh);
+  max-height: calc(var(--_dialog_cap) - var(--dialog-header-height, 0px));
   overflow: auto;
-  padding-bottom: calc(env(safe-area-inset-bottom) + 48px);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
 }
 
 /* Keep primary action visible within the internal viewport */

@@ -116,7 +116,25 @@ export function CheckoutPresenter({
               }
             } catch {}
           }}
-          ref={() => {}}
+          ref={(el) => {
+            if (!el) return;
+            const header = el.querySelector('.HeaderModal');
+            const setVar = (h) =>
+              el.style.setProperty(
+                '--dialog-header-height',
+                `${Math.max(0, Math.round(h))}px`,
+              );
+            if (header && 'ResizeObserver' in window) {
+              const ro = new ResizeObserver((entries) => {
+                const ent = entries[0];
+                const h = ent?.contentRect?.height ?? header.offsetHeight ?? 0;
+                setVar(h);
+              });
+              ro.observe(header);
+            } else {
+              setVar(header?.offsetHeight ?? 0);
+            }
+          }}
         >
           {/* Hidden accessible title/description for a11y without moving focus */}
           <Dialog.Title asChild>
