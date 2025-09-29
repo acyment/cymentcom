@@ -1301,7 +1301,8 @@ h2 {
   max-height: min(96svh, 96dvh, 96vh);
   box-sizing: border-box;
   overscroll-behavior: contain;
-  padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 96px);
+
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   box-shadow:
     hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
@@ -1313,6 +1314,13 @@ h2 {
   isolation: isolate; /* prevent overlay or page content blending */
   z-index: 3001; /* ensure it sits above the overlay */
   animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Keep primary action visible inside the desktop dialog scroll container */
+.DialogContent .BotonContinuar {
+  position: sticky;
+  bottom: calc(env(safe-area-inset-bottom) + 16px);
+  z-index: 1;
 }
 
 /* Default (mobile first) */
