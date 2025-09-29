@@ -83,6 +83,7 @@ $negative-main-padding-left: -($main-padding-left) !default;
   padding: clamp(15px, 2.9vw, 24px) clamp(24px, 4.6vw, 34px);
   font-weight: 600;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .HeroCTAPrimary {
@@ -99,10 +100,12 @@ $negative-main-padding-left: -($main-padding-left) !default;
   }
 
   .HeroCTA {
-    @include type-scale(6px, 1vw, 6px);
-    line-height: 1.05;
-    padding: clamp(6px, 1.8vw, 10px) clamp(10px, 3vw, 16px);
-    font-weight: 400;
+    // Mobile: readable size and tap target
+    @include type-scale(14px, 4vw, 18px);
+    line-height: 1.1;
+    padding: clamp(10px, 3vw, 16px) clamp(16px, 5vw, 22px);
+    min-height: 44px;
+    font-weight: 500;
   }
 }
 
@@ -125,4 +128,12 @@ $negative-main-padding-left: -($main-padding-left) !default;
   .CircleButton {
     display: none;
   }
+}
+
+/* Handheld-capability override (centralized via data-handheld on <html>) */
+[data-handheld='true'] .HeroCTA {
+  font-size: clamp(14px, 4vw, 18px);
+  line-height: 1.1;
+  padding: clamp(10px, 3vw, 16px) clamp(16px, 5vw, 22px);
+  min-height: 44px; /* comfortable tap target */
 }
