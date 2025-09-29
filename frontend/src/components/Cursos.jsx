@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Suspense, lazy } from 'react';
 import { usePostHog } from 'posthog-js/react';
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
-import DetalleCurso from './DetalleCurso';
+import { useNavigate } from '@tanstack/react-router';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
 import axios from 'axios';
@@ -9,6 +9,11 @@ import { formatCourseDateRange as fmtCourseRange } from '@/utils/courseDates';
 import CircleLoader from 'react-spinners/CircleLoader';
 import { useOpenCheckout } from '@/features/checkout/useOpenCheckout';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { loadDetalleCurso } from './loadDetalleCurso';
+
+const LazyDetalleCurso = lazy(() => loadDetalleCurso());
+
+let cachedTiposCurso = null;
 
 const Cursos = () => {
   const [tiposCurso, setTiposCurso] = useState([]);
@@ -19,6 +24,7 @@ const Cursos = () => {
   const [triggerScroll, setTriggerScroll] = useState(false);
   const posthog = usePostHog();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const [sliderRef, instanceRef] = useKeenSlider(
     {
       slideChanged() {},
@@ -31,24 +37,43 @@ const Cursos = () => {
     ],
   );
   useEffect(() => {
+    let isMounted = true;
+
+    if (cachedTiposCurso) {
+      setTiposCurso(cachedTiposCurso);
+      setLoading(false);
+      return () => {
+        isMounted = false;
+      };
+    }
+
     const fetchData = async () => {
       setLoading(true);
       try {
-        // Replace 'your_api_endpoint' with the actual endpoint URL
         const response = await axios.get('/api/tipos-de-curso');
         const dictTiposCurso = response.data.reduce((acc, obj) => {
           acc[obj.nombre_corto] = obj;
           return acc;
         }, {});
+        if (!isMounted) return;
+        cachedTiposCurso = dictTiposCurso;
         setTiposCurso(dictTiposCurso);
       } catch (error) {
-        console.error('Error fetching data: ', error);
+        if (isMounted) {
+          console.error('Error fetching data: ', error);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchData();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const updateSelectedItem = (value) => {
@@ -73,6 +98,16 @@ const Cursos = () => {
   }, [selectedCourse, triggerScroll]); // Depend on selectedCourse and triggerScroll
 
   const isMobile = useIsMobile('(max-width: 767px)');
+
+  const handleOpenMobileDetails = (course) => {
+    navigate({
+      to: '/cursos/$slug',
+      params: { slug: course.nombre_corto },
+      state: { course },
+    });
+  };
+
+  // No dialog/body locking in the new navigation flow
 
   const formatDateRange = (curso) => fmtCourseRange(curso);
 
@@ -125,6 +160,13 @@ const Cursos = () => {
                     {tipoCurso.resumen_una_linea}
                   </p>
                   <div className="CourseCardActions">
+                    <button
+                      type="button"
+                      className="CourseCardSecondary"
+                      onClick={() => handleOpenMobileDetails(tipoCurso)}
+                    >
+                      Ver más detalles
+                    </button>
                     <details className="CourseCardDetails">
                       <summary className="CourseCardPrimary">
                         Ver fechas
@@ -165,6 +207,7 @@ const Cursos = () => {
             ))}
           </div>
         )}
+        {/* Drawer removed: navigation takes over */}
       </div>
     );
   }
@@ -241,16 +284,22 @@ const Cursos = () => {
         )}
       </div>
       {selectedCourse && !loading && (
-        <DetalleCurso
-          ref={refDetalleCurso}
-          tipoCurso={tiposCurso[selectedCourse]}
-        />
+        <Suspense fallback={<div data-testid="detalle-curso-loading" />}>
+          <LazyDetalleCurso
+            ref={refDetalleCurso}
+            tipoCurso={tiposCurso[selectedCourse]}
+          />
+        </Suspense>
       )}
     </div>
   );
 };
 
 export default Cursos;
+
+export function __clearCursosCache() {
+  cachedTiposCurso = null;
+}
 
 function MobileEnrollButton({ tipoCurso }) {
   const openCheckout = useOpenCheckout();

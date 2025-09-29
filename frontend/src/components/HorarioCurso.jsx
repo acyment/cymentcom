@@ -3,6 +3,7 @@ import { usePostHog } from 'posthog-js/react';
 
 import { useOpenCheckout } from '@/features/checkout/useOpenCheckout';
 import formatDate from 'intl-dateformat';
+import { adjustTimeZone, calculateTimeDifference } from '@/utils/courseTime';
 
 const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
   const [proximoCurso, setProximoCurso] = useState(null);
@@ -20,39 +21,6 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
   }, [proximosCursos]);
 
   const openCheckout = useOpenCheckout();
-
-  const calculateTimeDifference = (startTime, endTime) => {
-    // Create Date objects from the time strings
-    const startDate = new Date(`2000-01-01T${startTime}`);
-    const endDate = new Date(`2000-01-01T${endTime}`);
-
-    // Calculate the difference in milliseconds
-    const diffInMilliseconds = endDate - startDate;
-
-    // Convert milliseconds to hours
-    return diffInMilliseconds / (1000 * 60 * 60);
-  };
-
-  const adjustTimeZone = (timeString, fromTimeZone, toTimeZone) => {
-    // Split the time string into hours and minutes
-    const [hours, minutes] = timeString.split(':');
-
-    // Create a Date object for the current date at the given time in UTC-3
-    const date = new Date();
-    date.setUTCHours(hours, minutes);
-
-    // Calculate the time zone difference in hours
-    const timeZoneDifference = toTimeZone - fromTimeZone;
-
-    // Adjust the time for the time zone difference
-    date.setUTCHours(date.getUTCHours() + timeZoneDifference);
-
-    // Format the result back into a string in the "HH:MM" format
-    const adjustedHours = date.getUTCHours().toString().padStart(2, '0');
-    const adjustedMinutes = date.getUTCMinutes().toString().padStart(2, '0');
-
-    return `${adjustedHours}:${adjustedMinutes}`;
-  };
 
   function capitalizeFirstLetter(str) {
     if (str.length === 0) {

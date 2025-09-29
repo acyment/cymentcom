@@ -1,7 +1,16 @@
 import React from 'react';
 import { render, screen, waitFor } from '@/tests/utils';
 import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
 import NavMenu from './NavMenu';
+
+vi.mock('react-rough-notation', () => ({
+  RoughNotation: ({ children, show, className, type }) => (
+    <span className={className} data-rough-show={show} data-rough-type={type}>
+      {children}
+    </span>
+  ),
+}));
 
 function mockMatchMedia({ mobile = false } = {}) {
   const listeners = new Set();
@@ -62,20 +71,30 @@ describe('NavMenu (desktop behavior)', () => {
 });
 
 it('annotations: desktop shows hover-only circle, mobile shows current underline', async () => {
-  // Desktop: no annotation until hover
+  // Desktop: annotation wrapper exists but stays hidden until hover
   mockMatchMedia({ mobile: false });
   const { unmount } = render(<NavMenu />);
   const cursos = await screen.findByRole('link', { name: 'Cursos' });
-  expect(document.querySelector('.NavNotation')).not.toBeInTheDocument();
+  expect(
+    document.querySelector('.NavNotation[data-rough-show="false"]'),
+  ).toBeInTheDocument();
   await userEvent.hover(cursos);
-  expect(document.querySelector('.NavNotation')).toBeInTheDocument();
+  await waitFor(() => {
+    expect(
+      document.querySelector('.NavNotation[data-rough-show="true"]'),
+    ).toBeInTheDocument();
+  });
 
-  // Mobile: only the current item has underline annotation
+  // Mobile: only the current item keeps an active underline annotation
   unmount();
   mockMatchMedia({ mobile: true });
   render(<NavMenu />);
   await screen.findByRole('link', { name: 'Inicio' });
-  const current = document.querySelector('.NavNotation--current');
+  const current = document.querySelector(
+    '.NavNotation--current[data-rough-type="underline"][data-rough-show="true"]',
+  );
   expect(current).toBeInTheDocument();
-  expect(document.querySelectorAll('.NavNotation').length).toBe(1);
+  expect(
+    document.querySelectorAll('.NavNotation[data-rough-show="true"]').length,
+  ).toBe(1);
 });

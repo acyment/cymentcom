@@ -21,7 +21,7 @@ const Logo = () => {
       }}
       className="LogoLink"
     >
-      <img src="static/images/logo.svg" className="Logo" />
+      <img src="/static/images/logo.svg" className="Logo" />
     </a>
   );
 };

@@ -19,7 +19,9 @@ function App({ children }) {
   const location = useLocation();
   const isMobile = useIsMobile(`(max-width: ${BP_MD}px)`);
   const isFullscreenCheckout =
-    isMobile && location?.pathname?.startsWith('/checkout');
+    isMobile &&
+    (location?.pathname?.startsWith('/checkout') ||
+      location?.pathname?.startsWith('/cursos/'));
 
   useEffect(() => {
     if (typeof document === 'undefined') return undefined;

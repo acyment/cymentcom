@@ -3,10 +3,14 @@ import * as Accordion from '@radix-ui/react-accordion';
 
 const FAQ = ({ faqEntries }) => {
   return (
-    <Accordion.Root type="multiple" collapsible={true} className="FAQAccordion">
+    <Accordion.Root type="multiple" className="FAQAccordion">
       {faqEntries &&
         faqEntries.map((faqEntry) => (
-          <Accordion.Item value={faqEntry.pregunta} className="FAQItem">
+          <Accordion.Item
+            key={faqEntry.pregunta || faqEntry.id}
+            value={faqEntry.pregunta}
+            className="FAQItem"
+          >
             <Accordion.Trigger className="AccordionTrigger PreguntaFAQ">
               {faqEntry.pregunta}
               <img

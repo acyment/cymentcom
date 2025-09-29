@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
 import Cursos from './Cursos';
 import Hero from './Hero';
-import Intervenciones from './Intervenciones';
-import AgilidadProfunda from './AgilidadProfunda';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { Outlet } from '@tanstack/react-router';
 import { CheckoutEntry } from '@/features/checkout/CheckoutEntry';
 import CheckoutFlow from '@/features/checkout/CheckoutFlow';
+import { loadIntervenciones } from './loadIntervenciones';
+import { loadAgilidadProfunda } from './loadAgilidadProfunda';
+
+const LazyIntervenciones = lazy(() => loadIntervenciones());
+const LazyAgilidadProfunda = lazy(() => loadAgilidadProfunda());
 
 const Sections = () => {
   const isMobile = useIsMobile();
@@ -15,8 +18,16 @@ const Sections = () => {
     <Accordion.Root type="multiple">
       <Hero />
       <Cursos />
-      {!isMobile && <Intervenciones />}
-      {!isMobile && <AgilidadProfunda />}
+      {!isMobile && (
+        <Suspense fallback={<div data-testid="intervenciones-loading" />}>
+          <LazyIntervenciones />
+        </Suspense>
+      )}
+      {!isMobile && (
+        <Suspense fallback={<div data-testid="agilidad-loading" />}>
+          <LazyAgilidadProfunda />
+        </Suspense>
+      )}
       <Outlet />
       {/* Desktop keeps the inline modal experience via query param */}
       {!isMobile && (
