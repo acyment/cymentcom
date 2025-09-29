@@ -277,22 +277,7 @@ const Cursos = () => {
                     {tipoCurso.resumen_una_linea}
                   </p>
                 </div>
-                <span
-                  className="CircleButton CircleButtonCursos"
-                  role="button"
-                  tabIndex={0}
-                  aria-label="Abrir detalles del curso"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    updateSelectedItem(tipoCurso.nombre_corto);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      updateSelectedItem(tipoCurso.nombre_corto);
-                    }
-                  }}
-                />
+                <span className="CircleButton CircleButtonCursos" />
               </ToggleGroup.Item>
             ))}
           </ToggleGroup.Root>
