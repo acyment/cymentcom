@@ -307,7 +307,7 @@ export default function CourseDetail() {
             padding: 40,
           }}
         >
-          <CircleLoader color="#36D7B7" size={60} />
+          <CircleLoader color="#7854fa" size={60} />
           <p className="LoaderLegend" aria-live="polite">
             <span className="LoaderLegendAccessible">Cargando...</span>
             Cargando
