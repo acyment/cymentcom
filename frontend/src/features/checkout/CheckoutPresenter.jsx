@@ -116,7 +116,6 @@ export function CheckoutPresenter({
               }
             } catch {}
           }}
-          style={{ maxHeight: '90dvh', overflow: 'auto' }}
           ref={() => {}}
         >
           {/* Hidden accessible title/description for a11y without moving focus */}
