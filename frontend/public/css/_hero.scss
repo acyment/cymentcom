@@ -74,7 +74,7 @@ $negative-main-padding-left: -($main-padding-left) !default;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* default to single line on desktop */
   gap: clamp(12px, 2.6vw, 24px);
 }
 
@@ -98,6 +98,7 @@ $negative-main-padding-left: -($main-padding-left) !default;
 @include down($bp-md) {
   .HeroCTARow {
     margin-top: clamp(10px, 2.6vw, 18px);
+    flex-wrap: wrap; /* only wrap on small screens */
   }
 
   .HeroCTA {
