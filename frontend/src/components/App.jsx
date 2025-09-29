@@ -11,7 +11,7 @@ import Logo from './Logo';
 import NavMenu from './NavMenu';
 import Contacto from './Contacto';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useIsHandheld } from '@/hooks/useIsHandheld';
+import { useIsHandheld, useIsCoarse } from '@/hooks/useIsHandheld';
 import { BP_MD } from '@/styles/breakpoints';
 
 function App({ children }) {
@@ -20,6 +20,7 @@ function App({ children }) {
   const location = useLocation();
   const isMobile = useIsMobile(`(max-width: ${BP_MD}px)`);
   const isHandheld = useIsHandheld();
+  const isCoarse = useIsCoarse();
   const isFullscreenCheckout =
     isMobile &&
     (location?.pathname?.startsWith('/checkout') ||
@@ -39,16 +40,17 @@ function App({ children }) {
   }, [isFullscreenCheckout]);
 
   // Centralized capability flag for CSS: [data-handheld='true']
+  // Use only the coarse+no-hover signal for styling to avoid shrinking CTAs on touch-enabled desktops.
   useEffect(() => {
     if (typeof document === 'undefined') return undefined;
     const root = document.documentElement;
     const prev = root.getAttribute('data-handheld');
-    const next = isHandheld ? 'true' : 'false';
+    const next = isCoarse ? 'true' : 'false';
     if (prev !== next) root.setAttribute('data-handheld', next);
     return () => {
       // leave attribute as-is on unmount to avoid flashes during routing
     };
-  }, [isHandheld]);
+  }, [isCoarse]);
 
   return (
     <div className={isFullscreenCheckout ? 'App App--fullscreen' : 'App'}>

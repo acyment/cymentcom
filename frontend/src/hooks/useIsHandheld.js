@@ -4,28 +4,32 @@ import { useEffect, useState } from 'react';
 // - Primary signal: CSS media query '(hover: none) and (pointer: coarse)'
 // - Fallback: navigator.maxTouchPoints > 0
 // Usage: const isHandheld = useIsHandheld();
-export function useIsHandheld() {
-  const mq = '(hover: none) and (pointer: coarse)';
+const COARSE_MQ = '(hover: none) and (pointer: coarse)';
 
-  const getValue = () => {
-    if (typeof window === 'undefined') return false;
-    const mql = window.matchMedia ? window.matchMedia(mq) : { matches: false };
-    const touch =
-      typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0;
-    return Boolean(mql.matches || touch);
-  };
+export function useIsCoarse() {
+  const getValue = () =>
+    typeof window !== 'undefined' &&
+    window.matchMedia &&
+    window.matchMedia(COARSE_MQ).matches;
 
-  const [isHandheld, setIsHandheld] = useState(getValue);
+  const [isCoarse, set] = useState(getValue);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return undefined;
-    const mql = window.matchMedia(mq);
-    const onChange = () => setIsHandheld(getValue());
-    // Initialize on mount in case environment changed
+    const mql = window.matchMedia(COARSE_MQ);
+    const onChange = () => set(getValue());
     onChange();
     mql.addEventListener?.('change', onChange);
     return () => mql.removeEventListener?.('change', onChange);
   }, []);
 
-  return isHandheld;
+  return isCoarse;
+}
+
+export function useIsHandheld() {
+  const isCoarse = useIsCoarse();
+  const hasTouch =
+    typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0;
+  // Broader signal for behavior decisions (e.g., avoid hover-dependent UX)
+  return Boolean(isCoarse || hasTouch);
 }
