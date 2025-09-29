@@ -32,7 +32,7 @@ $negative-main-padding-left: -($main-padding-left) !default;
 
 .HeroImage {
   display: block;
-  margin-left: $negative-main-padding-left;
+  margin-left: 0; /* rely on art-directed canvas for composition; avoid right gap */
   width: 100%;
 }
 
