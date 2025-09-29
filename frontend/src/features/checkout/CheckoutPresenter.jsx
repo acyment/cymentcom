@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import ArrowLeftIcon from 'lucide-react/dist/esm/icons/arrow-left.js';
+import { useDialogHeaderHeight } from '@/hooks/useDialogHeaderHeight';
 
 export function CheckoutPresenter({
   variant,
@@ -69,6 +70,10 @@ export function CheckoutPresenter({
     );
   }
 
+  // Modal variant: measure header and cap internal viewport
+  const contentRef = useRef(null);
+  useDialogHeaderHeight(contentRef, '.HeaderModal', '--dialog-header-height');
+
   return (
     <Dialog.Root
       open={open}
@@ -116,25 +121,7 @@ export function CheckoutPresenter({
               }
             } catch {}
           }}
-          ref={(el) => {
-            if (!el) return;
-            const header = el.querySelector('.HeaderModal');
-            const setVar = (h) =>
-              el.style.setProperty(
-                '--dialog-header-height',
-                `${Math.max(0, Math.round(h))}px`,
-              );
-            if (header && 'ResizeObserver' in window) {
-              const ro = new ResizeObserver((entries) => {
-                const ent = entries[0];
-                const h = ent?.contentRect?.height ?? header.offsetHeight ?? 0;
-                setVar(h);
-              });
-              ro.observe(header);
-            } else {
-              setVar(header?.offsetHeight ?? 0);
-            }
-          }}
+          ref={contentRef}
         >
           {/* Hidden accessible title/description for a11y without moving focus */}
           <Dialog.Title asChild>
