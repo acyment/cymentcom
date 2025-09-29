@@ -140,8 +140,6 @@ const Hero = () => {
               alt="Retrato del instructor"
               fetchpriority="high"
               decoding="async"
-              width={1280}
-              height={1280}
             />
           </picture>
         </section>
