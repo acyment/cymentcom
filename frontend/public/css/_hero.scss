@@ -108,6 +108,11 @@ $negative-main-padding-left: -($main-padding-left) !default;
     margin-bottom: clamp(8px, 2.6vw, 16px);
   }
 
+  /* Mobile type scale for main hero headline */
+  .HeroText {
+    font-size: 4.3vw;
+  }
+
   .HeroImage {
     margin-left: 0; /* remove negative offset when stacked */
     width: 100%;
