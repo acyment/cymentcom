@@ -100,6 +100,7 @@ const ResultadoPago = () => {
         open={true}
         onClose={() => handleOpenChange(false)}
         title="Resultado de pago"
+        showBack={false}
       >
         <div className="form-container">
           <div className={`status-header ${statusClassName}`}>
@@ -179,10 +180,10 @@ const ResultadoPago = () => {
           <div className="button-container">
             <button
               className="BotonFormulario BotonContinuar"
-              aria-label={isSuccess ? 'Listo' : 'Cerrar'}
+              aria-label={isSuccess ? 'Listo' : 'Volver a inscribirme'}
               onClick={() => handleOpenChange(false)}
             >
-              {isSuccess ? '¡Listo!' : 'Cerrar'}
+              {isSuccess ? '¡Listo!' : 'Volver a inscribirme'}
             </button>
           </div>
 

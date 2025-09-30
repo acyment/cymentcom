@@ -9,6 +9,7 @@ export function CheckoutPresenter({
   onClose,
   title = 'Checkout',
   children,
+  showBack = true, // mobile fullscreen: show back arrow unless explicitly disabled
 }) {
   // Intercept internal Tab traversal and perform focus move programmatically
   // to avoid FocusScope's occasional containment fallback.
@@ -56,14 +57,16 @@ export function CheckoutPresenter({
           className="CheckoutMobileHeader"
           data-testid="checkout-mobile-header"
         >
-          <button
-            type="button"
-            className="CheckoutMobileHeader__close"
-            onClick={onClose}
-            aria-label="Cerrar checkout"
-          >
-            <ArrowLeftIcon aria-hidden="true" />
-          </button>
+          {showBack ? (
+            <button
+              type="button"
+              className="CheckoutMobileHeader__close"
+              onClick={onClose}
+              aria-label="Cerrar checkout"
+            >
+              <ArrowLeftIcon aria-hidden="true" />
+            </button>
+          ) : null}
         </header>
         <div className="CheckoutFullscreen__content">{children}</div>
       </div>
