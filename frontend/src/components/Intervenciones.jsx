@@ -4,6 +4,8 @@ import { AccordionHeader } from '@radix-ui/react-accordion';
 import { RoughNotation } from 'react-rough-notation';
 
 import ResilientMuxPlayer from './ResilientMuxPlayer';
+import { USE_INLINE_VIDEO } from '@/features/video/videoFlags';
+import MuxMp4Video from '@/features/video/MuxMp4Video';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import useViewportUnits from '../hooks/useViewportUnits';
@@ -192,16 +194,20 @@ const Intervenciones = () => {
                 </p>
                 {/* TODO: Agregar link a PDF con caso detallado */}
               </div>
-              <ResilientMuxPlayer
-                ref={(ref) => {
-                  if (ref) {
-                    videoRefs.current[index] = ref;
-                  }
-                }}
-                className="VideoCaso"
-                playbackId={caso.videoURL}
-                streamType="on-demand"
-              />
+              {USE_INLINE_VIDEO ? (
+                <MuxMp4Video playbackId={caso.videoURL} className="VideoCaso" />
+              ) : (
+                <ResilientMuxPlayer
+                  ref={(ref) => {
+                    if (ref) {
+                      videoRefs.current[index] = ref;
+                    }
+                  }}
+                  className="VideoCaso"
+                  playbackId={caso.videoURL}
+                  streamType="on-demand"
+                />
+              )}
             </div>
           ))}
         </Carousel>
