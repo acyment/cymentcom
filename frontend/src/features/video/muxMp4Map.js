@@ -41,4 +41,19 @@ export const MUX_MP4_MAP = {
       },
     ],
   },
+  // Agilidad Profunda
+  '01jQAtccLD74At5jA5J02gU1cDkgacdF2v9jA400HeqxGI': {
+    poster:
+      'https://image.mux.com/01jQAtccLD74At5jA5J02gU1cDkgacdF2v9jA400HeqxGI/thumbnail.jpg',
+    sources: [
+      {
+        src: 'https://stream.mux.com/01jQAtccLD74At5jA5J02gU1cDkgacdF2v9jA400HeqxGI/720p.mp4',
+        type: 'video/mp4',
+      },
+      {
+        src: 'https://stream.mux.com/01jQAtccLD74At5jA5J02gU1cDkgacdF2v9jA400HeqxGI/480p.mp4',
+        type: 'video/mp4',
+      },
+    ],
+  },
 };

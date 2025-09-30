@@ -3,6 +3,8 @@ import * as Accordion from '@radix-ui/react-accordion';
 import { AccordionHeader } from '@radix-ui/react-accordion';
 import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
 import ResilientMuxPlayer from './ResilientMuxPlayer';
+import { USE_INLINE_VIDEO } from '@/features/video/videoFlags';
+import MuxMp4Video from '@/features/video/MuxMp4Video';
 import { useAccordionScroll } from '../hooks/useAccordionScroll';
 
 const AgilidadProfunda = () => {
@@ -36,12 +38,19 @@ const AgilidadProfunda = () => {
         ref={contentRef}
         className="AccordionContent AgilidadProfundaContent NavigationBarScrollOffset"
       >
-        <ResilientMuxPlayer
-          className="VideoAgilidadProfunda"
-          playbackId="01jQAtccLD74At5jA5J02gU1cDkgacdF2v9jA400HeqxGI"
-          streamType="on-demand"
-          muted
-        />
+        {USE_INLINE_VIDEO ? (
+          <MuxMp4Video
+            className="VideoAgilidadProfunda"
+            playbackId="01jQAtccLD74At5jA5J02gU1cDkgacdF2v9jA400HeqxGI"
+          />
+        ) : (
+          <ResilientMuxPlayer
+            className="VideoAgilidadProfunda"
+            playbackId="01jQAtccLD74At5jA5J02gU1cDkgacdF2v9jA400HeqxGI"
+            streamType="on-demand"
+            muted
+          />
+        )}
       </Accordion.Content>
     </Accordion.Item>
   );
