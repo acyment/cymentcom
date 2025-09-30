@@ -37,3 +37,15 @@
   outline: $width solid $color;
   outline-offset: $offset;
 }
+
+// Keep transition declarations consistent in codebase
+@mixin transition($pairs...) {
+  transition: $pairs;
+}
+
+// Elevated shadow used by dialogs/modals (matches existing visual)
+@mixin shadow-elevated() {
+  box-shadow:
+    hsl(206 22% 7% / 35%) 0 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0 10px 20px -15px;
+}
