@@ -1,0 +1,80 @@
+@import './variables';
+@import './mixins';
+
+/* Overlay behind dialogs */
+.DialogOverlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dialog surface */
+.DialogContent {
+  background: #fff;
+  border-radius: 12px;
+  /* Scrolling happens in .DialogViewport to avoid sticky+transform issues */
+  overflow: visible;
+  box-sizing: border-box;
+  overscroll-behavior: contain;
+  @include shadow-elevated();
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  isolation: isolate; /* prevent overlay or page content blending */
+  z-index: 3001; /* ensure it sits above the overlay */
+  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dedicated scroll container inside the dialog */
+.DialogViewport {
+  /* Cap internal scroller height to keep overall dialog within viewport */
+  max-height: calc(var(--dialog-cap) - var(--dialog-header-height, 0px) - 12px);
+  overflow: auto;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
+}
+
+/* Keep primary action visible within the internal viewport */
+.DialogViewport .BotonContinuar {
+  position: sticky;
+  bottom: calc(env(safe-area-inset-bottom) + 16px);
+  z-index: 1;
+}
+
+/* Default (mobile first) */
+.DialogContent {
+  width: 95vw;
+  max-width: 95vw;
+  height: auto;
+  overflow-y: auto;
+}
+
+/* Tablets and small laptops */
+@media only screen and (min-width: 600px) and (max-width: 1023px) {
+  .DialogContent {
+    width: 75vw;
+    max-width: 75vw;
+  }
+}
+
+/* Desktops and larger screens */
+@media only screen and (min-width: 1024px) {
+  .DialogContent {
+    width: 75vw; /* wider dialog on desktop */
+    max-width: 75vw;
+  }
+}
+
+/* Larger desktops */
+@media only screen and (min-width: 1440px) {
+  .DialogContent {
+    width: 60vw; /* keep it broader on large screens too */
+    max-width: 60vw;
+  }
+}
+
+.DialogContent:focus {
+  outline: none;
+}
