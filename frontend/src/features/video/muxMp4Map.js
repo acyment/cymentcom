@@ -56,4 +56,47 @@ export const MUX_MP4_MAP = {
       },
     ],
   },
+  // Cursos (fixture IDs shown here; replace with your live public playback IDs if different)
+  f7IVc2XFKvII1yvu00pMlb8VJy1WgD6Fb3U4qAd00Y2s8: {
+    poster:
+      'https://image.mux.com/f7IVc2XFKvII1yvu00pMlb8VJy1WgD6Fb3U4qAd00Y2s8/thumbnail.jpg',
+    sources: [
+      {
+        src: 'https://stream.mux.com/f7IVc2XFKvII1yvu00pMlb8VJy1WgD6Fb3U4qAd00Y2s8/720p.mp4',
+        type: 'video/mp4',
+      },
+      {
+        src: 'https://stream.mux.com/f7IVc2XFKvII1yvu00pMlb8VJy1WgD6Fb3U4qAd00Y2s8/480p.mp4',
+        type: 'video/mp4',
+      },
+    ],
+  },
+  k4AGjXE9RrHv00wVAnw3mA8z5HPrQQG8zGnv4wIywNDk: {
+    poster:
+      'https://image.mux.com/k4AGjXE9RrHv00wVAnw3mA8z5HPrQQG8zGnv4wIywNDk/thumbnail.jpg',
+    sources: [
+      {
+        src: 'https://stream.mux.com/k4AGjXE9RrHv00wVAnw3mA8z5HPrQQG8zGnv4wIywNDk/720p.mp4',
+        type: 'video/mp4',
+      },
+      {
+        src: 'https://stream.mux.com/k4AGjXE9RrHv00wVAnw3mA8z5HPrQQG8zGnv4wIywNDk/480p.mp4',
+        type: 'video/mp4',
+      },
+    ],
+  },
+  WkzL014mBoN7yBlZWrcgNMaWWsma6tcq9La6P64ZuM3Q: {
+    poster:
+      'https://image.mux.com/WkzL014mBoN7yBlZWrcgNMaWWsma6tcq9La6P64ZuM3Q/thumbnail.jpg',
+    sources: [
+      {
+        src: 'https://stream.mux.com/WkzL014mBoN7yBlZWrcgNMaWWsma6tcq9La6P64ZuM3Q/720p.mp4',
+        type: 'video/mp4',
+      },
+      {
+        src: 'https://stream.mux.com/WkzL014mBoN7yBlZWrcgNMaWWsma6tcq9La6P64ZuM3Q/480p.mp4',
+        type: 'video/mp4',
+      },
+    ],
+  },
 };

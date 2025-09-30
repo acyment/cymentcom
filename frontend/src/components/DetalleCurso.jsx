@@ -5,6 +5,8 @@ import HorarioCurso from './HorarioCurso';
 import FAQ from './FAQ';
 import CostoCurso from './CostoCurso';
 import ResilientMuxPlayer from './ResilientMuxPlayer';
+import { USE_INLINE_VIDEO } from '@/features/video/videoFlags';
+import MuxMp4Video from '@/features/video/MuxMp4Video';
 import parse from 'html-react-parser';
 
 const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
@@ -45,13 +47,17 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
         costoSinDescuentoUSD={tipoCurso.costo_sin_descuento_usd}
       />
       <hr className="Separador" />
-      <ResilientMuxPlayer
-        streamType="on-demand"
-        playbackId={tipoCurso.video}
-        primaryColor="#FFFFFF"
-        secondaryColor="#000000"
-        className="VideoPlayer"
-      />
+      {USE_INLINE_VIDEO ? (
+        <MuxMp4Video playbackId={tipoCurso.video} className="VideoPlayer" />
+      ) : (
+        <ResilientMuxPlayer
+          streamType="on-demand"
+          playbackId={tipoCurso.video}
+          primaryColor="#FFFFFF"
+          secondaryColor="#000000"
+          className="VideoPlayer"
+        />
+      )}
       <RoughNotation
         type="underline"
         color="#7b68ee"
