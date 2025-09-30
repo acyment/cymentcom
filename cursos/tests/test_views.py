@@ -156,6 +156,36 @@ class TestPaymentCallbacks:
         assert parsed.path == "/payment-result"
         assert qs["status"] == "approved"
 
+    def test_mp_callback_redirects_with_params_trailing_slash_domain(
+        self,
+        settings,
+    ):
+        settings.REDIRECT_DOMAIN = "http://testserver/"  # trailing slash
+        factura, alumno, curso, tipo = self._make_graph()
+        client = APIClient()
+        resp = client.get(
+            "/api/payments/mp-callback/",
+            {"status": "approved", "external_reference": str(factura.id)},
+        )
+        parsed, qs = self._parse_redirect(resp)
+        # Must not contain double slash in path
+        assert parsed.path == "/payment-result"
+
+    def test_stripe_callback_redirects_with_params_trailing_slash_domain(
+        self,
+        settings,
+    ):
+        settings.REDIRECT_DOMAIN = "http://testserver/"  # trailing slash
+        factura, alumno, curso, tipo = self._make_graph()
+        client = APIClient()
+        resp = client.get(
+            "/api/payments/stripe-callback/",
+            {"status": "approved", "id_factura": str(factura.id)},
+        )
+        parsed, qs = self._parse_redirect(resp)
+        # Must not contain double slash in path
+        assert parsed.path == "/payment-result"
+
     def test_missing_status_returns_400(self):
         client = APIClient()
         resp = client.get("/api/payments/stripe-callback/", {"id_factura": "1"})

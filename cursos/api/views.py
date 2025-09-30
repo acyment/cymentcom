@@ -465,12 +465,12 @@ class BasePaymentCallback(APIView, ABC):
                 "monto": inscripcion.monto,
             }
             try:
+                # Build redirect robustly regardless of trailing slash in REDIRECT_DOMAIN
+                base = getattr(settings, "REDIRECT_DOMAIN", "").rstrip("/")
                 query_string = urlencode(
                     params, quote_via=quote
                 )  # For compatibility when unencoding on the frontend
-                redirect_url = (
-                    f"{settings.REDIRECT_DOMAIN}/payment-result?{query_string}"
-                )
+                redirect_url = f"{base}/payment-result?{query_string}"
             except Exception as e:
                 # Catch potential errors during URL building (e.g., missing settings)
                 return self._build_error_response(
