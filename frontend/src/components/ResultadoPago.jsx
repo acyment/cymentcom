@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useSearch, useNavigate } from '@tanstack/react-router';
 import HeaderDialogo from './HeaderDialogo';
 import * as Dialog from '@radix-ui/react-dialog';
+import { CheckoutPresenter } from '@/features/checkout/CheckoutPresenter';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { BP_MD } from '@/styles/breakpoints';
 
 const ResultadoPago = () => {
   console.log('ResultadoPago component mounting...');
@@ -86,6 +89,117 @@ const ResultadoPago = () => {
     'Is Success:',
     isSuccess, // Use the derived variable
   );
+
+  const isMobile = useIsMobile(`(max-width: ${BP_MD}px)`);
+
+  // Mobile: present as a fullscreen page using the same shell as checkout
+  if (isMobile) {
+    return (
+      <CheckoutPresenter
+        variant="fullscreen"
+        open={true}
+        onClose={() => handleOpenChange(false)}
+        title="Resultado de pago"
+      >
+        <div className="form-container">
+          <div className={`status-header ${statusClassName}`}>
+            <img
+              src={`static/images/${isSuccess ? 'ok.svg' : 'error.svg'}`}
+              alt="Status"
+              className="status-icon"
+            />
+            <h1 className="status-title">
+              {isSuccess ? '¡Pago Exitoso!' : 'Error en el Pago'}
+            </h1>
+            <p className="status-subtitle">
+              {isSuccess
+                ? `¡Felicitaciones, ${nombre_participante}! Tu inscripción ha sido confirmada.`
+                : `Lo sentimos, ${nombre_participante}. No pudimos procesar tu pago.`}
+            </p>
+          </div>
+
+          <div className="details-box">
+            <h2 className="details-title">
+              {isSuccess ? 'Resumen de la transacción' : 'Detalles del intento'}
+            </h2>
+            <div className="details-content">
+              <p>
+                <strong>Curso:</strong> {nombre_curso} ({fecha_curso})
+              </p>
+              <p>
+                <strong>
+                  {isSuccess ? 'Monto Pagado:' : 'Monto Intentado:'}
+                </strong>{' '}
+                {monto}
+              </p>
+              {isSuccess && email_facturacion && (
+                <p>
+                  <strong>Factura:</strong> Se enviará a {email_facturacion} en
+                  breve.
+                </p>
+              )}
+              {fetchedAmount && (
+                <p>
+                  <strong>Importe confirmado:</strong> {fetchedAmount}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {isSuccess ? (
+            <div className="next-steps">
+              <h2 className="next-steps-title">Próximos pasos:</h2>
+              <ul className="next-steps-list">
+                <li>
+                  Recibirás un correo electrónico de bienvenida en breve con los
+                  detalles de acceso.
+                </li>
+                <li>
+                  Asegúrate de revisar tu bandeja de entrada (y la carpeta de
+                  spam).
+                </li>
+              </ul>
+            </div>
+          ) : (
+            <div className="action-guidance">
+              <h2 className="action-guidance-title">¿Qué puedes hacer?</h2>
+              <ul className="action-guidance-list">
+                <li>
+                  Verifica los datos de tu método de pago e inténtalo de nuevo.
+                </li>
+                <li>Considera usar un método de pago diferente.</li>
+                <li>
+                  Contacta a tu banco si crees que pueden estar bloqueando la
+                  transacción.
+                </li>
+              </ul>
+            </div>
+          )}
+
+          <div className="button-container">
+            <button
+              className="BotonFormulario BotonContinuar"
+              aria-label={isSuccess ? 'Listo' : 'Cerrar'}
+              onClick={() => handleOpenChange(false)}
+            >
+              {isSuccess ? '¡Listo!' : 'Cerrar'}
+            </button>
+          </div>
+
+          <div className="footer-help">
+            ¿Necesitas ayuda?{' '}
+            <a
+              href="#contacto"
+              className="help-link"
+              onClick={() => handleOpenChange(false)}
+            >
+              Contactanos
+            </a>
+          </div>
+        </div>
+      </CheckoutPresenter>
+    );
+  }
 
   return (
     <div className="ContenedorModal">

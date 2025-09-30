@@ -41,6 +41,10 @@ describe('PaymentResult routing', () => {
     expect(screen.queryByRole('banner')).toBeNull();
     // Confirmation UI should be visible
     expect(await screen.findByText('¡Pago Exitoso!')).toBeInTheDocument();
+    // And the fullscreen container from CheckoutPresenter should be present
+    expect(
+      await screen.findByTestId('checkout-fullscreen'),
+    ).toBeInTheDocument();
   });
 
   it('desktop: keeps site header and shows dialog with confirmation UI', async () => {
