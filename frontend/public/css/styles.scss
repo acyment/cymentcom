@@ -582,6 +582,17 @@ body {
   margin-bottom: 2vw;
   margin-top: 2vw;
 }
+
+/* Per-item overrides: left-align specific children inside .DetalleCurso */
+.DetalleCurso .SubtituloDetalleCurso,
+.DetalleCurso .ContenidoCurso {
+  align-self: flex-start;
+  width: 100%;
+}
+
+.DetalleCurso .SubtituloDetalleCurso {
+  text-align: left;
+}
 /* Buttons styles start */
 button {
   display: inline-block;
