@@ -15,7 +15,7 @@ const indexRoute = createRoute({
 });
 
 const paymentResultRoute = createRoute({
-  getParentRoute: () => indexRoute,
+  getParentRoute: () => rootRoute,
   path: 'payment-result',
   component: ResultadoPago,
   validateSearch: (search) => ({
@@ -46,7 +46,8 @@ const cursoSlugRoute = createRoute({
 });
 
 export const routeTree = rootRoute.addChildren([
-  indexRoute.addChildren([paymentResultRoute]),
+  indexRoute,
   checkoutRoute,
+  paymentResultRoute,
   cursosRoute.addChildren([cursoSlugRoute]),
 ]);
