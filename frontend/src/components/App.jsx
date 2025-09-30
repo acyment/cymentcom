@@ -24,7 +24,8 @@ function App({ children }) {
   const isFullscreenCheckout =
     isMobile &&
     (location?.pathname?.startsWith('/checkout') ||
-      location?.pathname?.startsWith('/cursos/'));
+      location?.pathname?.startsWith('/cursos/') ||
+      location?.pathname?.startsWith('/payment-result'));
 
   useEffect(() => {
     if (typeof document === 'undefined') return undefined;
