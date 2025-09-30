@@ -16,7 +16,6 @@
     "autoprefixer": "^10.4.21",
     "css-loader": "^7.1.2",
     "dotenv-webpack": "^8.1.0",
-    "hls.js": "^1.6.10",
     "jsdom": "^26.1.0",
     "media-chrome": "^4.8.0",
     "mini-css-extract-plugin": "^2.9.2",
@@ -39,7 +38,6 @@
     "webpack-merge": "^6.0.1"
   },
   "dependencies": {
-    "@mux/mux-player-react": "^3.6.0",
     "@radix-ui/colors": "^3.0.0",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-checkbox": "^1.1.5",
