@@ -80,10 +80,13 @@ const Intervenciones = () => {
   };
 
   const handleSlideChange = (nextSlide) => {
-    const muxPlayers = document.querySelectorAll('mux-player');
-    muxPlayers.forEach((player) => {
-      if (player && player.pause) {
-        player.pause();
+    // Pause any active media on slide change (mux-player or native video)
+    const mediaEls = document.querySelectorAll('.VideoCaso');
+    mediaEls.forEach((el) => {
+      if (el && typeof el.pause === 'function') {
+        try {
+          el.pause();
+        } catch {}
       }
     });
     setCurrentSlide(nextSlide);

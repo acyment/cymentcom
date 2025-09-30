@@ -1,1 +1,1 @@
-export const USE_INLINE_VIDEO = false;
+export const USE_INLINE_VIDEO = true;
