@@ -29,8 +29,9 @@ const Hero = () => {
         <section>
           <div className="HeroCopy">
             <p className="HeroText">
-              <b className="HeroTextBold">Alan</b> explica la agilidad como
-              nadie. Transmite ideas complejas en poco tiempo de manera{' '}
+              Agilidad para <b className="HeroTextBold">escépticos</b>
+              <br />
+              Menos dogma, más{' '}
               <RoughNotation
                 color="#7b68ee"
                 type="underline"
@@ -39,21 +40,20 @@ const Hero = () => {
                 iterations={8}
                 padding={[0, 5]}
               >
-                interactiva
-              </RoughNotation>
-              . Domina la oscilación entre lo filosófico y lo pragmático. Se
-              adapta sin sobresaltos a{' '}
+                resultados.
+              </RoughNotation>{' '}
+              Transforma la agilidad en cambios estructurales y resultados{' '}
               <RoughNotation
-                padding={[5, 17]}
+                padding={[3, 10]}
                 strokeWidth={2}
                 color="#7b68ee"
                 type="circle"
                 show="true"
                 animate="true"
               >
-                cualquier tipo de público
-              </RoughNotation>
-              .
+                tangibles
+              </RoughNotation>{' '}
+              para toda tu organización.
             </p>
             <div className="HeroCTARow">
               <button
