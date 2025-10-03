@@ -8,6 +8,7 @@ expect.extend(matchers);
 
 // Cleanup after each test case
 afterEach(() => {
+  vi.clearAllMocks();
   cleanup();
 });
 

@@ -31,6 +31,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './frontend/src'),
+      '@radix-ui/react-popover': resolve(
+        __dirname,
+        './frontend/src/tests/mocks/radixPopover.js',
+      ),
     },
   },
 });
