@@ -8,6 +8,11 @@
 - E2E tests run via a dedicated Playwright container; use Just recipes: `just e2e`, `just e2e-mobile`, `just e2e-ui`, `just e2e-report`.
 - Node uses pnpm with a stable store at `/app/.pnpm-store` and a shared `node_modules` volume.
 
+### Dependency Management
+
+- **Backend (Django)**: Add or update Python packages by editing `config/settings/base.py` to include the app (for example, adding `"django_jsonform"` to `THIRD_PARTY_APPS`) and updating `requirements/base.txt`. After those changes, notify the maintainer so they can rebuild the Django container and recreate its volume; agents must not run `pip install` directly in containers.
+- **Frontend (React/Node)**: Modify `package.json`/`pnpm-lock.yaml` to add dependencies, then let the maintainer rebuild the `node` container. Do not run package installs inside the running container yourself.
+
 ## Context: Legacy Code Without Tests
 
 This codebase was originally developed without TDD. Our approach:

@@ -1,9 +1,8 @@
 from django.contrib import admin
 from django.contrib import messages
-
-# Removed: from django.utils.safestring import mark_safe
-# Added:
+from django.db import models
 from django.utils.html import format_html
+from django_jsonform.widgets import JSONFormWidget
 
 from .emails import EmailSender
 from .models import Alumno
@@ -13,6 +12,66 @@ from .models import Factura
 from .models import FAQCurso
 from .models import Inscripcion
 from .models import TipoCurso
+
+COURSE_TEMARIO_SCHEMA = {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Esquema del Temario del Curso (Híbrido)",
+    "description": (
+        "Temario de 3 niveles donde la descripción de la lección es opcional."
+    ),
+    "type": "array",
+    "items": {
+        "type": "object",
+        "title": "Módulo",
+        "required": ["module_title", "summary", "topics"],
+        "properties": {
+            "module_title": {
+                "type": "string",
+                "title": "Título del Módulo",
+            },
+            "summary": {
+                "type": "string",
+                "title": "Resumen del Módulo",
+                "widget": "textarea",
+            },
+            "topics": {
+                "type": "array",
+                "title": "Temas del Módulo",
+                "items": {
+                    "type": "object",
+                    "title": "Tema",
+                    "required": ["topic_title", "lessons"],
+                    "properties": {
+                        "topic_title": {
+                            "type": "string",
+                            "title": "Título del Tema",
+                        },
+                        "lessons": {
+                            "type": "array",
+                            "title": "Lecciones",
+                            "items": {
+                                "type": "object",
+                                "title": "Lección",
+                                "required": ["title"],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "title": "Título de la Lección",
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "title": "Descripción Detallada (Opcional)",
+                                        "widget": "textarea",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
 
 
 class EmailActionMixin:
@@ -102,8 +161,22 @@ class FacturaAdmin(EmailActionMixin, admin.ModelAdmin):
     # Ensure allow_tags is not needed (it's deprecated, format_html handles it)
 
 
+@admin.register(TipoCurso)
+class TipoCursoAdmin(admin.ModelAdmin):
+    list_display = (
+        "nombre_corto",
+        "nombre_completo",
+        "orden",
+    )
+    search_fields = ("nombre_corto", "nombre_completo")
+    formfield_overrides = {
+        models.JSONField: {
+            "widget": JSONFormWidget(schema=COURSE_TEMARIO_SCHEMA),
+        },
+    }
+
+
 admin.site.register(Alumno)
 admin.site.register(Cliente)
 admin.site.register(Curso)
-admin.site.register(TipoCurso)
 admin.site.register(FAQCurso)
