@@ -21,8 +21,23 @@ class TipoCursoFactory(DjangoModelFactory):
     nombre_completo = Faker("sentence", nb_words=3)
     resumen_una_linea = Faker("sentence", nb_words=6)
     resumen = Faker("text", max_nb_chars=100)
-    contenido = Faker("text", max_nb_chars=100)
-    contenido_corto = Faker("text", max_nb_chars=50)
+    contenido = LazyAttribute(
+        lambda _: [
+            {
+                "module_title": "Módulo 1",
+                "summary": "Resumen breve",
+                "topics": [
+                    {
+                        "topic_title": "Tema Introductorio",
+                        "lessons": [
+                            {"title": "Introducción", "description": ""},
+                            {"title": "Dinámica", "description": ""},
+                        ],
+                    },
+                ],
+            },
+        ],
+    )
     video = ""
     foto = ""
     foto_tint = ""

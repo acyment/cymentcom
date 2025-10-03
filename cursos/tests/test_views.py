@@ -28,6 +28,33 @@ class TestTipoCursoAPI:
         names = [item["nombre_corto"] for item in data]
         assert names == ["A", "B"]
 
+    def test_list_tipos_de_curso_includes_json_contenido(self):
+        temario = [
+            {
+                "module_title": "Módulo 1",
+                "summary": "Resumen breve",
+                "topics": [
+                    {
+                        "topic_title": "Tema principal",
+                        "lessons": [
+                            {"title": "Intro", "description": ""},
+                            {"title": "Actividad", "description": ""},
+                        ],
+                    },
+                ],
+            },
+        ]
+        TipoCursoFactory(contenido=temario)
+
+        client = APIClient()
+        resp = client.get("/api/tipos-de-curso/")
+
+        assert resp.status_code == status.HTTP_200_OK
+        data = resp.json()
+
+        assert data[0]["contenido"] == temario
+        assert "contenido_corto" not in data[0]
+
 
 @pytest.mark.django_db
 class TestInscribirParticipanteEnCurso:
