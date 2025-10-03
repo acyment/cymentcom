@@ -9,16 +9,16 @@ import { formatCourseDateRange as fmtCourseRange } from '@/utils/courseDates';
 import CircleLoader from 'react-spinners/CircleLoader';
 import { useOpenCheckout } from '@/features/checkout/useOpenCheckout';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { loadDetalleCurso } from './loadDetalleCurso';
+import { loadCourseDetailPanel } from './loadCourseDetailPanel';
 
-const LazyDetalleCurso = lazy(() => loadDetalleCurso());
+const LazyCourseDetailPanel = lazy(() => loadCourseDetailPanel());
 
 let cachedTiposCurso = null;
 
 const Cursos = () => {
   const [tiposCurso, setTiposCurso] = useState([]);
 
-  const refDetalleCurso = useRef(null);
+  const refCourseDetailPanel = useRef(null);
   const refListaCursos = useRef(null);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [triggerScroll, setTriggerScroll] = useState(false);
@@ -95,15 +95,16 @@ const Cursos = () => {
       if (selectedCourse === '') {
         refListaCursos.current?.scrollIntoView(smooth);
       } else {
-        // DetalleCurso is lazy-loaded; wait briefly for it to mount
+        // CourseDetailPanel is lazy-loaded; wait briefly for it to mount
         let tries = 0;
-        while (!canceled && !refDetalleCurso.current && tries < 20) {
+        while (!canceled && !refCourseDetailPanel.current && tries < 20) {
           await new Promise((r) => setTimeout(r, 50));
           tries += 1;
         }
         // Fallback: query by class if ref hasn't attached yet
         const el =
-          refDetalleCurso.current || document.querySelector('.DetalleCurso');
+          refCourseDetailPanel.current ||
+          document.querySelector('.CourseDetailPanel');
         el?.scrollIntoView(smooth);
       }
       if (!canceled) setTriggerScroll(false);
@@ -148,7 +149,7 @@ const Cursos = () => {
               padding: 40,
             }}
           >
-            <CircleLoader color="#7854fa" size={60} />
+            <CircleLoader color="#ffffff" size={60} />
             <p className="LoaderLegend" aria-live="polite">
               <span className="LoaderLegendAccessible">Cargando...</span>
               Cargando
@@ -249,7 +250,7 @@ const Cursos = () => {
               padding: '40px',
             }}
           >
-            <CircleLoader color="#7854fa" size={60} />
+            <CircleLoader color="#ffffff" size={60} />
             <p className="LoaderLegend" aria-live="polite">
               <span className="LoaderLegendAccessible">Cargando...</span>
               Cargando
@@ -302,8 +303,8 @@ const Cursos = () => {
       </div>
       {selectedCourse && !loading && (
         <Suspense fallback={<div data-testid="detalle-curso-loading" />}>
-          <LazyDetalleCurso
-            ref={refDetalleCurso}
+          <LazyCourseDetailPanel
+            ref={refCourseDetailPanel}
             tipoCurso={tiposCurso[selectedCourse]}
           />
         </Suspense>

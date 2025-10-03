@@ -10,8 +10,18 @@ const buildCoursePayload = () => ({
   resumen: 'Descripción breve del curso',
   foto: 'curso.jpg',
   foto_tint: 'curso_tint.jpg',
-  contenido: '<ul><li>Módulo 1</li></ul>',
-  contenido_corto: '<ul><li>Módulo 1</li></ul>',
+  contenido: [
+    {
+      module_title: 'Módulo 1',
+      summary: 'Resumen breve',
+      topics: [
+        {
+          topic_title: 'Tema Introductorio',
+          lessons: [{ title: 'Introducción', description: '' }],
+        },
+      ],
+    },
+  ],
   faq_entries: [
     {
       pregunta: '¿Incluye certificado?',
@@ -42,7 +52,7 @@ const createDeferred = () => {
   return { promise, resolve };
 };
 
-const baseMocks = ({ isMobile, loadDetalle }) => {
+const baseMocks = ({ isMobile, loadCourseDetailPanel }) => {
   vi.doMock('axios', () => ({
     default: {
       get: vi.fn(() => Promise.resolve({ data: [buildCoursePayload()] })),
@@ -65,9 +75,9 @@ const baseMocks = ({ isMobile, loadDetalle }) => {
     __esModule: true,
     default: () => <div data-testid="mock-mux-player" />,
   }));
-  if (loadDetalle) {
-    vi.doMock('../loadDetalleCurso', () => ({
-      loadDetalleCurso: loadDetalle,
+  if (loadCourseDetailPanel) {
+    vi.doMock('../loadCourseDetailPanel', () => ({
+      loadCourseDetailPanel,
     }));
   }
 };
@@ -78,14 +88,14 @@ afterEach(() => {
 });
 
 describe('Cursos lazy loading', () => {
-  it('loads DetalleCurso on demand for desktop users', async () => {
+  it('loads CourseDetailPanel on demand for desktop users', async () => {
     const deferred = createDeferred();
     const loader = vi.fn(() => deferred.promise);
     const mockDetalle = React.forwardRef(({ tipoCurso, ...rest }, ref) => (
       <div data-testid="detalle-curso" ref={ref} {...rest} />
     ));
 
-    baseMocks({ isMobile: false, loadDetalle: loader });
+    baseMocks({ isMobile: false, loadCourseDetailPanel: loader });
 
     const Cursos = (await import('../Cursos.jsx')).default;
 
@@ -113,11 +123,11 @@ describe('Cursos lazy loading', () => {
     });
   });
 
-  it('does not load DetalleCurso for mobile drawer flow', async () => {
+  it('does not load CourseDetailPanel for mobile drawer flow', async () => {
     const deferred = createDeferred();
     const loader = vi.fn(() => deferred.promise);
 
-    baseMocks({ isMobile: true, loadDetalle: loader });
+    baseMocks({ isMobile: true, loadCourseDetailPanel: loader });
 
     const Cursos = (await import('../Cursos.jsx')).default;
 

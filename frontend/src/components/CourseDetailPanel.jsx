@@ -1,15 +1,14 @@
-import React, { useEffect, useState, forwardRef } from 'react';
-import { RoughNotation, RoughNotationGroup } from 'react-rough-notation';
-import EllipsisNestedList from './EllipsisNestedList';
+import React, { forwardRef } from 'react';
+import { RoughNotation } from 'react-rough-notation';
+import CourseContentsAccordion from './CourseContentsAccordion';
 import HorarioCurso from './HorarioCurso';
 import FAQ from './FAQ';
 import CostoCurso from './CostoCurso';
 import ResilientMuxPlayer from './ResilientMuxPlayer';
 import { USE_INLINE_VIDEO } from '@/features/video/videoFlags';
 import MuxMp4Video from '@/features/video/MuxMp4Video';
-import parse from 'html-react-parser';
 
-const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
+const CourseDetailPanel = forwardRef(({ tipoCurso }, ref) => {
   function hayProximasFechas() {
     return tipoCurso.upcoming_courses.length > 0;
   }
@@ -45,8 +44,11 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
         costoARS={tipoCurso.costo_ars}
         costoSinDescuentoARS={tipoCurso.costo_sin_descuento_ars}
         costoSinDescuentoUSD={tipoCurso.costo_sin_descuento_usd}
+        proximoCurso={tipoCurso.upcoming_courses?.[0]}
+        nombreCorto={tipoCurso.nombre_corto}
       />
       <hr className="Separador" />
+      <p className="SubtituloDetalleCurso">Conoce a tu instructor</p>
       {USE_INLINE_VIDEO ? (
         <MuxMp4Video playbackId={tipoCurso.video} className="VideoPlayer" />
       ) : (
@@ -67,18 +69,18 @@ const DetalleCurso = forwardRef(({ tipoCurso }, ref) => {
         <p className="TituloDetalleCurso">{tipoCurso.nombre_completo}</p>
       </RoughNotation>
       <p className="ResumenDetalleCurso">{tipoCurso.resumen}</p>
-      <p className="SubtituloDetalleCurso">Contenidos</p>
-      <EllipsisNestedList
-        fullContents={parse(tipoCurso.contenido)}
-        truncatedContents={parse(tipoCurso.contenido_corto)}
-        maxItems={5}
-      ></EllipsisNestedList>
+      <p className="SubtituloDetalleCurso">¿Qué vas a aprender?</p>
+      {Array.isArray(tipoCurso.contenido) && tipoCurso.contenido.length ? (
+        <CourseContentsAccordion modules={tipoCurso.contenido} />
+      ) : (
+        <p>Pronto publicaremos el temario.</p>
+      )}
       <hr className="Separador" />
 
-      <p className="SubtituloDetalleCurso">FAQ</p>
+      <p className="SubtituloDetalleCurso">Preguntas frecuentes</p>
       <FAQ faqEntries={tipoCurso.faq_entries} />
     </div>
   );
 });
 
-export default DetalleCurso;
+export default CourseDetailPanel;

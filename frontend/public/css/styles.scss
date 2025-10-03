@@ -554,7 +554,7 @@ body {
   margin-bottom: 5vh;
 }
 
-.DetalleCurso {
+.CourseDetailPanel {
   background-color: white;
   padding-left: 6vw;
   padding-right: 6vw;
@@ -563,7 +563,7 @@ body {
   align-items: center;
 }
 
-.TituloDetalleCurso {
+.TituloCourseDetailPanel {
   font-size: 2vw;
   font-weight: 500;
   margin-bottom: -0.5vh;
@@ -571,14 +571,14 @@ body {
   text-align: left;
 }
 
-.ResumenDetalleCurso {
+.ResumenCourseDetailPanel {
   font-weight: 100;
   font-size: 1.2vw;
   padding-right: 43vw;
   margin-top: 2vh;
   margin-bottom: 2vh;
 }
-.SubtituloDetalleCurso {
+.SubtituloCourseDetailPanel {
   color: $azul-violaceo;
   font-size: 1.5vw;
   font-weight: 600;
@@ -586,14 +586,14 @@ body {
   margin-top: 2vw;
 }
 
-/* Per-item overrides: left-align specific children inside .DetalleCurso */
-.DetalleCurso .SubtituloDetalleCurso,
-.DetalleCurso .ContenidoCurso {
+/* Per-item overrides: left-align specific children inside .CourseDetailPanel */
+.CourseDetailPanel .SubtituloCourseDetailPanel,
+.CourseDetailPanel .ContenidoCurso {
   align-self: flex-start;
   width: 100%;
 }
 
-.DetalleCurso .SubtituloDetalleCurso {
+.CourseDetailPanel .SubtituloCourseDetailPanel {
   text-align: left;
 }
 /* Buttons styles start */
