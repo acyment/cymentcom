@@ -51,12 +51,30 @@ import { routeTree } from '@/routes/routes';
 import { __clearCourseDetailCache } from '@/components/CourseDetail';
 import { __clearCursosCache } from '@/components/Cursos';
 
+beforeAll(() => {
+  window.scrollTo = vi.fn();
+});
+
 const buildCourse = () => ({
   nombre_corto: 'TM',
   nombre_completo: 'Test Masterclass',
   resumen_una_linea: 'Resumen corto',
   resumen: 'Descripción breve del curso',
-  contenido: '<ul><li>Módulo 1: Fundamentos</li></ul>',
+  contenido: [
+    {
+      module_title: 'Módulo 1',
+      summary: 'Resumen breve',
+      topics: [
+        {
+          topic_title: 'Tema Introductorio',
+          lessons: [
+            { title: 'Introducción', description: '' },
+            { title: 'Dinámica', description: 'Práctica guiada' },
+          ],
+        },
+      ],
+    },
+  ],
   faq_entries: [{ pregunta: '¿Incluye certificado?', respuesta: 'Sí.' }],
   costo_usd: { amount: '250.00', currency: 'USD' },
   costo_ars: { amount: '200000.00', currency: 'ARS' },
@@ -437,15 +455,37 @@ describe('CourseDetail route', () => {
     expect(screen.getByText('Sí.')).toBeInTheDocument();
   });
 
-  it('collapses contenidos by default and reveals the full list when expanding', async () => {
+  it('renders course modules inside an accordion sourced from JSON contenido', async () => {
     axios.get.mockImplementation((url) => {
       if (/\/api\/tipos-de-curso\/TM/.test(url)) {
         return Promise.resolve({
           data: {
             ...buildCourse(),
-            contenido:
-              '<ul><li>Módulo 1</li><li>Módulo 2</li><li>Módulo 3</li></ul>',
-            contenido_corto: '<ul><li>Módulo 1</li></ul>',
+            contenido: [
+              {
+                module_title: 'Módulo 1',
+                summary: 'Resumen breve',
+                topics: [
+                  {
+                    topic_title: 'Tema Introductorio',
+                    lessons: [
+                      { title: 'Introducción', description: '' },
+                      { title: 'Dinámica', description: '30 minutos' },
+                    ],
+                  },
+                ],
+              },
+              {
+                module_title: 'Módulo 2',
+                summary: '',
+                topics: [
+                  {
+                    topic_title: 'Tema Avanzado',
+                    lessons: [{ title: 'Profundización', description: '' }],
+                  },
+                ],
+              },
+            ],
           },
         });
       }
@@ -463,12 +503,34 @@ describe('CourseDetail route', () => {
     });
     await userEvent.click(more);
 
-    await screen.findByRole('heading', { name: /contenidos/i, level: 2 });
-    expect(screen.queryByText(/módulo 3/i)).not.toBeInTheDocument();
+    const accordion = await screen.findByTestId('CourseContentsAccordion');
+    expect(
+      within(accordion).getByRole('button', { name: /módulo 1/i }),
+    ).toBeInTheDocument();
 
-    const revealButton = await screen.findByText(/ver más/i);
-    await userEvent.click(revealButton);
-    expect(screen.getByText(/módulo 3/i)).toBeInTheDocument();
+    const moduleTrigger = within(accordion).getByRole('button', {
+      name: /módulo 1/i,
+    });
+    await userEvent.click(moduleTrigger);
+
+    const modulePanel = within(accordion).getByTestId('CourseContentsModule-0');
+    expect(
+      within(modulePanel).getByText(/tema introductorio/i),
+    ).toBeInTheDocument();
+    expect(within(modulePanel).getByText(/introducción/i)).toBeInTheDocument();
+
+    const infoButton = within(modulePanel).getByRole('button', {
+      name: /ver descripción de dinámica/i,
+    });
+
+    await userEvent.hover(infoButton);
+    expect(await screen.findByText(/30 minutos/i)).toBeInTheDocument();
+
+    expect(
+      within(modulePanel).queryByRole('button', {
+        name: /ver descripción de introducción/i,
+      }),
+    ).toBeNull();
   });
 
   it('uses scrollIntoView for section navigation', async () => {

@@ -88,9 +88,28 @@ const buildCoursePayload = () => ({
   resumen: 'Descripción breve del curso',
   foto: 'curso.jpg',
   foto_tint: 'curso_tint.jpg',
-  contenido:
-    '<ul><li>Módulo 1: Fundamentos</li><li>Módulo 2: Práctica</li></ul>',
-  contenido_corto: '<ul><li>Módulo 1: Fundamentos</li></ul>',
+  contenido: [
+    {
+      module_title: 'Módulo 1',
+      summary: 'Resumen breve',
+      topics: [
+        {
+          topic_title: 'Fundamentos',
+          lessons: [{ title: 'Fundamentos', description: '' }],
+        },
+      ],
+    },
+    {
+      module_title: 'Módulo 2',
+      summary: '',
+      topics: [
+        {
+          topic_title: 'Práctica',
+          lessons: [{ title: 'Práctica', description: '' }],
+        },
+      ],
+    },
+  ],
   faq_entries: [
     {
       pregunta: '¿Incluye certificado?',
@@ -142,9 +161,10 @@ describe('Cursos desktop details', () => {
     expect(
       screen.getByText('Descripción breve del curso', { exact: false }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText('Módulo 1: Fundamentos', { exact: false }),
-    ).toBeInTheDocument();
+    const moduleTrigger = screen.getByRole('button', { name: /módulo 1/i });
+    expect(moduleTrigger).toBeInTheDocument();
+    await userEvent.click(moduleTrigger);
+    expect(screen.getAllByText(/fundamentos/i)[0]).toBeInTheDocument();
     expect(screen.getByText('¿Incluye certificado?')).toBeInTheDocument();
   });
 

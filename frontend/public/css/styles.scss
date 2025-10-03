@@ -580,7 +580,7 @@ body {
 }
 .SubtituloCourseDetailPanel {
   color: $azul-violaceo;
-  font-size: 1.5vw;
+  font-size: 1.9vw;
   font-weight: 600;
   margin-bottom: 2vw;
   margin-top: 2vw;
@@ -2401,4 +2401,139 @@ select,
   .DosBotonesFormulario .BotonFormulario {
     width: 100% !important;
   }
+}
+
+.CourseContentsAccordion {
+  width: 100%;
+  align-self: flex-start;
+  border: 1px solid rgba(120, 84, 250, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.CourseContentsAccordionItem + .CourseContentsAccordionItem {
+  border-top: 1px solid rgba(120, 84, 250, 0.2);
+}
+
+.CourseContentsAccordionHeader {
+  margin: 0;
+}
+
+.CourseContentsAccordionTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 18px 24px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-align: left;
+  background-color: #f7f7fb;
+  border: none;
+  cursor: pointer;
+  gap: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.CourseContentsAccordionTrigger:hover {
+  background-color: #efeff8;
+}
+
+.CourseContentsAccordionTrigger:focus-visible {
+  outline: 2px solid #7854fa;
+  outline-offset: 2px;
+}
+
+.CourseContentsAccordionChevron {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.CourseContentsAccordionTrigger[data-state='open']
+  .CourseContentsAccordionChevron {
+  transform: rotate(180deg);
+}
+
+.CourseContentsAccordionContent {
+  padding: 0 24px 24px;
+}
+
+.CourseContentsSummary {
+  font-style: italic;
+  color: #49495f;
+  margin: 16px 0 12px;
+}
+
+.CourseContentsTopic {
+  margin-top: 12px;
+}
+
+.CourseContentsTopicTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: #49495f;
+}
+
+.CourseContentsLessons {
+  list-style: none;
+  padding-left: 1.25rem;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.CourseContentsLesson {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.CourseContentsLessonTitle {
+  font-weight: 600;
+}
+
+.CourseContentsLessonTitle--duplicate {
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.CourseContentsLessonInfoTrigger {
+  appearance: none;
+  background: none;
+  border: none;
+  color: #7854fa;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  margin-left: 0.5rem;
+}
+
+.CourseContentsLessonInfoTrigger:focus-visible {
+  outline: 2px solid #7854fa;
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+
+.CourseContentsLessonInfoIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.CourseContentsLessonInfoContent {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(17, 17, 17, 0.14);
+  padding: 12px 16px;
+  max-width: 260px;
+  color: #2b2b2b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.CourseContentsLessonInfoArrow {
+  fill: #ffffff;
 }

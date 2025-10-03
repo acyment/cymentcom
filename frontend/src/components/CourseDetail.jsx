@@ -8,14 +8,13 @@ import React, {
 import axios from 'axios';
 import { Link, useParams, useRouterState } from '@tanstack/react-router';
 import * as Accordion from '@radix-ui/react-accordion';
-import parse from 'html-react-parser';
 import formatDate from 'intl-dateformat';
 import CircleLoader from 'react-spinners/CircleLoader';
 import ArrowLeftIcon from 'lucide-react/dist/esm/icons/arrow-left.js';
 
 import { adjustTimeZone, calculateTimeDifference } from '@/utils/courseTime';
 import { useOpenCheckout } from '@/features/checkout/useOpenCheckout';
-import EllipsisNestedList from './EllipsisNestedList';
+import CourseContentsAccordion from './CourseContentsAccordion';
 
 const courseDetailCache = new Map();
 
@@ -316,16 +315,14 @@ export default function CourseDetail() {
       upcomingCourse.hora_inicio,
       upcomingCourse.hora_fin,
     );
-    return `${startDay} a ${endDay} en ${upcomingCourse.cantidad_dias} sesiones diarias de ${formatHours(dailyHours)} hs cada una`;
+    return `${startDay} a ${endDay} en ${
+      upcomingCourse.cantidad_dias
+    } sesiones diarias de ${formatHours(dailyHours)} hs cada una`;
   }, [upcomingCourse]);
 
-  const fullContents = useMemo(
-    () => (course?.contenido ? parse(course.contenido) : null),
+  const courseModules = useMemo(
+    () => (Array.isArray(course?.contenido) ? course.contenido : []),
     [course?.contenido],
-  );
-  const truncatedContents = useMemo(
-    () => (course?.contenido_corto ? parse(course.contenido_corto) : null),
-    [course?.contenido_corto],
   );
 
   if (status === 'loading') {
@@ -432,19 +429,9 @@ export default function CourseDetail() {
       </section>
 
       <section className="CourseDetailSection" id="contenidos">
-        <h2>Contenidos</h2>
-        {course.contenido ? (
-          truncatedContents ? (
-            <EllipsisNestedList
-              fullContents={fullContents}
-              truncatedContents={truncatedContents}
-              maxItems={5}
-              seeMoreText="Ver más"
-              seeLessText="Ver menos"
-            />
-          ) : (
-            <div>{fullContents}</div>
-          )
+        <h2>¿Qué Vas a Dominar?</h2>
+        {courseModules.length ? (
+          <CourseContentsAccordion modules={courseModules} />
         ) : (
           <p>Pronto publicaremos el temario.</p>
         )}
