@@ -249,6 +249,9 @@ SPECTACULAR_SETTINGS["SERVERS"] = [
 WEBHOOKS_DOMAIN = "https://cyment.com/"
 REDIRECT_DOMAIN = "https://cyment.com/"
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://cyment.com",
-]
+CSRF_TRUSTED_ORIGINS = env.list(
+    "CSRF_TRUSTED_ORIGINS",
+    default=[
+        "https://cyment.com",
+    ],
+)
