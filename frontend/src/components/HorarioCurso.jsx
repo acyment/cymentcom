@@ -106,7 +106,7 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
           </button>
         )}
       </div>
-      <p className="ResumenDetalleCurso">
+      <p className="ResumenCourseDetailPanel">
         {proximoCurso ? (
           <>
             {capitalizeFirstLetter(

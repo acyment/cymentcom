@@ -1,12 +1,37 @@
 import React from 'react';
+import { usePostHog } from 'posthog-js/react';
 import { formatPrice } from '../utils/formatPrice';
+import { useOpenCheckout } from '@/features/checkout/useOpenCheckout';
 
 const CostoCurso = ({
   costoUSD,
   costoARS,
   costoSinDescuentoARS,
   costoSinDescuentoUSD,
+  proximoCurso,
+  nombreCorto,
 }) => {
+  const openCheckout = useOpenCheckout();
+  const posthog = usePostHog();
+
+  const handlePrimaryClick = () => {
+    if (proximoCurso) {
+      posthog?.capture?.('Boton inscripcion ' + proximoCurso.id);
+      openCheckout({
+        idCurso: proximoCurso.id,
+        nombreCorto,
+        costoUSD,
+        costoARS,
+      });
+    } else {
+      document
+        .getElementById('contacto')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const primaryLabel = proximoCurso ? 'Inscribirme' : 'Contacto';
+
   return (
     <div className="ContenedorPagos">
       <div className="TarjetaPago">
@@ -30,15 +55,8 @@ const CostoCurso = ({
             <li>Pagá con tarjeta crédito, débito o dinero en cuenta</li>
             <li>Escribinos si quieres hacer transferencia bancaria</li>
           </ul>
-          <button
-            onClick={() =>
-              document
-                .getElementById('calendario-curso')
-                ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            }
-            className="BotonPago"
-          >
-            Calendario
+          <button onClick={handlePrimaryClick} className="BotonPago">
+            {primaryLabel}
           </button>
           <p className="Nota">
             NOTA: Aplica exclusivamente si resides actualmente en Argentina,
@@ -68,15 +86,8 @@ const CostoCurso = ({
             <li>Válido solamente para pagos fuera de Argentina</li>
             <li>Puedes pagar con cualquier tarjeta de crédito</li>
           </ul>
-          <button
-            onClick={() =>
-              document
-                .getElementById('calendario-curso')
-                ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            }
-            className="BotonPago"
-          >
-            Calendario
+          <button onClick={handlePrimaryClick} className="BotonPago">
+            {primaryLabel}
           </button>
           <p className="Nota">
             NOTA: Aplica si no resides actualmente en Argentina y cuentas con
