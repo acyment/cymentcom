@@ -1,10 +1,46 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export function useScrollSpy(ids = [], options = {}) {
   const { offset = 80, holdMs = 350 } = options;
   const [activeId, _setActiveId] = useState(ids[0] || null);
   const holdActive = useRef(false);
   const releaseTimer = useRef(null);
+  const idsKey = Array.isArray(ids) ? ids.join(',') : '';
+
+  const evaluateActive = useCallback(() => {
+    const idsArray = Array.isArray(ids) ? ids : [];
+    if (!idsArray.length) {
+      _setActiveId(null);
+      return;
+    }
+
+    const scrollY = window.scrollY || 0;
+    const scrollPos = scrollY + offset;
+    let current = idsArray[0] || null;
+
+    if (scrollY > 0) {
+      for (const id of idsArray) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const elTop = el.offsetTop;
+        if (elTop <= scrollPos) {
+          current = id;
+        } else {
+          break;
+        }
+      }
+    }
+
+    const doc = document.documentElement;
+    const atBottom =
+      window.scrollY + window.innerHeight >= doc.scrollHeight - 2;
+    const scrolled = window.scrollY > 10;
+    if (scrolled && atBottom && idsArray.length) {
+      current = idsArray[idsArray.length - 1];
+    }
+
+    _setActiveId(current);
+  }, [idsKey, offset]);
 
   const setActiveId = (id, opts = {}) => {
     _setActiveId(id);
@@ -13,7 +49,7 @@ export function useScrollSpy(ids = [], options = {}) {
       if (releaseTimer.current) clearTimeout(releaseTimer.current);
       releaseTimer.current = setTimeout(() => {
         holdActive.current = false;
-        handler();
+        evaluateActive();
       }, holdMs);
     }
   };
@@ -28,29 +64,7 @@ export function useScrollSpy(ids = [], options = {}) {
         }, holdMs);
         return;
       }
-      const scrollY = window.scrollY || 0;
-      const scrollPos = scrollY + offset;
-      let current = ids[0] || null;
-
-      if (scrollY > 0) {
-        for (const id of ids) {
-          const el = document.getElementById(id);
-          if (!el) continue;
-          const elTop = el.offsetTop;
-          if (elTop <= scrollPos) {
-            current = id;
-          } else {
-            break;
-          }
-        }
-      }
-      // If at (or near) the bottom and the user actually scrolled, force last section
-      const doc = document.documentElement;
-      const atBottom =
-        window.scrollY + window.innerHeight >= doc.scrollHeight - 2;
-      const scrolled = window.scrollY > 10;
-      if (scrolled && atBottom && ids.length) current = ids[ids.length - 1];
-      _setActiveId(current);
+      evaluateActive();
     };
 
     handler();
@@ -64,7 +78,7 @@ export function useScrollSpy(ids = [], options = {}) {
       if (releaseTimer.current) clearTimeout(releaseTimer.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ids.join(','), offset]);
+  }, [evaluateActive, holdMs]);
 
   return [activeId, setActiveId];
 }

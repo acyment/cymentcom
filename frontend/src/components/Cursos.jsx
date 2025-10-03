@@ -138,17 +138,7 @@ const Cursos = () => {
         ref={refListaCursos}
       >
         {loading ? (
-          <div
-            className="LoaderContainer"
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
-              gap: '12px',
-              padding: 40,
-            }}
-          >
+          <div className="LoaderContainer">
             <CircleLoader color="#ffffff" size={60} />
             <p className="LoaderLegend" aria-live="polite">
               <span className="LoaderLegendAccessible">Cargando...</span>
@@ -239,17 +229,7 @@ const Cursos = () => {
     >
       <div className="CursosHeader">
         {loading ? (
-          <div
-            className="LoaderContainer"
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
-              gap: '12px',
-              padding: '40px',
-            }}
-          >
+          <div className="LoaderContainer">
             <CircleLoader color="#ffffff" size={60} />
             <p className="LoaderLegend" aria-live="polite">
               <span className="LoaderLegendAccessible">Cargando...</span>

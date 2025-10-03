@@ -328,18 +328,8 @@ export default function CourseDetail() {
   if (status === 'loading') {
     return (
       <main className="CourseDetailPage">
-        <div
-          className="LoaderContainer"
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'column',
-            gap: '12px',
-            padding: 40,
-          }}
-        >
-          <CircleLoader color="#7854fa" size={60} />
+        <div className="LoaderContainer">
+          <CircleLoader color="#ffffff" size={60} />
           <p className="LoaderLegend" aria-live="polite">
             <span className="LoaderLegendAccessible">Cargando...</span>
             Cargando

@@ -843,6 +843,16 @@ ul {
   white-space: nowrap;
   width: 1px;
 }
+.LoaderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  padding: 40px;
+  width: 100%;
+  min-height: 220px;
+}
 
 @keyframes loaderLegendPulse {
   0%,
