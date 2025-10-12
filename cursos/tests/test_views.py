@@ -1,8 +1,10 @@
 import datetime
+from datetime import timedelta
 from urllib.parse import parse_qs
 from urllib.parse import urlparse
 
 import pytest
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient
 
@@ -54,6 +56,23 @@ class TestTipoCursoAPI:
 
         assert data[0]["contenido"] == temario
         assert "contenido_corto" not in data[0]
+
+
+@pytest.mark.django_db
+def test_tipo_curso_detail_returns_course_data(client):
+    tipo = TipoCursoFactory(nombre_corto="CSM", orden=1)
+    curso = CursoFactory(
+        tipo=tipo,
+        fecha=timezone.now().date() + timedelta(days=10),
+    )
+
+    response = client.get(f"/api/tipos-de-curso/{tipo.nombre_corto}/")
+
+    assert response.status_code == status.HTTP_200_OK
+
+    payload = response.json()
+    assert payload["nombre_corto"] == "CSM"
+    assert payload["upcoming_courses"][0]["id"] == curso.id
 
 
 @pytest.mark.django_db

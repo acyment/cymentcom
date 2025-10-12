@@ -59,6 +59,15 @@ class TipoCursoList(generics.ListAPIView):
     serializer_class = TipoCursoSerializer
 
 
+class TipoCursoDetail(generics.RetrieveAPIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+    queryset = TipoCurso.objects.all()
+    serializer_class = TipoCursoSerializer
+    lookup_field = "nombre_corto"
+    lookup_url_kwarg = "slug"
+
+
 class InscribirParticipanteEnCurso(APIView):
     # Disable authentication
     authentication_classes = []

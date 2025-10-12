@@ -10,6 +10,7 @@ from cursos.api.views import MPPaymentCallback
 from cursos.api.views import MPPaymentWebhookView
 from cursos.api.views import StripePaymentCallback
 from cursos.api.views import StripePaymentWebhookView
+from cursos.api.views import TipoCursoDetail
 from cursos.api.views import TipoCursoList
 from cyment_com.users.api.views import UserViewSet
 
@@ -50,6 +51,11 @@ urlpatterns += [
         r"^tipos-de-curso/?$",
         TipoCursoList.as_view(),
         name="tipo_curso_list",
+    ),
+    re_path(
+        r"^tipos-de-curso/(?P<slug>[^/]+)/?$",
+        TipoCursoDetail.as_view(),
+        name="tipo_curso_detail",
     ),
     re_path(
         r"^payments/mp-callback/?$",

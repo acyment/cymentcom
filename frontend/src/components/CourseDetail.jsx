@@ -85,7 +85,7 @@ function useCourseDetail(slug, initialCourse) {
     setError(null);
 
     axios
-      .get(`/api/tipos-de-curso/${slug}`)
+      .get(`/api/tipos-de-curso/${slug}/`)
       .then((res) => {
         if (!isMounted) return;
         const detailedCourse = seedDetailed(res.data, true);
