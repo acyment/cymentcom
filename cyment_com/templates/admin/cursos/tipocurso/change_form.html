@@ -1,0 +1,15 @@
+{% extends "admin/change_form.html" %}
+
+{% load i18n %}
+
+{% block content %}
+  <div class="submit-row json-toggle">
+    <a class="button" href="{{ json_toggle_url }}">{{ json_toggle_label }}</a>
+    {% if is_raw_json_view %}
+      <span class="json-toggle-hint">{% trans "Estás editando directamente el JSON." %}</span>
+    {% else %}
+      <span class="json-toggle-hint">{% trans "Estás usando el editor estructurado." %}</span>
+    {% endif %}
+  </div>
+  {{ block.super }}
+{% endblock content %}

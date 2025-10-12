@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib import messages
 from django.db import models
 from django.utils.html import format_html
+from django_json_widget.widgets import JSONEditorWidget
 from django_jsonform.widgets import JSONFormWidget
 
 from .emails import EmailSender
@@ -174,6 +175,52 @@ class TipoCursoAdmin(admin.ModelAdmin):
             "widget": JSONFormWidget(schema=COURSE_TEMARIO_SCHEMA),
         },
     }
+    change_form_template = "admin/cursos/tipocurso/change_form.html"
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        contenido_field = form.base_fields.get("contenido")
+        if not contenido_field:
+            return form
+
+        if request.GET.get("json_view") == "raw":
+            contenido_field.widget = JSONEditorWidget()
+        else:
+            contenido_field.widget = JSONFormWidget(schema=COURSE_TEMARIO_SCHEMA)
+
+        return form
+
+    def changeform_view(self, request, object_id=None, form_url="", extra_context=None):
+        extra_context = extra_context or {}
+        is_raw_view = request.GET.get("json_view") == "raw"
+
+        params = request.GET.copy()
+        if is_raw_view:
+            params.pop("json_view", None)
+            toggle_label = "Volver al editor estructurado"
+        else:
+            params["json_view"] = "raw"
+            toggle_label = "Editar JSON crudo"
+
+        toggle_query = params.urlencode()
+        toggle_url = request.path
+        if toggle_query:
+            toggle_url = f"{toggle_url}?{toggle_query}"
+
+        extra_context.update(
+            {
+                "is_raw_json_view": is_raw_view,
+                "json_toggle_url": toggle_url,
+                "json_toggle_label": toggle_label,
+            },
+        )
+
+        return super().changeform_view(
+            request,
+            object_id=object_id,
+            form_url=form_url,
+            extra_context=extra_context,
+        )
 
 
 admin.site.register(Alumno)

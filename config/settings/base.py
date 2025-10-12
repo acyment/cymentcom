@@ -89,6 +89,7 @@ THIRD_PARTY_APPS = [
     "djmoney",
     "django_afip",
     "django_jsonform",
+    "django_json_widget",
 ]
 
 LOCAL_APPS = [
