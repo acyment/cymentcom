@@ -9,43 +9,32 @@
       "resumen": "Introducción a la agilidad más profunda. Reflexión intensa sobre el mundo del trabajo. Catarata de trucos sobre el rol del ScrumMaster. Mucho más que un simple curso.",
       "contenido": [
         {
-          "module_title": "Filosofía de la agilidad",
-          "summary": "",
           "topics": [
             {
-              "topic_title": "Complejidad, el por qué de la agilidad",
               "lessons": [
                 {
-                  "title": "Mapa de la complejidad",
-                  "description": ""
-                },
-                {
-                  "title": "Complicado no es lo mismo que complejo",
-                  "description": ""
-                },
-                {
-                  "title": "La niebla y el sol, otra analogía",
-                  "description": ""
+                  "title": "El Mapa de la complejidad",
+                  "description": "Aprenderás a distinguir entre distintos niveles de complejidad del entorno mediante una metáfora intuitiva y memorable."
                 },
                 {
                   "title": "Predictibilidad versus aprendizaje",
-                  "description": ""
+                  "description": "Tu empresa mide el éxito basándose en la predictibilidad, ¿verdad? Pero, ¿qué ocurre cuando el entorno es turbulento? Se termina castigando a los equipos por adaptarse. En esta lección, comenzaremos a desmantelar los KPIs tradicionales que penalizan la agilidad y a discutir alternativas que promuevan el aprendizaje rápido."
                 },
                 {
                   "title": "Velocidad versus adaptabilidad",
-                  "description": ""
+                  "description": "¿De qué sirve tener un tren bala si va en la dirección equivocada? Muchas organizaciones construyen trenes bala, optimizando la velocidad en la vía equivocada. En esta lección, aprenderás a cambiar el enfoque: de construir el motor más rápido a tener el mejor sistema para leer el terreno y cambiar de vía ágilmente. Descubrirás que llegar al destino correcto lentamente es infinitamente mejor que llegar al lugar equivocado a toda velocidad."
                 }
-              ]
+              ],
+              "topic_title": "Navegando la Incertidumbre: Por qué algunos planes fallan"
             },
             {
-              "topic_title": "La propuesta de la agilidad",
               "lessons": [
                 {
                   "title": "Desarrollo orgánico versus mecánico",
-                  "description": ""
+                  "description": "Los proyectos tradicionales se construyen como máquinas: siguiendo un plano detallado donde cada pieza debe encajar a la perfección. Pero, ¿qué pasa cuando el entorno cambia? El plan se rompe. En esta lección, descubrirás el poder del desarrollo orgánico: un enfoque que trata tu producto como un ser vivo que crece y se adapta. Aprenderás a construirlo de forma incremental, asegurando que sea robusto y entregue valor en cada etapa de su evolución, no solo al final."
                 },
                 {
-                  "title": "Corte orgánico",
+                  "title": "Corte orgánico - el nuevo sentido común",
                   "description": ""
                 },
                 {
@@ -54,11 +43,7 @@
                 },
                 {
                   "title": "Foco y flujo",
-                  "description": ""
-                },
-                {
-                  "title": "Una mini-simulación",
-                  "description": ""
+                  "description": "Imagina una autopista. ¿Qué sucede si sigues metiendo más y más coches? Todo se detiene en un atasco masivo. Lo mismo ocurre con el trabajo de tu equipo. En esta lección, aprenderás a ser el \"controlador de tráfico\" que garantiza el flujo constante. Descubrirás que, al igual que en la autopista, limitar la cantidad de \"coches\" (tareas) en el sistema no solo evita el colapso, sino que hace que todos lleguen a su destino mucho más rápido."
                 },
                 {
                   "title": "Dolores y causas del multitasking",
@@ -66,7 +51,7 @@
                 },
                 {
                   "title": "Una nueva definición de éxito",
-                  "description": ""
+                  "description": "En entornos estables, el éxito se mide por el cumplimiento: entregar a tiempo, dentro del presupuesto y según el alcance (Output). Pero en un mercado turbulento, esta fórmula te puede llevar a entregar perfectamente un producto que ya nadie quiere. En esta lección, redefiniremos el éxito en términos de impacto real en el negocio y en el cliente (Outcome). Aprenderás cómo alinear los indicadores de tu organización (KPIs, OKRs) para premiar la generación de valor, no solo la ejecución de tareas."
                 },
                 {
                   "title": "Output y outcome",
@@ -80,9 +65,12 @@
                   "title": "Éxito para escenarios complejos",
                   "description": ""
                 }
-              ]
+              ],
+              "topic_title": "La propuesta de la agilidad"
             }
-          ]
+          ],
+          "summary": "La agilidad que compraste falló. No porque no funcione, sino porque se quedó en la superficie. Te entregaremos el modelo de Organizaciones Fluidas, un mapa para entender el juego real: sabrás dónde aplicar agilidad, usarás las prácticas que importan (y que otros ignoran) y harás los ajustes estructurales precisos en tu organización para que deje de ser un obstáculo.",
+          "module_title": "El Porqué de la Agilidad: De la Frustración a la Fluidez"
         },
         {
           "module_title": "Scrum",
@@ -230,19 +218,68 @@
       "resumen": "Introducción al desarrollo de productos y servicios con agilidad. Práctica intensa de técnicas de discovery. Discusión y acción para maximizar outcome minimizando output. Mucho más que un simple curso",
       "contenido": [
         {
-          "module_title": "Filosofía de la agilidad",
-          "summary": "",
           "topics": [
             {
-              "topic_title": "Filosofía de la agilidad",
               "lessons": [
                 {
-                  "title": "Filosofía de la agilidad",
+                  "title": "El Mapa de la complejidad",
+                  "description": "Aprenderás a distinguir entre distintos niveles de complejidad del entorno mediante una metáfora intuitiva y memorable."
+                },
+                {
+                  "title": "Predictibilidad versus aprendizaje",
+                  "description": "Tu empresa mide el éxito basándose en la predictibilidad, ¿verdad? Pero, ¿qué ocurre cuando el entorno es turbulento? Se termina castigando a los equipos por adaptarse. En esta lección, comenzaremos a desmantelar los KPIs tradicionales que penalizan la agilidad y a discutir alternativas que promuevan el aprendizaje rápido."
+                },
+                {
+                  "title": "Velocidad versus adaptabilidad",
+                  "description": "¿De qué sirve tener un tren bala si va en la dirección equivocada? Muchas organizaciones construyen trenes bala, optimizando la velocidad en la vía equivocada. En esta lección, aprenderás a cambiar el enfoque: de construir el motor más rápido a tener el mejor sistema para leer el terreno y cambiar de vía ágilmente. Descubrirás que llegar al destino correcto lentamente es infinitamente mejor que llegar al lugar equivocado a toda velocidad."
+                }
+              ],
+              "topic_title": "Navegando la Incertidumbre: Por qué algunos planes fallan"
+            },
+            {
+              "lessons": [
+                {
+                  "title": "Desarrollo orgánico versus mecánico",
+                  "description": "Los proyectos tradicionales se construyen como máquinas: siguiendo un plano detallado donde cada pieza debe encajar a la perfección. Pero, ¿qué pasa cuando el entorno cambia? El plan se rompe. En esta lección, descubrirás el poder del desarrollo orgánico: un enfoque que trata tu producto como un ser vivo que crece y se adapta. Aprenderás a construirlo de forma incremental, asegurando que sea robusto y entregue valor en cada etapa de su evolución, no solo al final."
+                },
+                {
+                  "title": "Corte orgánico - el nuevo sentido común",
+                  "description": ""
+                },
+                {
+                  "title": "Velocidad de aprendizaje",
+                  "description": ""
+                },
+                {
+                  "title": "Foco y flujo",
+                  "description": "Imagina una autopista. ¿Qué sucede si sigues metiendo más y más coches? Todo se detiene en un atasco masivo. Lo mismo ocurre con el trabajo de tu equipo. En esta lección, aprenderás a ser el \"controlador de tráfico\" que garantiza el flujo constante. Descubrirás que, al igual que en la autopista, limitar la cantidad de \"coches\" (tareas) en el sistema no solo evita el colapso, sino que hace que todos lleguen a su destino mucho más rápido."
+                },
+                {
+                  "title": "Dolores y causas del multitasking",
+                  "description": ""
+                },
+                {
+                  "title": "Una nueva definición de éxito",
+                  "description": "En entornos estables, el éxito se mide por el cumplimiento: entregar a tiempo, dentro del presupuesto y según el alcance (Output). Pero en un mercado turbulento, esta fórmula te puede llevar a entregar perfectamente un producto que ya nadie quiere. En esta lección, redefiniremos el éxito en términos de impacto real en el negocio y en el cliente (Outcome). Aprenderás cómo alinear los indicadores de tu organización (KPIs, OKRs) para premiar la generación de valor, no solo la ejecución de tareas."
+                },
+                {
+                  "title": "Output y outcome",
+                  "description": ""
+                },
+                {
+                  "title": "Éxito en términos de output",
+                  "description": ""
+                },
+                {
+                  "title": "Éxito para escenarios complejos",
                   "description": ""
                 }
-              ]
+              ],
+              "topic_title": "La propuesta de la agilidad"
             }
-          ]
+          ],
+          "summary": "La agilidad que compraste falló. No porque no funcione, sino porque se quedó en la superficie. Te entregaremos el modelo de Organizaciones Fluidas, un mapa para entender el juego real: sabrás dónde aplicar agilidad, usarás las prácticas que importan (y que otros ignoran) y harás los ajustes estructurales precisos en tu organización para que deje de ser un obstáculo.",
+          "module_title": "El Porqué de la Agilidad: De la Frustración a la Fluidez"
         },
         {
           "module_title": "Scrum visto por un PO",
