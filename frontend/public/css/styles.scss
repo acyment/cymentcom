@@ -629,6 +629,63 @@ body {
   width: 100%;
 }
 
+.CourseDetailPanelSection {
+  align-self: flex-start;
+  width: 100%;
+}
+
+.CourseCardContents {
+  margin-top: $space-4;
+  padding-top: $space-3;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  display: grid;
+  gap: $space-3;
+}
+
+.CourseCardContents .CourseContentsSummary {
+  font-size: clamp(1.05rem, 4vw, 1.18rem);
+  line-height: 1.6;
+}
+
+.CourseCardContents .CourseContentsTopicTitle {
+  font-size: clamp(1.12rem, 4.4vw, 1.3rem);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.CourseCardContents .CourseContentsLessons {
+  gap: 12px;
+}
+
+.CourseCardContents .CourseContentsLesson {
+  font-size: clamp(1.02rem, 3.8vw, 1.15rem);
+}
+
+.CourseCardContents .CourseContentsLessonTitle {
+  font-weight: 500;
+}
+
+.CourseCardContents .CourseContentsLessonTitle--duplicate {
+  font-weight: 400;
+}
+
+.CourseCardContents .CourseContentsLessonInfoTrigger {
+  margin-left: 0.35rem;
+}
+
+.CourseCardContents .CourseContentsLessonInfoIcon {
+  width: 9px;
+  height: 9px;
+}
+
+.CourseCardContentsTitle {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #49495f;
+}
 .CourseDetailPanel .SubtituloCourseDetailPanel {
   text-align: left;
 }
@@ -843,7 +900,7 @@ ul {
 }
 
 .LoaderLegend {
-  color: $azul-violaceo;
+  color: inherit;
   display: flex;
   align-items: center;
   font-size: 1rem;
@@ -888,6 +945,11 @@ ul {
   padding: 40px;
   width: 100%;
   min-height: 220px;
+  color: $azul-violaceo;
+}
+
+.LoaderContainer--onDark {
+  color: #ffffff;
 }
 
 @keyframes loaderLegendPulse {

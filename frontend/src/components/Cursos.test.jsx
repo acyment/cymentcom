@@ -47,10 +47,26 @@ vi.mock('./ResilientMuxPlayer', () => ({
   default: () => <div data-testid="mock-mux-player" />,
 }));
 
+import CourseDetailPanel from './CourseDetailPanel.jsx';
+
+vi.mock('./loadCourseDetailPanel', () => ({
+  loadCourseDetailPanel: vi.fn(() =>
+    Promise.resolve({
+      default: CourseDetailPanel,
+    }),
+  ),
+}));
+
 import axios from 'axios';
 import userEvent from '@testing-library/user-event';
-import { render, screen, waitFor } from '@/tests/utils';
-import Cursos from './Cursos';
+import {
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+  within,
+} from '@/tests/utils';
+import Cursos, { __clearCursosCache } from './Cursos';
 import { __clearCourseDetailCache } from './CourseDetail';
 
 beforeAll(() => {
@@ -67,11 +83,13 @@ beforeEach(() => {
   mockUseIsMobile.mockClear();
   mockNavigate.navigate.mockReset();
   __clearCourseDetailCache();
+  __clearCursosCache();
 });
 
 describe('Cursos loader', () => {
   it('renders the circle loader while data is still loading', () => {
-    render(<Cursos />);
+    const onCourseDetailReady = vi.fn();
+    render(<Cursos onCourseDetailReady={onCourseDetailReady} />);
     expect(screen.getByTestId('circle-loader')).toBeInTheDocument();
   });
 
@@ -142,18 +160,21 @@ describe('Cursos desktop details', () => {
       data: [buildCoursePayload()],
     });
 
-    render(<Cursos />);
+    const onCourseDetailReady = vi.fn();
+    render(<Cursos onCourseDetailReady={onCourseDetailReady} />);
 
     const toggle = await screen.findByRole('radio', {
       name: /test masterclass/i,
     });
     await userEvent.click(toggle);
 
-    await waitFor(() =>
-      expect(
-        screen.getByText(/MEX\/CRI \[GMT-6] 06:00 a 09:30 hs\./i),
-      ).toBeInTheDocument(),
+    const detailPanel = await screen.findByTestId('CourseDetailPanel');
+    const accordion = within(detailPanel).getByTestId(
+      'CourseContentsAccordion',
     );
+    expect(accordion).toBeInTheDocument();
+
+    expect(onCourseDetailReady).toHaveBeenCalledWith(detailPanel);
 
     expect(
       screen.getByText(/en 5 sesiones diarias de 3\.5 hs cada una/i),
@@ -166,6 +187,22 @@ describe('Cursos desktop details', () => {
     await userEvent.click(moduleTrigger);
     expect(screen.getAllByText(/fundamentos/i)[0]).toBeInTheDocument();
     expect(screen.getByText('¿Incluye certificado?')).toBeInTheDocument();
+  });
+
+  it('invokes onCourseDetailReady when initialSlug is provided', async () => {
+    axios.get.mockResolvedValueOnce({
+      data: [buildCoursePayload()],
+    });
+
+    const onCourseDetailReady = vi.fn();
+
+    render(
+      <Cursos initialSlug="TM" onCourseDetailReady={onCourseDetailReady} />,
+    );
+
+    const detailPanel = await screen.findByTestId('CourseDetailPanel');
+
+    expect(onCourseDetailReady).toHaveBeenCalledWith(detailPanel);
   });
 
   it('sends the selected course in navigation state on mobile', async () => {
@@ -190,5 +227,40 @@ describe('Cursos desktop details', () => {
         },
       }),
     );
+  });
+});
+
+describe('Cursos mobile temario (caracterización)', () => {
+  afterEach(() => {
+    mockUseIsMobile.mockImplementation(() => false);
+  });
+
+  it('muestra el temario normalizado en la tarjeta móvil', async () => {
+    mockUseIsMobile.mockImplementation(() => true);
+    const payload = buildCoursePayload();
+
+    axios.get.mockResolvedValueOnce({ data: [payload] });
+
+    render(<Cursos />);
+
+    const contentsHeading = await screen.findByRole('heading', {
+      name: /¿qué vas a aprender\?/i,
+      level: 4,
+    });
+    const contentsSection = contentsHeading.closest('.CourseCardContents');
+    expect(contentsSection).not.toBeNull();
+    expect(contentsHeading).toHaveClass('CourseCardContentsTitle');
+
+    const topicTitle = within(contentsSection).getByRole('heading', {
+      name: /fundamentos/i,
+      level: 3,
+    });
+    expect(topicTitle).toHaveClass('CourseContentsTopicTitle');
+
+    const lessonRow = contentsSection.querySelector('.CourseContentsLesson');
+    expect(lessonRow).not.toBeNull();
+    expect(
+      lessonRow.querySelector('.CourseContentsLessonTitle')?.textContent,
+    ).toMatch(/fundamentos/i);
   });
 });

@@ -12,12 +12,19 @@ import { loadAgilidadProfunda } from './loadAgilidadProfunda';
 const LazyIntervenciones = lazy(() => loadIntervenciones());
 const LazyAgilidadProfunda = lazy(() => loadAgilidadProfunda());
 
-const Sections = () => {
+const Sections = ({
+  initialSlug = null,
+  renderOutlet = true,
+  onCourseDetailReady = () => {},
+} = {}) => {
   const isMobile = useIsMobile();
   return (
     <Accordion.Root type="multiple">
       <Hero />
-      <Cursos />
+      <Cursos
+        initialSlug={initialSlug}
+        onCourseDetailReady={onCourseDetailReady}
+      />
       {!isMobile && (
         <Suspense fallback={<div data-testid="intervenciones-loading" />}>
           <LazyIntervenciones />
@@ -28,7 +35,7 @@ const Sections = () => {
           <LazyAgilidadProfunda />
         </Suspense>
       )}
-      <Outlet />
+      {renderOutlet ? <Outlet /> : null}
       {/* Desktop keeps the inline modal experience via query param */}
       {!isMobile && (
         <CheckoutEntry title="Checkout">

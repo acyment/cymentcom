@@ -131,6 +131,24 @@ describe('CourseDetail route', () => {
     expect(stickyHeader).toHaveStyle({ position: 'sticky' });
   });
 
+  it('loads course detail when directly visiting /cursos/CSM', async () => {
+    axios.get.mockImplementation((url) => {
+      if (url === '/api/tipos-de-curso/CSM/') {
+        return Promise.resolve({ data: buildCourse() });
+      }
+      return Promise.reject(new Error(`Unexpected request: ${url}`));
+    });
+
+    const router = createRouter({
+      routeTree,
+      history: createMemoryHistory({ initialEntries: ['/cursos/CSM'] }),
+    });
+    render(<RouterProvider router={router} />);
+
+    await screen.findByRole('heading', { name: /test masterclass/i, level: 1 });
+    expect(axios.get).toHaveBeenCalledWith('/api/tipos-de-curso/CSM/');
+  });
+
   it('shows loading state while fetching course detail', async () => {
     let resolveDetail;
     axios.get.mockImplementation((url) => {

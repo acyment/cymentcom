@@ -9,18 +9,22 @@ import { formatCourseDateRange as fmtCourseRange } from '@/utils/courseDates';
 import CircleLoader from 'react-spinners/CircleLoader';
 import { useOpenCheckout } from '@/features/checkout/useOpenCheckout';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import CourseContentsList from './CourseContentsList.jsx';
 import { loadCourseDetailPanel } from './loadCourseDetailPanel';
 
 const LazyCourseDetailPanel = lazy(() => loadCourseDetailPanel());
 
 let cachedTiposCurso = null;
 
-const Cursos = () => {
+const Cursos = ({
+  initialSlug = null,
+  onCourseDetailReady = () => {},
+} = {}) => {
   const [tiposCurso, setTiposCurso] = useState([]);
 
   const refCourseDetailPanel = useRef(null);
   const refListaCursos = useRef(null);
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(initialSlug ?? null);
   const [triggerScroll, setTriggerScroll] = useState(false);
   const posthog = usePostHog();
   const [loading, setLoading] = useState(true);
@@ -88,6 +92,12 @@ const Cursos = () => {
   };
 
   useEffect(() => {
+    if (!initialSlug) return;
+    setSelectedCourse((prev) => (prev === initialSlug ? prev : initialSlug));
+    setTriggerScroll(true);
+  }, [initialSlug]);
+
+  useEffect(() => {
     if (!triggerScroll) return;
     let canceled = false;
     const doScroll = async () => {
@@ -105,7 +115,10 @@ const Cursos = () => {
         const el =
           refCourseDetailPanel.current ||
           document.querySelector('.CourseDetailPanel');
-        el?.scrollIntoView(smooth);
+        if (el) {
+          el.scrollIntoView(smooth);
+          onCourseDetailReady(el);
+        }
       }
       if (!canceled) setTriggerScroll(false);
     };
@@ -138,7 +151,7 @@ const Cursos = () => {
         ref={refListaCursos}
       >
         {loading ? (
-          <div className="LoaderContainer">
+          <div className="LoaderContainer LoaderContainer--onDark">
             <CircleLoader color="#ffffff" size={60} />
             <p className="LoaderLegend" aria-live="polite">
               <span className="LoaderLegendAccessible">Cargando...</span>
@@ -207,6 +220,15 @@ const Cursos = () => {
                         <div className="CourseStickyBar">
                           <MobileEnrollButton tipoCurso={tipoCurso} />
                         </div>
+                        {Array.isArray(tipoCurso.contenido) &&
+                        tipoCurso.contenido.length ? (
+                          <div className="CourseCardContents">
+                            <h4 className="CourseCardContentsTitle">
+                              ¿Qué vas a aprender?
+                            </h4>
+                            <CourseContentsList modules={tipoCurso.contenido} />
+                          </div>
+                        ) : null}
                       </div>
                     </details>
                   </div>
@@ -229,7 +251,7 @@ const Cursos = () => {
     >
       <div className="CursosHeader">
         {loading ? (
-          <div className="LoaderContainer">
+          <div className="LoaderContainer LoaderContainer--onDark">
             <CircleLoader color="#ffffff" size={60} />
             <p className="LoaderLegend" aria-live="polite">
               <span className="LoaderLegendAccessible">Cargando...</span>
@@ -247,6 +269,7 @@ const Cursos = () => {
             type="single"
             onValueChange={updateSelectedItem}
             className="ResumenCursosCarousel"
+            value={selectedCourse ?? undefined}
           >
             {Object.values(tiposCurso).map((tipoCurso) => (
               <ToggleGroup.Item

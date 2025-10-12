@@ -5,7 +5,7 @@ import Sections from '../components/Sections';
 import ResultadoPago from '../components/ResultadoPago';
 import { CheckoutEntry } from '@/features/checkout/CheckoutEntry';
 import CheckoutFlow from '@/features/checkout/CheckoutFlow';
-import CourseDetail from '@/components/CourseDetail';
+import CourseDetailRoute from '@/components/CourseDetailRoute';
 
 // Index route with nested payment result
 const indexRoute = createRoute({
@@ -42,7 +42,7 @@ const cursosRoute = createRoute({
 const cursoSlugRoute = createRoute({
   getParentRoute: () => cursosRoute,
   path: '$slug',
-  component: CourseDetail,
+  component: CourseDetailRoute,
 });
 
 export const routeTree = rootRoute.addChildren([

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useMemo } from 'react';
 import { usePostHog } from 'posthog-js/react';
 
 import { useOpenCheckout } from '@/features/checkout/useOpenCheckout';
@@ -6,19 +6,26 @@ import formatDate from 'intl-dateformat';
 import { adjustTimeZone, calculateTimeDifference } from '@/utils/courseTime';
 
 const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
-  const [proximoCurso, setProximoCurso] = useState(null);
-  const [fechaCurso, setFechaCurso] = useState(null);
-  const posthog = usePostHog();
-
-  useEffect(() => {
-    if (proximosCursos) {
-      setProximoCurso(proximosCursos[0]);
-      // TODO: Manejar el caso en el que hay muchas próximas fechas
-      let _fechaCurso = new Date(proximosCursos[0].fecha);
-      _fechaCurso.setUTCHours(12); // Permite que el día no cambie para UTC-3
-      setFechaCurso(_fechaCurso);
+  const proximoCurso = proximosCursos?.[0] ?? null;
+  const fechaCurso = useMemo(() => {
+    if (!proximoCurso?.fecha) {
+      return null;
     }
-  }, [proximosCursos]);
+    const calculated = new Date(proximoCurso.fecha);
+    calculated.setUTCHours(12);
+    return calculated;
+  }, [proximoCurso?.fecha]);
+  const fechaFinCurso = useMemo(() => {
+    if (!fechaCurso || !proximoCurso?.cantidad_dias) {
+      return null;
+    }
+    const endDate = new Date(fechaCurso);
+    endDate.setDate(fechaCurso.getDate() + proximoCurso.cantidad_dias - 1);
+    return endDate;
+  }, [fechaCurso, proximoCurso?.cantidad_dias]);
+  const hayFechas = Boolean(proximoCurso && fechaCurso);
+  const fechaFinParaResumen = fechaFinCurso ?? fechaCurso;
+  const posthog = usePostHog();
 
   const openCheckout = useOpenCheckout();
 
@@ -36,36 +43,34 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
           <img
             src="static/images/noun-calendar-6641614.svg"
             className="ImagenCalendarioHorarioCurso"
+            width="157"
+            height="169"
           />
           <div className="FechaCurso">
             <p className="MesFechaCurso">
-              {proximoCurso &&
+              {hayFechas &&
                 formatDate(fechaCurso, 'MMM', {
                   locale: 'es-AR',
                 }).toUpperCase()}
             </p>
             <p className="DiaFechaCurso">
-              {proximoCurso && fechaCurso.getDate()}
+              {hayFechas && fechaCurso?.getDate()}
             </p>
           </div>
         </div>
         <div className="DesdeHasta">
           <p className="DesdeHastaFecha">
             Desde el{' '}
-            {proximoCurso &&
+            {hayFechas &&
               formatDate(fechaCurso, 'dddd DD', { locale: 'es-AR' })}
             <br />
             al{' '}
-            {proximoCurso &&
-              (() => {
-                const endDate = new Date(fechaCurso);
-                endDate.setDate(
-                  fechaCurso.getDate() + proximoCurso.cantidad_dias - 1,
-                );
-                return formatDate(endDate, 'dddd DD', { locale: 'es-AR' });
-              })()}{' '}
+            {hayFechas &&
+              formatDate(fechaFinParaResumen, 'dddd DD', {
+                locale: 'es-AR',
+              })}{' '}
             de{' '}
-            {proximoCurso &&
+            {hayFechas &&
               formatDate(fechaCurso, 'MMMM', { locale: 'es-AR' }) +
                 ' de ' +
                 formatDate(fechaCurso, 'YYYY', { locale: 'es-AR' })}
@@ -107,19 +112,15 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
         )}
       </div>
       <p className="ResumenCourseDetailPanel">
-        {proximoCurso ? (
+        {hayFechas ? (
           <>
             {capitalizeFirstLetter(
               formatDate(fechaCurso, 'dddd', { locale: 'es-AR' }),
             )}{' '}
             a{' '}
-            {formatDate(
-              new Date(fechaCurso.getTime()).setDate(
-                fechaCurso.getDate() + proximoCurso.cantidad_dias - 1,
-              ),
-              'dddd',
-              { locale: 'es-AR' },
-            )}{' '}
+            {formatDate(fechaFinParaResumen, 'dddd', {
+              locale: 'es-AR',
+            })}{' '}
             en {proximoCurso.cantidad_dias} sesiones diarias de{' '}
             {calculateTimeDifference(
               proximoCurso.hora_inicio,

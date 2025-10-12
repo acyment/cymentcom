@@ -17,11 +17,12 @@ const CourseDetailPanel = forwardRef(({ tipoCurso }, ref) => {
     <div
       ref={ref}
       id="detalle-curso"
-      className="DetalleCurso NavigationBarScrollOffset"
+      className="CourseDetailPanel NavigationBarScrollOffset"
+      data-testid="CourseDetailPanel"
     >
       {hayProximasFechas() && (
-        <div id="calendario-curso">
-          <p className="SubtituloDetalleCurso">Próximos cursos</p>
+        <div id="calendario-curso" className="CourseDetailPanelSection">
+          <p className="SubtituloCourseDetailPanel">Próximos cursos</p>
           <HorarioCurso
             proximosCursos={tipoCurso.upcoming_courses}
             nombreCorto={tipoCurso.nombre_corto}
@@ -31,8 +32,11 @@ const CourseDetailPanel = forwardRef(({ tipoCurso }, ref) => {
         </div>
       )}
       {!hayProximasFechas() && (
-        <div id="calendario-curso" className="NavigationBarScrollOffset">
-          <p className="SubtituloDetalleCurso">
+        <div
+          id="calendario-curso"
+          className="CourseDetailPanelSection NavigationBarScrollOffset"
+        >
+          <p className="SubtituloCourseDetailPanel">
             No hay próximas fechas de este curso
           </p>
           <a href="#contacto">¿Interesado en la versión in-company?</a>
@@ -48,7 +52,7 @@ const CourseDetailPanel = forwardRef(({ tipoCurso }, ref) => {
         nombreCorto={tipoCurso.nombre_corto}
       />
       <hr className="Separador" />
-      <p className="SubtituloDetalleCurso">Conoce a tu instructor</p>
+      <p className="SubtituloCourseDetailPanel">Conoce a tu instructor</p>
       {USE_INLINE_VIDEO ? (
         <MuxMp4Video playbackId={tipoCurso.video} className="VideoPlayer" />
       ) : (
@@ -66,10 +70,10 @@ const CourseDetailPanel = forwardRef(({ tipoCurso }, ref) => {
         show={true}
         iterations={5}
       >
-        <p className="TituloDetalleCurso">{tipoCurso.nombre_completo}</p>
+        <p className="TituloCourseDetailPanel">{tipoCurso.nombre_completo}</p>
       </RoughNotation>
-      <p className="ResumenDetalleCurso">{tipoCurso.resumen}</p>
-      <p className="SubtituloDetalleCurso">¿Qué vas a aprender?</p>
+      <p className="ResumenCourseDetailPanel">{tipoCurso.resumen}</p>
+      <p className="SubtituloCourseDetailPanel">¿Qué vas a aprender?</p>
       {Array.isArray(tipoCurso.contenido) && tipoCurso.contenido.length ? (
         <CourseContentsAccordion modules={tipoCurso.contenido} />
       ) : (
@@ -77,7 +81,7 @@ const CourseDetailPanel = forwardRef(({ tipoCurso }, ref) => {
       )}
       <hr className="Separador" />
 
-      <p className="SubtituloDetalleCurso">Preguntas frecuentes</p>
+      <p className="SubtituloCourseDetailPanel">Preguntas frecuentes</p>
       <FAQ faqEntries={tipoCurso.faq_entries} />
     </div>
   );
