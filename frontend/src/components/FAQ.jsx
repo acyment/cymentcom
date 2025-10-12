@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
+import ChevronDownIcon from 'lucide-react/dist/esm/icons/chevron-down.js';
 
 const FAQ = ({ faqEntries }) => {
   return (
@@ -13,9 +14,8 @@ const FAQ = ({ faqEntries }) => {
           >
             <Accordion.Trigger className="AccordionTrigger PreguntaFAQ">
               {faqEntry.pregunta}
-              <img
-                src="static/images/noun-chevron-1703100.svg"
-                className="AccordionChevron"
+              <ChevronDownIcon
+                className="CourseContentsAccordionChevron"
                 aria-hidden
               />
             </Accordion.Trigger>

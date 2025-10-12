@@ -118,26 +118,62 @@ body {
 
 /* Ensure mobile drawer nav items are comfortably large */
 
-.FAQAccordion {
+.FAQAccordion,
+.CourseContentsAccordion {
+  align-self: flex-start;
+  overflow: hidden;
   width: 100%;
 }
 
-.FAQItem {
-  font-size: 2.2vw;
+.FAQItem,
+.CourseContentsAccordionItem {
+  font-size: 1.6vw;
   width: 100%;
   margin-top: 0.6vw;
   margin-bottom: 2vw;
 }
 
-.PreguntaFAQ {
+.PreguntaFAQ,
+.CourseContentsAccordionTrigger {
   font-weight: 500;
-  background-color: white;
+  background-color: transparent;
+  border: 0;
   border-top: 2px solid black;
   width: 100%;
   text-align: left;
   align-items: center;
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.FAQTopicTitle,
+.CourseContentsTopicTitle {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+.FAQLesson,
+.CourseContentsLesson {
+  padding-left: 1.5rem;
+}
+
+.CourseContentsTopic + .CourseContentsTopic {
+  margin-top: 1.5rem;
+}
+
+.CourseContentsLessons {
+  padding-left: 0;
+  list-style: none;
+  margin: 0;
+}
+
+.PreguntaFAQ:hover,
+.CourseContentsAccordionTrigger:hover {
+  text-shadow: 0 0 0.3rem rgba(120, 84, 250, 0.18);
 }
 
 .RespuestaFAQ {
@@ -2425,10 +2461,6 @@ select,
   border-top: 1px solid rgba(120, 84, 250, 0.2);
 }
 
-.CourseContentsAccordionHeader {
-  margin: 0;
-}
-
 .CourseContentsAccordionTrigger {
   display: flex;
   align-items: center;
@@ -2454,6 +2486,39 @@ select,
   outline-offset: 2px;
 }
 
+@include down($bp-md) {
+  /* Course contents mobile overrides */
+  .CourseContentsAccordionItem {
+    font-size: clamp(18px, 4.6vw, 20px);
+    margin-bottom: clamp(16px, 5.6vw, 28px);
+  }
+
+  .CourseContentsAccordionTitle {
+    font-size: clamp(20px, 5.5vw, 24px);
+    line-height: 1.25;
+  }
+
+  .CourseContentsSummary {
+    font-size: clamp(15px, 4.6vw, 17px);
+    line-height: 1.5;
+  }
+
+  .CourseContentsTopicTitle {
+    font-size: clamp(16px, 4.8vw, 18px);
+    margin-bottom: 12px;
+  }
+
+  .CourseContentsLesson,
+  .CourseContentsLessonTitle,
+  .CourseContentsLessonInfoTrigger {
+    font-size: clamp(15px, 4.5vw, 17px);
+  }
+}
+
+.CourseContentsAccordionHeader {
+  margin: 0;
+}
+
 .CourseContentsAccordionChevron {
   width: 20px;
   height: 20px;
@@ -2468,28 +2533,42 @@ select,
 
 .CourseContentsAccordionContent {
   padding: 0 24px 24px;
+  overflow: hidden;
+  background-color: white;
+}
+
+.CourseContentsAccordionContent[data-state='open'] {
+  animation: slideDown 300ms ease-out;
+}
+
+.CourseContentsAccordionContent[data-state='closed'] {
+  animation: slideUp 300ms ease-out;
 }
 
 .CourseContentsSummary {
   font-style: italic;
   color: #49495f;
+  font-size: 1rem;
   margin: 16px 0 12px;
+  line-height: 1.6;
 }
 
 .CourseContentsTopic {
-  margin-top: 12px;
+  margin-top: 0;
 }
 
 .CourseContentsTopicTitle {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   margin: 0 0 8px;
-  color: #49495f;
+  color: #555;
 }
 
 .CourseContentsLessons {
   list-style: none;
-  padding-left: 1.25rem;
+  padding-left: 0;
   margin: 0;
   display: grid;
   gap: 6px;
