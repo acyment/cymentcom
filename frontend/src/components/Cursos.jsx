@@ -169,7 +169,7 @@ const Cursos = ({
               <div key={tipoCurso.nombre_corto} className="CourseCard">
                 <img
                   className="CourseCardImage"
-                  src={`static/images/${tipoCurso.foto}`}
+                  src={`/static/images/${tipoCurso.foto}`}
                   alt={tipoCurso.nombre_corto}
                   loading="lazy"
                 />
@@ -281,8 +281,8 @@ const Cursos = ({
                   <img
                     src={
                       selectedCourse === tipoCurso.nombre_corto
-                        ? `static/images/${tipoCurso.foto}`
-                        : `static/images/${tipoCurso.foto_tint}`
+                        ? `/static/images/${tipoCurso.foto}`
+                        : `/static/images/${tipoCurso.foto_tint}`
                     }
                     className="ImagenResumenCurso"
                     alt={tipoCurso.nombre_corto}

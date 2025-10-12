@@ -29,7 +29,7 @@ const AgilidadProfunda = () => {
           reglas y vive una experiencia de agilidad limitada.
         </p>
         <img
-          src="static/images/firulete-horizontal.svg"
+          src="/static/images/firulete-horizontal.svg"
           className="FiruleteHorizontal"
         />
       </AccordionHeader>

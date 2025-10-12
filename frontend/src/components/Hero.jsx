@@ -84,8 +84,8 @@ const Hero = () => {
               type="image/webp"
               media="(min-width: 1024px)"
               srcSet={[
-                'static/images/hero-desktop-1920x960.webp 1920w',
-                'static/images/hero-desktop-1600x800.webp 1600w',
+                '/static/images/hero-desktop-1920x960.webp 1920w',
+                '/static/images/hero-desktop-1600x800.webp 1600w',
               ].join(', ')}
               sizes="100vw"
             />
@@ -94,8 +94,8 @@ const Hero = () => {
               type="image/webp"
               media="(min-width: 768px)"
               srcSet={[
-                'static/images/hero-tablet-1600x1000.webp 1600w',
-                'static/images/hero-tablet-1200x750.webp 1200w',
+                '/static/images/hero-tablet-1600x1000.webp 1600w',
+                '/static/images/hero-tablet-1200x750.webp 1200w',
               ].join(', ')}
               sizes="(min-width: 768px) 100vw, 100vw"
             />
@@ -103,8 +103,8 @@ const Hero = () => {
             <source
               type="image/webp"
               srcSet={[
-                'static/images/hero-mobile-1280.webp 1280w',
-                'static/images/hero-mobile-640.webp 640w',
+                '/static/images/hero-mobile-1280.webp 1280w',
+                '/static/images/hero-mobile-640.webp 640w',
               ].join(', ')}
               sizes="(max-width: 767px) 100vw, 0px"
             />
@@ -113,8 +113,8 @@ const Hero = () => {
             <source
               media="(min-width: 1024px)"
               srcSet={[
-                'static/images/hero-desktop-1920x960.jpg 1920w',
-                'static/images/hero-desktop-1600x800.jpg 1600w',
+                '/static/images/hero-desktop-1920x960.jpg 1920w',
+                '/static/images/hero-desktop-1600x800.jpg 1600w',
               ].join(', ')}
               sizes="100vw"
             />
@@ -122,8 +122,8 @@ const Hero = () => {
             <source
               media="(min-width: 768px)"
               srcSet={[
-                'static/images/hero-tablet-1600x1000.jpg 1600w',
-                'static/images/hero-tablet-1200x750.jpg 1200w',
+                '/static/images/hero-tablet-1600x1000.jpg 1600w',
+                '/static/images/hero-tablet-1200x750.jpg 1200w',
               ].join(', ')}
               sizes="(min-width: 768px) 100vw, 100vw"
             />
@@ -131,10 +131,10 @@ const Hero = () => {
             {/* Mobile fallback */}
             <img
               className="HeroImage"
-              src="static/images/hero-mobile-640.jpg"
+              src="/static/images/hero-mobile-640.jpg"
               srcSet={[
-                'static/images/hero-mobile-1280.jpg 1280w',
-                'static/images/hero-mobile-640.jpg 640w',
+                '/static/images/hero-mobile-1280.jpg 1280w',
+                '/static/images/hero-mobile-640.jpg 640w',
               ].join(', ')}
               sizes="(max-width: 767px) 100vw, 0px"
               alt="Retrato del instructor"
@@ -183,7 +183,7 @@ const Hero = () => {
                 realidad
               </li>
             </ul>
-            <img src="static/images/firulete.svg" className="Firulete"></img>
+            <img src="/static/images/firulete.svg" className="Firulete"></img>
           </div>
           {!isMobile && <Clientes />}
         </section>

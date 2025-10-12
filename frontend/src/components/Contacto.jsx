@@ -56,7 +56,7 @@ const Contacto = () => {
         </NavigationMenu.Root>
       </div>
       <div className="Copyright">
-        <img className="ImagenCopyright" src="static/images/isotipo.svg" />
+        <img className="ImagenCopyright" src="/static/images/isotipo.svg" />
         <span className="CopyrightText">© Cyment 2024</span>
       </div>
     </div>

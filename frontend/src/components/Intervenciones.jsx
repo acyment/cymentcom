@@ -23,7 +23,7 @@ const CustomRightArrow = ({ onClick, ...rest }) => {
       onClick={() => onClick()}
       className="CarouselCasosFlechaDespues"
     >
-      <img src="static/images/flecha-carrusel-der.svg" />
+      <img src="/static/images/flecha-carrusel-der.svg" />
     </button>
   );
 };
@@ -39,7 +39,7 @@ const CustomLeftArrow = ({ onClick, ...rest }) => {
       onClick={() => onClick()}
       className="CarouselCasosFlechaAntes"
     >
-      <img src="static/images/flecha-carrusel-izq.svg" />
+      <img src="/static/images/flecha-carrusel-izq.svg" />
     </button>
   );
 };

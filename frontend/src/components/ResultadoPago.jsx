@@ -105,7 +105,7 @@ const ResultadoPago = () => {
         <div className="form-container">
           <div className={`status-header ${statusClassName}`}>
             <img
-              src={`static/images/${isSuccess ? 'ok.svg' : 'error.svg'}`}
+              src={`/static/images/${isSuccess ? 'ok.svg' : 'error.svg'}`}
               alt="Status"
               className="status-icon"
             />
@@ -225,7 +225,7 @@ const ResultadoPago = () => {
             <div className="form-container">
               <div className={`status-header ${statusClassName}`}>
                 <img
-                  src={`static/images/${isSuccess ? 'ok.svg' : 'error.svg'}`}
+                  src={`/static/images/${isSuccess ? 'ok.svg' : 'error.svg'}`}
                   alt="Status"
                   className="status-icon"
                 />
