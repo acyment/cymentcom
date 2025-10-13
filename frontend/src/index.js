@@ -19,5 +19,5 @@ root.render(
     >
       <RouterProvider router={router} />
     </PostHogProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
