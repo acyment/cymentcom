@@ -41,7 +41,7 @@ const HorarioCurso = ({ proximosCursos, nombreCorto, costoUSD, costoARS }) => {
       <div className="HorarioCurso">
         <div className="ContenedorFechaCurso">
           <img
-            src="static/images/noun-calendar-6641614.svg"
+            src="/static/images/noun-calendar-6641614.svg"
             className="ImagenCalendarioHorarioCurso"
             width="157"
             height="169"

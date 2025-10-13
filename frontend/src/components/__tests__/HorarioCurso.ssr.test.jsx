@@ -44,5 +44,6 @@ describe('HorarioCurso SSR output', () => {
     const html = renderToStaticMarkup(<HorarioCurso {...baseProps} />);
     expect(html).toContain('width="157"');
     expect(html).toContain('height="169"');
+    expect(html).toContain('/static/images/noun-calendar-6641614.svg');
   });
 });

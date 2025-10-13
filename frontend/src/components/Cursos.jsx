@@ -105,6 +105,14 @@ const Cursos = ({
       if (selectedCourse === '') {
         refListaCursos.current?.scrollIntoView(smooth);
       } else {
+        const fallbackTarget =
+          refCourseDetailPanel.current ||
+          document.querySelector('.CourseDetailPanel') ||
+          refListaCursos.current ||
+          document.querySelector('.CursosHeader');
+
+        fallbackTarget?.scrollIntoView(smooth);
+
         // CourseDetailPanel is lazy-loaded; wait briefly for it to mount
         let tries = 0;
         while (!canceled && !refCourseDetailPanel.current && tries < 20) {

@@ -69,13 +69,15 @@ import {
 import Cursos, { __clearCursosCache } from './Cursos';
 import { __clearCourseDetailCache } from './CourseDetail';
 
+let scrollIntoViewSpy;
+
 beforeAll(() => {
   if (!HTMLElement.prototype.scrollIntoView) {
     HTMLElement.prototype.scrollIntoView = () => {};
   }
-  vi.spyOn(HTMLElement.prototype, 'scrollIntoView').mockImplementation(
-    () => {},
-  );
+  scrollIntoViewSpy = vi
+    .spyOn(HTMLElement.prototype, 'scrollIntoView')
+    .mockImplementation(() => {});
 });
 
 beforeEach(() => {
@@ -84,6 +86,7 @@ beforeEach(() => {
   mockNavigate.navigate.mockReset();
   __clearCourseDetailCache();
   __clearCursosCache();
+  scrollIntoViewSpy?.mockClear();
 });
 
 describe('Cursos loader', () => {
@@ -174,7 +177,9 @@ describe('Cursos desktop details', () => {
     );
     expect(accordion).toBeInTheDocument();
 
-    expect(onCourseDetailReady).toHaveBeenCalledWith(detailPanel);
+    await waitFor(() =>
+      expect(onCourseDetailReady).toHaveBeenCalledWith(detailPanel),
+    );
 
     expect(
       screen.getByText(/en 5 sesiones diarias de 3\.5 hs cada una/i),
@@ -202,7 +207,20 @@ describe('Cursos desktop details', () => {
 
     const detailPanel = await screen.findByTestId('CourseDetailPanel');
 
-    expect(onCourseDetailReady).toHaveBeenCalledWith(detailPanel);
+    await waitFor(() =>
+      expect(onCourseDetailReady).toHaveBeenCalledWith(detailPanel),
+    );
+  });
+
+  it('scrolls to the loader immediately when deep linking before data resolves', async () => {
+    const pending = new Promise(() => {});
+    axios.get.mockReturnValueOnce(pending);
+
+    render(<Cursos initialSlug="TM" onCourseDetailReady={vi.fn()} />);
+
+    await waitFor(() => expect(scrollIntoViewSpy).toHaveBeenCalled());
+    const firstInstance = scrollIntoViewSpy.mock.instances[0];
+    expect(firstInstance?.id).toBe('cursos');
   });
 
   it('sends the selected course in navigation state on mobile', async () => {
