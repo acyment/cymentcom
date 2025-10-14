@@ -17,6 +17,7 @@ import { useOpenCheckout } from '@/features/checkout/useOpenCheckout';
 import CourseContentsAccordion from './CourseContentsAccordion';
 
 const courseDetailCache = new Map();
+const LOADER_COLOR = '#7854fa';
 
 function seedDetailed(course, detailed = false) {
   if (!course) return null;
@@ -222,6 +223,12 @@ export default function CourseDetail() {
     };
   }, []);
 
+  useEffect(() => {
+    if (status !== 'loading') return;
+    if (typeof window === 'undefined') return;
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [status]);
+
   // After header height is measured and offsets applied, ensure initial load starts at top
   useEffect(() => {
     if (didInitialScrollRef.current) return;
@@ -329,7 +336,7 @@ export default function CourseDetail() {
     return (
       <main className="CourseDetailPage">
         <div className="LoaderContainer">
-          <CircleLoader color="#ffffff" size={60} />
+          <CircleLoader color={LOADER_COLOR} size={60} />
           <p className="LoaderLegend" aria-live="polite">
             <span className="LoaderLegendAccessible">Cargando...</span>
             Cargando

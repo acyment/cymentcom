@@ -28,9 +28,15 @@ vi.mock('@tanstack/react-router-devtools', () => ({
   TanStackRouterDevtools: () => null,
 }));
 
+const circleLoaderMock = vi.hoisted(() =>
+  vi.fn((props) => (
+    <div data-testid="course-detail-spinner" data-color={props?.color} />
+  )),
+);
+
 vi.mock('react-spinners/CircleLoader', () => ({
   __esModule: true,
-  default: () => <div data-testid="course-detail-spinner" />,
+  default: circleLoaderMock,
 }));
 
 vi.mock('use-font-face-observer', () => ({
@@ -95,6 +101,7 @@ describe('CourseDetail route', () => {
     axios.get.mockReset();
     __clearCourseDetailCache();
     __clearCursosCache();
+    circleLoaderMock.mockClear();
   });
 
   it('navigates to /cursos/TM and renders detail heading (no dialog)', async () => {
@@ -129,6 +136,24 @@ describe('CourseDetail route', () => {
     ).not.toBeInTheDocument();
     const stickyHeader = screen.getByTestId('CourseDetailHeader');
     expect(stickyHeader).toHaveStyle({ position: 'sticky' });
+  });
+
+  it('shows the loader first when visiting a course URL directly on mobile', async () => {
+    axios.get.mockReturnValue(new Promise(() => {}));
+
+    const router = createRouter({
+      routeTree,
+      history: createMemoryHistory({ initialEntries: ['/cursos/TM'] }),
+    });
+    render(<RouterProvider router={router} />);
+
+    expect(await screen.findByTestId('course-detail-spinner')).toBeVisible();
+    expect(circleLoaderMock).toHaveBeenCalled();
+    expect(circleLoaderMock.mock.calls[0][0].color).toBe('#7854fa');
+
+    const dots = document.querySelectorAll('.LoaderLegendDot');
+    expect(dots).toHaveLength(3);
+    await waitFor(() => expect(window.scrollTo).toHaveBeenCalled());
   });
 
   it('loads course detail when directly visiting /cursos/CSM', async () => {
