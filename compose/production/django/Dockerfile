@@ -4,8 +4,9 @@ ARG APP_HOME=/app
 WORKDIR ${APP_HOME}
 
 COPY ./package.json ${APP_HOME}
+COPY ./pnpm-lock.yaml ${APP_HOME}
 
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 COPY ./frontend/src ${APP_HOME}/frontend/src
 COPY ./frontend/public ${APP_HOME}/frontend/public
 COPY ./webpack ${APP_HOME}/webpack
