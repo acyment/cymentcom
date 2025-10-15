@@ -3,8 +3,9 @@
   "$schema": "https://json.schemastore.org/swcrc", // Optional: For editor autocompletion
   "jsc": {
     "parser": {
-      "syntax": "ecmascript", // Use "typescript" if you have TS files
+      "syntax": "typescript",
       "jsx": true,
+      "tsx": true,
       "dynamicImport": true // Enable if you use dynamic imports
     },
     "transform": {

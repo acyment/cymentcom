@@ -30,7 +30,6 @@
     "sass-loader": "^16.0.5",
     "style-loader": "^4.0.0",
     "swc-loader": "^0.2.6",
-    "ts-loader": "^9.5.4  ",
     "typescript": "^5.8.2",
     "vitest": "^2.1.9",
     "webpack-bundle-analyzer": "^4.10.2",

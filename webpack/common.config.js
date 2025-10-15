@@ -27,7 +27,7 @@ module.exports = {
     rules: [
       // we pass the output from babel loader to react-hot loader
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/, // IMPORTANT: Keep excluding node_modules
         loader: 'swc-loader',
       },
@@ -47,11 +47,6 @@ module.exports = {
           'sass-loader',
         ],
         type: 'javascript/auto',
-      },
-      {
-        test: /\.(ts|tsx)$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
       },
     ],
   },
