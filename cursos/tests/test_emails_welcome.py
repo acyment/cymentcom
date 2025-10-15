@@ -199,3 +199,52 @@ def test_send_reseller_welcome_email_uses_reseller_template(monkeypatch):
     assert captured["template"] == "emails/welcome_reseller.mjml"
     assert captured["subject"].startswith("Datos de conexión - ")
     assert captured["context"]["jueves_inicio_argentina"].strftime("%H:%M") == "17:00"
+
+
+@pytest.mark.django_db
+def test_send_welcome_email_includes_cc_when_present(monkeypatch):
+    """La copia en CC se agrega cuando la inscripción lo define."""
+    curso = CursoFactory()
+    inscripcion = InscripcionFactory(curso=curso, cc_email="cc@example.com")
+
+    captured = {}
+
+    def fake_send(
+        template_name,
+        context,
+        subject,
+        recipient_list,
+        cc_list=None,
+        **kwargs,
+    ):
+        captured["cc"] = cc_list
+
+    monkeypatch.setattr(EmailSender, "_send_email", staticmethod(fake_send))
+
+    EmailSender.send_welcome_email(inscripcion.id)
+
+    assert captured["cc"] == ["cc@example.com"]
+
+
+@pytest.mark.django_db
+def test_send_reseller_welcome_email_includes_cc_when_present(monkeypatch):
+    curso = CursoFactory()
+    inscripcion = InscripcionFactory(curso=curso, cc_email="reseller-cc@example.com")
+
+    captured = {}
+
+    def fake_send(
+        template_name,
+        context,
+        subject,
+        recipient_list,
+        cc_list=None,
+        **kwargs,
+    ):
+        captured["cc"] = cc_list
+
+    monkeypatch.setattr(EmailSender, "_send_email", staticmethod(fake_send))
+
+    EmailSender.send_reseller_welcome_email(inscripcion.id)
+
+    assert captured["cc"] == ["reseller-cc@example.com"]

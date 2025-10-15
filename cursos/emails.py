@@ -65,6 +65,7 @@ class EmailSender:
         context,
         subject,
         recipient_list,
+        cc_list=None,
         attachment_path=None,
         attachment_filename=None,
         attachment_mimetype=None,
@@ -101,6 +102,7 @@ class EmailSender:
                 body=text_message,
                 from_email=EmailSender.DEFAULT_FROM_EMAIL,
                 to=recipient_list,
+                cc=cc_list,
             )
             email.attach_alternative(html_message, "text/html")
 
@@ -179,6 +181,7 @@ class EmailSender:
                 context=context,
                 subject=subject,
                 recipient_list=recipient_list,
+                cc_list=EmailSender._get_cc_list(inscripcion),
             )
             inscripcion.se_envio_mail_bienvenida = True
             inscripcion.save(update_fields=["se_envio_mail_bienvenida"])
@@ -260,12 +263,19 @@ class EmailSender:
                 context=context,
                 subject=subject,
                 recipient_list=recipient_list,
+                cc_list=EmailSender._get_cc_list(inscripcion),
             )
             inscripcion.se_envio_mail_bienvenida = True
             inscripcion.save(update_fields=["se_envio_mail_bienvenida"])
             log.info("reseller_welcome_email_sent_and_status_updated")
         except Exception:
             log.exception("task_failed_exception_in_send_reseller_email")
+
+    @staticmethod
+    def _get_cc_list(inscripcion):
+        if inscripcion.cc_email:
+            return [inscripcion.cc_email]
+        return None
 
     @staticmethod
     @shared_task

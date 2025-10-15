@@ -104,7 +104,24 @@ class EmailActionMixin:
 
 @admin.register(Inscripcion)
 class InscripcionAdmin(EmailActionMixin, admin.ModelAdmin):
-    list_display = ("alumno", "curso", "estado", "se_envio_mail_bienvenida")
+    list_display = ("alumno", "curso", "estado", "cc_email", "se_envio_mail_bienvenida")
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "alumno",
+                    "curso",
+                    "estado",
+                    "procesador_pago",
+                    "monto",
+                    "factura",
+                    "cc_email",
+                    "se_envio_mail_bienvenida",
+                ),
+            },
+        ),
+    )
     actions = ["enviar_mail_bienvenida", "enviar_mail_bienvenida_reseller"]
 
     @admin.action(

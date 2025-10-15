@@ -186,6 +186,7 @@ class Inscripcion(models.Model):
     estado = models.CharField(max_length=9, choices=EstadoInscripcion.choices)
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE, null=True)
     se_envio_mail_bienvenida = models.BooleanField(default=False)
+    cc_email = models.EmailField(blank=True, default="")
 
     class Meta:
         verbose_name_plural = "Inscripciones"

@@ -17,7 +17,7 @@ from cursos.models import TipoCurso
 
 
 class TipoCursoFactory(DjangoModelFactory):
-    nombre_corto = Faker("word")
+    nombre_corto = Faker("lexify", text="??????")
     nombre_completo = Faker("sentence", nb_words=3)
     resumen_una_linea = Faker("sentence", nb_words=6)
     resumen = Faker("text", max_nb_chars=100)
@@ -92,6 +92,7 @@ class InscripcionFactory(DjangoModelFactory):
     procesador_pago = ProcesadorPago.STRIPE
     estado = EstadoInscripcion.PENDIENTE
     factura = None
+    cc_email = ""
 
     class Meta:
         model = Inscripcion
