@@ -76,6 +76,18 @@ const extractScssBlock = (source, marker) => {
   );
 };
 
+const getLastCssRuleBody = (selector) => {
+  const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp(`${escapedSelector}\\s*{([\\s\\S]*?)}`, 'gm');
+  const matches = [...stylesSource.matchAll(pattern)];
+
+  if (!matches.length) {
+    throw new Error(`No CSS rule found for selector: ${selector}`);
+  }
+
+  return matches.at(-1)[1];
+};
+
 describe('CourseContentsAccordion', () => {
   it('renders every lesson within a topic and shows popover icons when a description is present', async () => {
     const modules = [
@@ -271,6 +283,17 @@ describe('CourseContentsAccordion', () => {
 
     const lessonListRule = getCssRuleBody('.CourseContentsLessons');
     expect(lessonListRule).toMatch(/padding-left:\s*0/);
+  });
+
+  it('mantiene triggers con fondo transparente y borde superior grueso', () => {
+    const finalTriggerRule = getLastCssRuleBody(
+      '.CourseContentsAccordionTrigger',
+    );
+
+    expect(finalTriggerRule).toMatch(/background-color:\s*transparent/);
+    expect(finalTriggerRule).toMatch(/border-top:\s*2px\s+solid\s+black/);
+    expect(finalTriggerRule).toMatch(/padding:\s*0(?:\s+0)?;/);
+    expect(finalTriggerRule).toMatch(/gap:\s*0/);
   });
 
   it('define tipografías legibles en móviles para el acordeón de contenidos', () => {

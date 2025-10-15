@@ -2514,13 +2514,10 @@ select,
 .CourseContentsAccordion {
   width: 100%;
   align-self: flex-start;
-  border: 1px solid rgba(120, 84, 250, 0.2);
-  border-radius: 12px;
-  overflow: hidden;
 }
 
 .CourseContentsAccordionItem + .CourseContentsAccordionItem {
-  border-top: 1px solid rgba(120, 84, 250, 0.2);
+  border-top: 0;
 }
 
 .CourseContentsAccordionTrigger {
@@ -2528,19 +2525,18 @@ select,
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 18px 24px;
-  font-size: 1.125rem;
-  font-weight: 600;
+  padding: 0;
   text-align: left;
-  background-color: #f7f7fb;
-  border: none;
+  background-color: transparent;
+  border: 0;
+  border-top: 2px solid black;
   cursor: pointer;
-  gap: 16px;
-  transition: background-color 0.2s ease;
+  gap: 0;
+  transition: text-shadow 0.2s ease;
 }
 
 .CourseContentsAccordionTrigger:hover {
-  background-color: #efeff8;
+  background-color: transparent;
 }
 
 .CourseContentsAccordionTrigger:focus-visible {
