@@ -69,8 +69,8 @@ def test_send_welcome_email_computes_mexico_schedule(monkeypatch):
 
 
 @pytest.mark.django_db
-def test_welcome_email_highlights_thursday_exception():
-    """El cronograma incluye la sesión especial de jueves en ambos husos horarios."""
+def test_welcome_email_uses_standard_schedule():
+    """El cronograma vuelve al formato simple sin excepciones de jueves."""
     curso = CursoFactory(
         fecha=date(2025, 10, 27),
         cantidad_dias=5,
@@ -90,24 +90,22 @@ def test_welcome_email_highlights_thursday_exception():
         "hora_fin_argentina": curso.hora_fin,
         "hora_inicio_mexico": time(7, 0),
         "hora_fin_mexico": time(10, 30),
-        "jueves_inicio_argentina": time(17, 0),
-        "jueves_fin_argentina": time(20, 30),
-        "jueves_inicio_mexico": time(14, 0),
-        "jueves_fin_mexico": time(17, 30),
     }
 
     html = mjml2html(render_to_string("emails/welcome.mjml", context))
     collapsed = " ".join(html.split())
 
-    assert "Todas las sesiones son en vivo" in collapsed
-    assert "Jueves" in collapsed
-    assert "Argentina (GMT-3): 17:00 a 20:30" in collapsed
-    assert "México (GMT-6): 14:00 a 17:30" in collapsed
+    assert "Argentina (GMT-3): 10:00 a 13:30" in collapsed
+    assert "México (GMT-6): 07:00 a 10:30" in collapsed
+    assert "Argentina (GMT-3): 17:00 a 20:30" not in collapsed
+    assert "México (GMT-6): 14:00 a 17:30" not in collapsed
+    assert "Jueves (sesión especial)" not in collapsed
+    assert "Sesión especial del jueves" not in collapsed
 
 
 @pytest.mark.django_db
-def test_welcome_email_mentions_thursday_recording(monkeypatch):
-    """El mensaje aclara que el jueves se graba y se comparte la sesión."""
+def test_welcome_email_recoding_section_returns_to_no_recordings(monkeypatch):
+    """La sección de FAQ vuelve a indicar que no se realizan grabaciones."""
     curso = CursoFactory(
         fecha=date(2025, 10, 27),
         hora_inicio=time(10, 0),
@@ -128,10 +126,9 @@ def test_welcome_email_mentions_thursday_recording(monkeypatch):
     ctx = captured["context"]
     collapsed = " ".join(captured["html"].split())
 
-    assert ctx["jueves_inicio_argentina"].strftime("%H:%M") == "17:00"
-    assert ctx["jueves_inicio_mexico"].strftime("%H:%M") == "14:00"
-    assert "Sesión especial del jueves" in collapsed
-    assert "se grabará y recibirás la reproducción" in collapsed
+    assert "No, las sesiones no serán grabadas." in collapsed
+    assert "se grabará y recibirás la reproducción" not in collapsed
+    assert "jueves_inicio_argentina" not in ctx
 
 
 @pytest.mark.django_db
@@ -156,10 +153,6 @@ def test_reseller_template_removes_payment_section():
         "hora_fin_argentina": time(13, 30),
         "hora_inicio_mexico": time(7, 0),
         "hora_fin_mexico": time(10, 30),
-        "jueves_inicio_argentina": time(17, 0),
-        "jueves_fin_argentina": time(20, 30),
-        "jueves_inicio_mexico": time(14, 0),
-        "jueves_fin_mexico": time(17, 30),
     }
 
     html = mjml2html(render_to_string("emails/welcome_reseller.mjml", context))
@@ -172,12 +165,13 @@ def test_reseller_template_removes_payment_section():
     assert "Información de pago y facturación" not in collapsed
     assert "Se envió otro mensaje a la dirección correspondiente" not in collapsed
     assert "Argentina (GMT-3): 10:00 a 13:30" in collapsed
-    assert "México (GMT-6): 14:00 a 17:30" in collapsed
+    assert "México (GMT-6): 07:00 a 10:30" in collapsed
+    assert "Jueves (sesión especial)" not in collapsed
 
 
 @pytest.mark.django_db
 def test_send_reseller_welcome_email_uses_reseller_template(monkeypatch):
-    """El envío para resellers usa el nuevo template y asunto."""
+    """El envío para resellers usa el nuevo template y mantiene el horario base."""
     curso = CursoFactory(
         fecha=date(2025, 10, 27),
         hora_inicio=time(10, 0),
@@ -198,7 +192,9 @@ def test_send_reseller_welcome_email_uses_reseller_template(monkeypatch):
 
     assert captured["template"] == "emails/welcome_reseller.mjml"
     assert captured["subject"].startswith("Datos de conexión - ")
-    assert captured["context"]["jueves_inicio_argentina"].strftime("%H:%M") == "17:00"
+    assert captured["context"]["hora_inicio_argentina"].strftime("%H:%M") == "10:00"
+    assert captured["context"]["hora_inicio_mexico"].strftime("%H:%M") == "07:00"
+    assert "jueves_inicio_argentina" not in captured["context"]
 
 
 @pytest.mark.django_db

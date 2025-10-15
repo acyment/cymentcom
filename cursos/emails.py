@@ -1,6 +1,5 @@
 import mimetypes
 from datetime import datetime
-from datetime import time
 from datetime import timedelta
 from email.mime.image import MIMEImage
 from pathlib import Path
@@ -205,15 +204,6 @@ class EmailSender:
         mexico_start = (datetime.combine(curso.fecha, argentina_start) - delta).time()
         mexico_end = (datetime.combine(curso.fecha, argentina_end) - delta).time()
 
-        jueves_inicio_argentina = time(17, 0)
-        jueves_fin_argentina = time(20, 30)
-        jueves_inicio_mexico = (
-            datetime.combine(curso.fecha, jueves_inicio_argentina) - delta
-        ).time()
-        jueves_fin_mexico = (
-            datetime.combine(curso.fecha, jueves_fin_argentina) - delta
-        ).time()
-
         return {
             "alumno": inscripcion.alumno,
             "curso": curso,
@@ -224,10 +214,6 @@ class EmailSender:
             "hora_fin_argentina": argentina_end,
             "hora_inicio_mexico": mexico_start,
             "hora_fin_mexico": mexico_end,
-            "jueves_inicio_argentina": jueves_inicio_argentina,
-            "jueves_fin_argentina": jueves_fin_argentina,
-            "jueves_inicio_mexico": jueves_inicio_mexico,
-            "jueves_fin_mexico": jueves_fin_mexico,
         }
 
     @staticmethod
