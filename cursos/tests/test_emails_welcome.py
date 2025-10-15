@@ -132,3 +132,70 @@ def test_welcome_email_mentions_thursday_recording(monkeypatch):
     assert ctx["jueves_inicio_mexico"].strftime("%H:%M") == "14:00"
     assert "Sesión especial del jueves" in collapsed
     assert "se grabará y recibirás la reproducción" in collapsed
+
+
+@pytest.mark.django_db
+def test_reseller_template_removes_payment_section():
+    """La variante reseller ajusta el saludo y elimina la sección de pago."""
+    curso = CursoFactory(
+        fecha=date(2025, 10, 27),
+        cantidad_dias=5,
+        hora_inicio=time(10, 0),
+        hora_fin=time(13, 30),
+    )
+    inscripcion = InscripcionFactory(curso=curso)
+    fecha_fin = curso.fecha + timedelta(days=curso.cantidad_dias - 1)
+
+    context = {
+        "alumno": inscripcion.alumno,
+        "curso": curso,
+        "monto": inscripcion.monto,
+        "procesador_pago": inscripcion.get_procesador_pago_display(),
+        "fecha_fin": fecha_fin,
+        "hora_inicio_argentina": time(10, 0),
+        "hora_fin_argentina": time(13, 30),
+        "hora_inicio_mexico": time(7, 0),
+        "hora_fin_mexico": time(10, 30),
+        "jueves_inicio_argentina": time(17, 0),
+        "jueves_fin_argentina": time(20, 30),
+        "jueves_inicio_mexico": time(14, 0),
+        "jueves_fin_mexico": time(17, 30),
+    }
+
+    html = mjml2html(render_to_string("emails/welcome_reseller.mjml", context))
+    collapsed = " ".join(html.split())
+
+    assert (
+        "Ya falta muy poco para el comienzo del curso. Aquí va información importante"
+        in collapsed
+    )
+    assert "Información de pago y facturación" not in collapsed
+    assert "Se envió otro mensaje a la dirección correspondiente" not in collapsed
+    assert "Argentina (GMT-3): 10:00 a 13:30" in collapsed
+    assert "México (GMT-6): 14:00 a 17:30" in collapsed
+
+
+@pytest.mark.django_db
+def test_send_reseller_welcome_email_uses_reseller_template(monkeypatch):
+    """El envío para resellers usa el nuevo template y asunto."""
+    curso = CursoFactory(
+        fecha=date(2025, 10, 27),
+        hora_inicio=time(10, 0),
+        hora_fin=time(13, 30),
+    )
+    inscripcion = InscripcionFactory(curso=curso)
+
+    captured = {}
+
+    def fake_send(template_name, context, subject, recipient_list, **kwargs):
+        captured["template"] = template_name
+        captured["subject"] = subject
+        captured["context"] = context
+
+    monkeypatch.setattr(EmailSender, "_send_email", staticmethod(fake_send))
+
+    EmailSender.send_reseller_welcome_email(inscripcion.id)
+
+    assert captured["template"] == "emails/welcome_reseller.mjml"
+    assert captured["subject"].startswith("Datos de conexión - ")
+    assert captured["context"]["jueves_inicio_argentina"].strftime("%H:%M") == "17:00"

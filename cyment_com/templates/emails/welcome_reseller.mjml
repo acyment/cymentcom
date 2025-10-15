@@ -1,0 +1,188 @@
+<mjml>
+  <mj-head>
+    <mj-title>Datos de Conexión</mj-title>
+    <mj-font
+      name="Rubik"
+      href="https://fonts.googleapis.com/css?family=Rubik:400,500,700"
+    />
+    <mj-attributes>
+      <mj-all font-family="Rubik, Arial, sans-serif" />
+      <mj-text font-size="16px" color="#333333" line-height="24px" />
+      <mj-button
+        background-color="#7854fa"
+        font-weight="bold"
+        border-radius="8px"
+      />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#f4f4f9">
+    <mj-wrapper padding="0">
+      <mj-section background-color="white" padding="20px">
+        <mj-column>
+          <mj-image
+            width="180px"
+            src="cid:{{ logo_negro_cid }}"
+            alt="Logo"
+            align="center"
+          />
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#7854fa" padding="20px">
+        <mj-column>
+          <mj-text font-size="24px" font-weight="bold" color="white" align="center">
+            Datos de Conexión
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+
+    <mj-wrapper padding="20px" background-color="white">
+      <mj-section padding-top="0">
+        <mj-column>
+          <mj-text font-size="18px" font-weight="bold">
+            ¡Hola {{ alumno.nombre }}!
+          </mj-text>
+          <mj-text>
+            Ya falta muy poco para el comienzo del curso. Aquí va información
+            importante sobre el mismo.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <mj-divider border-color="#7854fa" border-width="1px" padding="10px 0" />
+
+      <mj-section padding="0 0 20px">
+        <mj-column>
+          <mj-text font-size="18px" font-weight="bold" color="#7854fa">
+            Detalles del Curso
+          </mj-text>
+          <mj-text>
+            <strong>Curso:</strong> {{ curso.tipo.nombre_completo }}
+          </mj-text>
+          <mj-text>
+            <strong>Fechas:</strong> {{ curso.fecha|date:"d/m/Y" }} a
+            {{fecha_fin|date:"d/m/Y" }}
+          </mj-text>
+          <mj-text>
+            <strong>Horario:</strong>
+          </mj-text>
+          <mj-text>
+            Todas las sesiones son en vivo; consulta el ajuste especial del jueves.
+          </mj-text>
+          <mj-table cellpadding="0" cellspacing="0" width="100%" padding="10px 0">
+            <tr style="background-color: #f5f5fa; text-align: left;">
+              <th style="padding: 8px 12px; font-weight: 600;">Día</th>
+              <th style="padding: 8px 12px; font-weight: 600;">Argentina (GMT-3)</th>
+              <th style="padding: 8px 12px; font-weight: 600;">México (GMT-6)</th>
+            </tr>
+            <tr style="text-align: left;">
+              <td style="padding: 8px 12px;">Lunes a miércoles y viernes</td>
+              <td style="padding: 8px 12px;">
+                Argentina (GMT-3): {{ hora_inicio_argentina|time:"H:i" }} a
+                {{ hora_fin_argentina|time:"H:i" }}
+              </td>
+              <td style="padding: 8px 12px;">
+                México (GMT-6): {{ hora_inicio_mexico|time:"H:i" }} a
+                {{ hora_fin_mexico|time:"H:i" }}
+              </td>
+            </tr>
+            <tr style="background-color: #f1ecff; text-align: left;">
+              <td style="padding: 8px 12px; font-weight: 600;">Jueves (sesión especial)</td>
+              <td style="padding: 8px 12px;">
+                Argentina (GMT-3): {{ jueves_inicio_argentina|time:"H:i" }} a
+                {{ jueves_fin_argentina|time:"H:i" }}
+              </td>
+              <td style="padding: 8px 12px;">
+                México (GMT-6): {{ jueves_inicio_mexico|time:"H:i" }} a
+                {{ jueves_fin_mexico|time:"H:i" }}
+              </td>
+            </tr>
+          </mj-table>
+          <mj-text padding="12px" background-color="#f1ecff">
+            <strong style="color: #7854fa;">Sesión especial del jueves:</strong>
+            el encuentro se grabará y recibirás la reproducción debido al ajuste de horario.
+          </mj-text>
+          <mj-text>
+            <strong>URL de Conexión: </strong>
+            <a href="{{ curso.meeting_url }}" style="color: #7854fa">Acceder a la reunión</a>
+          </mj-text>
+          {% if curso.meeting_id %}
+          <mj-text>
+            <strong>ID de Reunión:</strong> {{ curso.meeting_id }}
+          </mj-text>
+          {% endif %}
+          {% if curso.meeting_password %}
+          <mj-text>
+            <strong>Contraseña:</strong> {{ curso.meeting_password }}
+          </mj-text>
+          {% endif %}
+          {% if curso.whiteboard_url %}
+          <mj-text>
+            <strong>Pizarra Virtual: </strong>
+            <a href="{{ curso.whiteboard_url }}" style="color: #7854fa">Acceder a la pizarra</a>
+          </mj-text>
+          {% endif %}
+        </mj-column>
+      </mj-section>
+
+      <mj-divider border-color="#7854fa" border-width="1px" padding="10px 0" />
+
+      <mj-section background-color="#f8f5ff" padding="20px" border-radius="8px">
+        <mj-column>
+          <mj-text font-weight="bold" color="#7854fa"> Próximos Pasos </mj-text>
+          <mj-text>1. Guarda este correo como referencia para la conexión</mj-text>
+          <mj-text>2. Instala el cliente de Zoom en tu dispositivo</mj-text>
+          <mj-text>3. Conéctate unos minutos antes para verificar tu equipo</mj-text>
+          <mj-text>
+            Si no puedes conectarte el jueves, recibirás la grabación en cuanto esté disponible.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+
+    <mj-wrapper padding="0 20px" background-color="white">
+      <mj-section padding-top="0">
+        <mj-column>
+          <mj-text font-size="18px" font-weight="bold" color="#7854fa">
+            Preguntas Frecuentes
+          </mj-text>
+          <mj-text font-weight="bold"> ¿Qué necesito para conectarme? </mj-text>
+          <mj-text>
+            Una conexión estable a internet, auriculares y micrófono. Si bien es posible usar un navegador, te recomendamos instalar el cliente de escritorio de Zoom.
+          </mj-text>
+          <mj-text font-weight="bold"> ¿Se grabarán las sesiones? </mj-text>
+          <mj-text>
+            Normalmente no grabamos las sesiones, salvo la del jueves en esta edición; enviaremos la reproducción por la diferencia de horario.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <mj-section padding="20px 0">
+        <mj-column>
+          <mj-button background-color="#7854fa" color="white" href="mailto:info@cyment.com">
+            ¿Dudas? ¡Escríbenos!
+          </mj-button>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+
+    <mj-wrapper padding="0">
+      <mj-section background-color="#333333" padding="20px">
+        <mj-column>
+          <mj-image
+            width="120px"
+            src="cid:{{ logo_blanco_cid }}"
+            alt="Logo"
+            align="center"
+          />
+          <mj-text color="white" align="center" font-size="14px" padding-top="15px">
+            Cyment - fluidez organizacional
+          </mj-text>
+          <mj-text color="#bbbbbb" align="center" font-size="12px">
+            Este correo fue enviado a {{ alumno.email }}
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>

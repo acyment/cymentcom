@@ -105,7 +105,7 @@ class EmailActionMixin:
 @admin.register(Inscripcion)
 class InscripcionAdmin(EmailActionMixin, admin.ModelAdmin):
     list_display = ("alumno", "curso", "estado", "se_envio_mail_bienvenida")
-    actions = ["enviar_mail_bienvenida"]
+    actions = ["enviar_mail_bienvenida", "enviar_mail_bienvenida_reseller"]
 
     @admin.action(
         description="Enviar mail de bienvenida",
@@ -116,6 +116,18 @@ class InscripcionAdmin(EmailActionMixin, admin.ModelAdmin):
             "task": EmailSender.send_welcome_email,
             "warning_msg": "Ya se había enviado el mail de bienvenida a %s",
             "success_msg": "Enviando mail de bienvenida a %s...",
+        }
+        self.email_action(request, queryset, email_config)
+
+    @admin.action(
+        description="Enviar correo de bienvenida a inscripción via reseller",
+    )
+    def enviar_mail_bienvenida_reseller(self, request, queryset):
+        email_config = {
+            "field": "se_envio_mail_bienvenida",
+            "task": EmailSender.send_reseller_welcome_email,
+            "warning_msg": "Ya se había enviado el mail de bienvenida a %s",
+            "success_msg": "Enviando correo de bienvenida (reseller) a %s...",
         }
         self.email_action(request, queryset, email_config)
 

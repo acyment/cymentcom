@@ -164,41 +164,7 @@ class EmailSender:
             log.warning("inscripcion_not_found")
             return
 
-        fecha_fin = inscripcion.curso.fecha + timedelta(
-            days=inscripcion.curso.cantidad_dias - 1,
-        )
-
-        curso = inscripcion.curso
-        argentina_start = curso.hora_inicio
-        argentina_end = curso.hora_fin
-        delta = timedelta(hours=3)
-        mexico_start = (datetime.combine(curso.fecha, argentina_start) - delta).time()
-        mexico_end = (datetime.combine(curso.fecha, argentina_end) - delta).time()
-
-        jueves_inicio_argentina = time(17, 0)
-        jueves_fin_argentina = time(20, 30)
-        jueves_inicio_mexico = (
-            datetime.combine(curso.fecha, jueves_inicio_argentina) - delta
-        ).time()
-        jueves_fin_mexico = (
-            datetime.combine(curso.fecha, jueves_fin_argentina) - delta
-        ).time()
-
-        context = {
-            "alumno": inscripcion.alumno,
-            "curso": curso,
-            "monto": inscripcion.monto,
-            "procesador_pago": inscripcion.get_procesador_pago_display(),
-            "fecha_fin": fecha_fin,
-            "hora_inicio_argentina": argentina_start,
-            "hora_fin_argentina": argentina_end,
-            "hora_inicio_mexico": mexico_start,
-            "hora_fin_mexico": mexico_end,
-            "jueves_inicio_argentina": jueves_inicio_argentina,
-            "jueves_fin_argentina": jueves_fin_argentina,
-            "jueves_inicio_mexico": jueves_inicio_mexico,
-            "jueves_fin_mexico": jueves_fin_mexico,
-        }
+        context = EmailSender._build_welcome_context(inscripcion)
 
         subject = (
             f"Confirmación de inscripción - {inscripcion.curso.tipo.nombre_completo} "
@@ -222,6 +188,84 @@ class EmailSender:
         # para loguear antes del reintento/fallo.
         except Exception:
             log.exception("task_failed_exception_in_send_email")
+
+    @staticmethod
+    def _build_welcome_context(inscripcion):
+        fecha_fin = inscripcion.curso.fecha + timedelta(
+            days=inscripcion.curso.cantidad_dias - 1,
+        )
+
+        curso = inscripcion.curso
+        argentina_start = curso.hora_inicio
+        argentina_end = curso.hora_fin
+        delta = timedelta(hours=3)
+        mexico_start = (datetime.combine(curso.fecha, argentina_start) - delta).time()
+        mexico_end = (datetime.combine(curso.fecha, argentina_end) - delta).time()
+
+        jueves_inicio_argentina = time(17, 0)
+        jueves_fin_argentina = time(20, 30)
+        jueves_inicio_mexico = (
+            datetime.combine(curso.fecha, jueves_inicio_argentina) - delta
+        ).time()
+        jueves_fin_mexico = (
+            datetime.combine(curso.fecha, jueves_fin_argentina) - delta
+        ).time()
+
+        return {
+            "alumno": inscripcion.alumno,
+            "curso": curso,
+            "monto": inscripcion.monto,
+            "procesador_pago": inscripcion.get_procesador_pago_display(),
+            "fecha_fin": fecha_fin,
+            "hora_inicio_argentina": argentina_start,
+            "hora_fin_argentina": argentina_end,
+            "hora_inicio_mexico": mexico_start,
+            "hora_fin_mexico": mexico_end,
+            "jueves_inicio_argentina": jueves_inicio_argentina,
+            "jueves_fin_argentina": jueves_fin_argentina,
+            "jueves_inicio_mexico": jueves_inicio_mexico,
+            "jueves_fin_mexico": jueves_fin_mexico,
+        }
+
+    @staticmethod
+    @shared_task
+    def send_reseller_welcome_email(inscripcion_id):
+        """Envía el correo de bienvenida adaptado para inscripciones vía reseller."""
+        log = logger.bind(
+            task="send_reseller_welcome_email",
+            inscripcion_id=inscripcion_id,
+        )
+        try:
+            inscripcion = Inscripcion.objects.select_related(
+                "alumno",
+                "curso",
+                "curso__tipo",
+            ).get(id=inscripcion_id)
+        except Inscripcion.DoesNotExist:
+            log.warning("inscripcion_not_found")
+            return
+
+        context = EmailSender._build_welcome_context(inscripcion)
+
+        subject = (
+            f"Datos de conexión - {inscripcion.curso.tipo.nombre_completo} "
+            f"- {inscripcion.curso.fecha.strftime('%d/%m/%Y')}"
+        )
+        recipient_list = [inscripcion.alumno.email]
+        log = log.bind(subject=subject, recipients=recipient_list)
+
+        try:
+            EmailSender._send_email(
+                template_name="emails/welcome_reseller.mjml",
+                context=context,
+                subject=subject,
+                recipient_list=recipient_list,
+            )
+            inscripcion.se_envio_mail_bienvenida = True
+            inscripcion.save(update_fields=["se_envio_mail_bienvenida"])
+            log.info("reseller_welcome_email_sent_and_status_updated")
+        except Exception:
+            log.exception("task_failed_exception_in_send_reseller_email")
 
     @staticmethod
     @shared_task
