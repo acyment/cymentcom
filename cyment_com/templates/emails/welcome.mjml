@@ -72,8 +72,11 @@
             {{fecha_fin|date:"d/m/Y" }}
           </mj-text>
           <mj-text>
-            <strong>Horario:</strong> {{ curso.hora_inicio|time:"H:i" }} a
-            {{curso.hora_fin|time:"H:i" }} (Argentina)
+            <strong>Horario:</strong><br />
+            Argentina (GMT-3): {{ hora_inicio_argentina|time:"H:i" }} a
+            {{ hora_fin_argentina|time:"H:i" }}<br />
+            México (GMT-6): {{ hora_inicio_mexico|time:"H:i" }} a
+            {{ hora_fin_mexico|time:"H:i" }}
           </mj-text>
           <mj-text>
             <strong>URL de Conexión: </strong>

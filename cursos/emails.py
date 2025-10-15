@@ -1,4 +1,5 @@
 import mimetypes
+from datetime import datetime
 from datetime import timedelta
 from email.mime.image import MIMEImage
 from pathlib import Path
@@ -166,12 +167,23 @@ class EmailSender:
             days=inscripcion.curso.cantidad_dias - 1,
         )
 
+        curso = inscripcion.curso
+        argentina_start = curso.hora_inicio
+        argentina_end = curso.hora_fin
+        delta = timedelta(hours=3)
+        mexico_start = (datetime.combine(curso.fecha, argentina_start) - delta).time()
+        mexico_end = (datetime.combine(curso.fecha, argentina_end) - delta).time()
+
         context = {
             "alumno": inscripcion.alumno,
-            "curso": inscripcion.curso,
+            "curso": curso,
             "monto": inscripcion.monto,
             "procesador_pago": inscripcion.get_procesador_pago_display(),
             "fecha_fin": fecha_fin,
+            "hora_inicio_argentina": argentina_start,
+            "hora_fin_argentina": argentina_end,
+            "hora_inicio_mexico": mexico_start,
+            "hora_fin_mexico": mexico_end,
         }
 
         subject = (
