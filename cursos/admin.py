@@ -1,7 +1,13 @@
+from django import forms
+from django.conf import settings
 from django.contrib import admin
 from django.contrib import messages
+from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 from django.db import models
+from django.shortcuts import redirect
+from django.template.response import TemplateResponse
 from django.utils.html import format_html
+from djmoney.money import Money
 from django_json_widget.widgets import JSONEditorWidget
 from django_jsonform.widgets import JSONFormWidget
 
@@ -13,6 +19,7 @@ from .models import Factura
 from .models import FAQCurso
 from .models import Inscripcion
 from .models import TipoCurso
+from .services import alta_batch_revendedor
 
 COURSE_TEMARIO_SCHEMA = {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -75,6 +82,10 @@ COURSE_TEMARIO_SCHEMA = {
 }
 
 
+class ConfirmationCcForm(forms.Form):
+    cc_email = forms.EmailField(label="Email en CC", required=False)
+
+
 class EmailActionMixin:
     def email_action(self, request, queryset, config):
         """
@@ -133,8 +144,9 @@ class InscripcionAdmin(EmailActionMixin, admin.ModelAdmin):
             "task": EmailSender.send_welcome_email,
             "warning_msg": "Ya se había enviado el mail de bienvenida a %s",
             "success_msg": "Enviando mail de bienvenida a %s...",
+            "title": "Enviar mail de bienvenida",
         }
-        self.email_action(request, queryset, email_config)
+        return self.email_action_with_cc_prompt(request, queryset, email_config)
 
     @admin.action(
         description="Enviar correo de bienvenida a inscripción via reseller",
@@ -145,8 +157,41 @@ class InscripcionAdmin(EmailActionMixin, admin.ModelAdmin):
             "task": EmailSender.send_reseller_welcome_email,
             "warning_msg": "Ya se había enviado el mail de bienvenida a %s",
             "success_msg": "Enviando correo de bienvenida (reseller) a %s...",
+            "title": "Enviar correo de bienvenida a inscripción via reseller",
         }
-        self.email_action(request, queryset, email_config)
+        return self.email_action_with_cc_prompt(request, queryset, email_config)
+
+    def email_action_with_cc_prompt(self, request, queryset, config):
+        form = ConfirmationCcForm(request.POST or None)
+        if request.POST.get("apply") and form.is_valid():
+            self._store_confirmation_cc(queryset, form.cleaned_data["cc_email"])
+            return self.email_action(request, queryset, config)
+        return self._render_confirmation_cc_form(request, queryset, config, form)
+
+    def _store_confirmation_cc(self, queryset, prompted_cc):
+        cc_email = prompted_cc or getattr(settings, "CURSOS_CONFIRMATION_CC_EMAIL", "")
+        if cc_email:
+            queryset.update(cc_email=cc_email)
+
+    def _render_confirmation_cc_form(self, request, queryset, config, form):
+        context = self._confirmation_cc_context(request, queryset, config, form)
+        return TemplateResponse(
+            request,
+            "admin/cursos/inscripcion/confirmation_cc_form.html",
+            context,
+        )
+
+    def _confirmation_cc_context(self, request, queryset, config, form):
+        return {
+            **self.admin_site.each_context(request),
+            "action_checkbox_name": ACTION_CHECKBOX_NAME,
+            "action_name": request.POST.get("action"),
+            "form": form,
+            "opts": self.model._meta,
+            "queryset": queryset,
+            "selected": request.POST.getlist(ACTION_CHECKBOX_NAME),
+            "title": config["title"],
+        }
 
 
 @admin.register(Factura)
@@ -189,6 +234,38 @@ class FacturaAdmin(EmailActionMixin, admin.ModelAdmin):
         return "Sin archivo"
 
     # Ensure allow_tags is not needed (it's deprecated, format_html handles it)
+
+
+@admin.register(Curso)
+class CursoAdmin(admin.ModelAdmin):
+    change_form_template = "admin/cursos/curso/change_form.html"
+
+    def changeform_view(self, request, object_id=None, form_url="", extra_context=None):
+        if request.POST.get("_alta_batch_revendedor") and object_id:
+            return self._handle_alta_batch_revendedor(request, object_id)
+        return super().changeform_view(request, object_id, form_url, extra_context)
+
+    def _handle_alta_batch_revendedor(self, request, object_id):
+        curso = self.get_object(request, object_id)
+        result = alta_batch_revendedor(
+            curso=curso,
+            alumnos_text=request.POST["batch_alumnos"],
+            monto=Money("850.00", "USD"),
+            email_facturacion=request.POST["batch_email_facturacion"],
+            pais_facturacion=request.POST["batch_pais_facturacion"],
+        )
+        self._message_alta_batch_success(request, result)
+        return redirect(".")
+
+    def _message_alta_batch_success(self, request, result):
+        messages.success(
+            request,
+            (
+                "Alta batch de revendedor completada: "
+                f"{result.created_alumnos} alumnos creados, "
+                f"{result.reused_alumnos} alumnos reutilizados."
+            ),
+        )
 
 
 @admin.register(TipoCurso)
@@ -254,5 +331,4 @@ class TipoCursoAdmin(admin.ModelAdmin):
 
 admin.site.register(Alumno)
 admin.site.register(Cliente)
-admin.site.register(Curso)
 admin.site.register(FAQCurso)
