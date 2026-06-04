@@ -1,11 +1,13 @@
+from http import HTTPStatus
+
 import pytest
 from django.contrib.admin.sites import AdminSite
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.test import RequestFactory
-from djmoney.money import Money
 from django_json_widget.widgets import JSONEditorWidget
 from django_jsonform.widgets import JSONFormWidget
+from djmoney.money import Money
 
 from cursos.admin import CursoAdmin
 from cursos.admin import InscripcionAdmin
@@ -32,7 +34,7 @@ def add_messages_to_request(request):
     middleware = SessionMiddleware(lambda req: None)
     middleware.process_request(request)
     request.session.save()
-    request._messages = FallbackStorage(request)
+    request._messages = FallbackStorage(request)  # noqa: SLF001
 
 
 class FakeTask:
@@ -106,7 +108,48 @@ def test_curso_admin_changeform_runs_alta_batch_revendedor(
     admin = CursoAdmin(Curso, admin_site)
     response = admin.changeform_view(request, object_id=str(curso.id))
 
-    assert response.status_code == 302
+    assert response.status_code == HTTPStatus.FOUND
+    assert called == {
+        "curso": curso,
+        "alumnos_text": "Burgos\tNatallie\tnb@insyspr.com",
+        "monto": Money("850.00", "USD"),
+        "email_facturacion": "billing@example.com",
+        "pais_facturacion": "AR",
+    }
+
+
+@pytest.mark.django_db
+def test_curso_admin_runs_alta_batch_when_batch_text_is_present_on_regular_save(
+    rf,
+    admin_site,
+    monkeypatch,
+):
+    curso = CursoFactory()
+    request = rf.post(
+        f"/admin/cursos/curso/{curso.id}/change/",
+        data={
+            "_save": "Guardar",
+            "batch_alumnos": "Burgos\tNatallie\tnb@insyspr.com",
+            "batch_email_facturacion": "billing@example.com",
+            "batch_pais_facturacion": "AR",
+        },
+    )
+    add_messages_to_request(request)
+    called = {}
+
+    def fake_alta_batch_revendedor(**kwargs):
+        called.update(kwargs)
+        return AltaBatchRevendedorResult(created_alumnos=1, reused_alumnos=0)
+
+    monkeypatch.setattr(
+        "cursos.admin.alta_batch_revendedor",
+        fake_alta_batch_revendedor,
+    )
+
+    admin = CursoAdmin(Curso, admin_site)
+    response = admin.changeform_view(request, object_id=str(curso.id))
+
+    assert response.status_code == HTTPStatus.FOUND
     assert called == {
         "curso": curso,
         "alumnos_text": "Burgos\tNatallie\tnb@insyspr.com",

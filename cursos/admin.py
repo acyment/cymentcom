@@ -7,9 +7,9 @@ from django.db import models
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.html import format_html
-from djmoney.money import Money
 from django_json_widget.widgets import JSONEditorWidget
 from django_jsonform.widgets import JSONFormWidget
+from djmoney.money import Money
 
 from .emails import EmailSender
 from .models import Alumno
@@ -187,7 +187,7 @@ class InscripcionAdmin(EmailActionMixin, admin.ModelAdmin):
             "action_checkbox_name": ACTION_CHECKBOX_NAME,
             "action_name": request.POST.get("action"),
             "form": form,
-            "opts": self.model._meta,
+            "opts": self.opts,
             "queryset": queryset,
             "selected": request.POST.getlist(ACTION_CHECKBOX_NAME),
             "title": config["title"],
@@ -241,9 +241,19 @@ class CursoAdmin(admin.ModelAdmin):
     change_form_template = "admin/cursos/curso/change_form.html"
 
     def changeform_view(self, request, object_id=None, form_url="", extra_context=None):
-        if request.POST.get("_alta_batch_revendedor") and object_id:
+        if self._is_alta_batch_revendedor_request(request, object_id):
             return self._handle_alta_batch_revendedor(request, object_id)
         return super().changeform_view(request, object_id, form_url, extra_context)
+
+    def _is_alta_batch_revendedor_request(self, request, object_id):
+        return bool(
+            object_id
+            and request.method == "POST"
+            and (
+                request.POST.get("_alta_batch_revendedor")
+                or request.POST.get("batch_alumnos", "").strip()
+            ),
+        )
 
     def _handle_alta_batch_revendedor(self, request, object_id):
         curso = self.get_object(request, object_id)
