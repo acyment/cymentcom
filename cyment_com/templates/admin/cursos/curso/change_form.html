@@ -7,20 +7,16 @@
       <h2>Alta batch de revendedor</h2>
       <div class="form-row">
         <label for="id_batch_alumnos">Alumnos</label>
-        <textarea
-          id="id_batch_alumnos"
-          name="batch_alumnos"
-          rows="10"
-          placeholder="Apellido	Nombre	email"
-        ></textarea>
+        <textarea id="id_batch_alumnos"
+                  name="batch_alumnos"
+                  rows="10"
+                  placeholder="Apellido	Nombre	email"></textarea>
       </div>
       <div class="form-row">
         <label for="id_batch_email_facturacion">Email de facturación</label>
-        <input
-          id="id_batch_email_facturacion"
-          name="batch_email_facturacion"
-          type="email"
-        />
+        <input id="id_batch_email_facturacion"
+               name="batch_email_facturacion"
+               type="email" />
       </div>
       <div class="form-row">
         <label for="id_batch_pais_facturacion">País de facturación</label>
@@ -29,14 +25,11 @@
     </fieldset>
   {% endif %}
 {% endblock after_field_sets %}
-
 {% block submit_buttons_bottom %}
-  {{ block.super }}
   {% if original %}
     <div class="submit-row">
-      <button class="button" type="submit" name="_alta_batch_revendedor" value="1">
-        Alta batch de revendedor
-      </button>
+      <button class="button" type="submit" name="_alta_batch_revendedor" value="1">Alta batch de revendedor</button>
     </div>
   {% endif %}
+  {{ block.super }}
 {% endblock submit_buttons_bottom %}

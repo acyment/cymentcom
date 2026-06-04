@@ -5,6 +5,7 @@ from django.contrib.admin.sites import AdminSite
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.test import RequestFactory
+from django.urls import reverse
 from django_json_widget.widgets import JSONEditorWidget
 from django_jsonform.widgets import JSONFormWidget
 from djmoney.money import Money
@@ -157,6 +158,19 @@ def test_curso_admin_runs_alta_batch_when_batch_text_is_present_on_regular_save(
         "email_facturacion": "billing@example.com",
         "pais_facturacion": "AR",
     }
+
+
+@pytest.mark.django_db
+def test_curso_admin_renders_alta_batch_submit_before_default_submit_buttons(
+    admin_client,
+):
+    curso = CursoFactory()
+    url = reverse("admin:cursos_curso_change", args=[curso.pk])
+
+    response = admin_client.get(url)
+    html = response.content.decode()
+
+    assert html.index('name="_alta_batch_revendedor"') < html.index('name="_save"')
 
 
 @pytest.mark.django_db
