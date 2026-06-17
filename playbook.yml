@@ -5,148 +5,41 @@
   vars:
     created_username: acyment
 
+  handlers:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: ssh
+        state: restarted
+
+    - name: Restart fail2ban
+      ansible.builtin.service:
+        name: fail2ban
+        state: restarted
+
   tasks:
     - name: Install aptitude
-      apt:
+      ansible.builtin.apt:
         name: aptitude
-        state: latest
+        state: present
         update_cache: true
 
-    - name: Setup passwordless sudo
-      lineinfile:
-        path: /etc/sudoers
-        state: present
-        regexp: '^%sudo'
-        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
-        validate: '/usr/sbin/visudo -cf %s'
+    - name: Import user setup tasks
+      ansible.builtin.import_tasks: tasks/user_setup.yml
 
-    - name: Create a new regular user with sudo privileges
-      user:
-        name: '{{ created_username }}'
-        state: present
-        groups: sudo
-        append: true
-        create_home: true
+    - name: Import SSH hardening tasks
+      ansible.builtin.import_tasks: tasks/ssh_hardening.yml
 
-    - name: Set authorized key for remote user
-      ansible.posix.authorized_key:
-        user: '{{ created_username }}'
-        state: present
-        key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+    - name: Import Docker tasks
+      ansible.builtin.import_tasks: tasks/docker.yml
 
-    - name: Disable password authentication for root
-      lineinfile:
-        path: /etc/ssh/sshd_config
-        state: present
-        regexp: '^#?PermitRootLogin'
-        line: 'PermitRootLogin prohibit-password'
+    - name: Import firewall tasks
+      ansible.builtin.import_tasks: tasks/firewall.yml
 
-    - name: Add Docker GPG apt Key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
-
-    - name: Add Docker Repository
-      apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu jammy stable
-        state: present
-
-    - name: Upgrade apt
-      apt:
-        upgrade: true
-        update_cache: true
-
-    - name: Install required system packages
-      apt:
-        pkg:
-          - curl
-          - git
-          - ufw
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-          - docker-buildx-plugin
-          - docker-compose-plugin
-          - unattended-upgrades
-        state: latest
-
-    - name: UFW - Allow SSH connections
-      community.general.ufw:
-        rule: allow
-        name: OpenSSH
-
-    - name: UFW - Enable and deny by default
-      community.general.ufw:
-        state: enabled
-        default: deny
-
-    - name: Ensure group "docker" exists
-      ansible.builtin.group:
-        name: docker
-        state: present
-
-    - name: Add user acyment to docker group
-      user:
-        name: acyment
-        groups: docker
-        append: yes
-
-    - name: Install Fish shell on Debian/Ubuntu
-      apt:
-        name: fish
-        state: present
-
-    - name: Set Fish as default shell for the user
-      user:
-        name: '{{ created_username }}'
-        shell: /usr/bin/fish
-
-    - name: Change ownership of home directory
-      file:
-        path: /home/{{ created_username }}
-        owner: '{{ created_username }}'
-        group: '{{ created_username }}'
-        recurse: yes
-
-    - name: Change permissions of home directory
-      file:
-        path: /home/{{ created_username }}
-        mode: '0755'
-        recurse: yes
-
-    - name: Create src folder in user's home
-      ansible.builtin.file:
-        path: '/home/{{ created_username }}/src'
-        state: directory
-        owner: '{{ created_username }}'
-        group: '{{ created_username }}'
-        mode: '0755'
-
-    - name: Ensure .config/fish directory exists for user
-      ansible.builtin.file:
-        path: '/home/{{ created_username }}/.config/fish'
-        state: directory
-        owner: '{{ created_username }}'
-        group: '{{ created_username }}'
-        mode: '0755'
-        # recurse: yes # Usually not needed here unless fixing existing bad perms
-
-    - name: Set COMPOSE_BAKE env variable in Fish config
-      ansible.builtin.lineinfile:
-        path: '/home/{{ created_username }}/.config/fish/config.fish'
-        line: 'set -Ux COMPOSE_BAKE true'
-        create: true # Create config.fish if it doesn't exist
-        owner: '{{ created_username }}'
-        group: '{{ created_username }}'
-        mode: '0644' # Standard file permissions for config files
-
-    - name: Set vm.overcommit_memory for Redis/Performance
-      ansible.posix.sysctl:
-        name: vm.overcommit_memory
-        value: '1'
-        sysctl_file: /etc/sysctl.d/99-overcommit-memory.conf # Use /etc/sysctl.d/
-        state: present
-        reload: yes # Apply the setting immediately without requiring a reboot for it to take effect
+    - name: Import app environment tasks
+      ansible.builtin.import_tasks: tasks/app_env.yml
 
     - name: Unconditionally reboot the machine with all defaults
       ansible.builtin.reboot:
+
+    - name: Import backup tasks
+      ansible.builtin.import_tasks: tasks/backup.yml

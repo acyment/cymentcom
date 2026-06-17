@@ -1,0 +1,32 @@
+---
+- name: Disable root SSH login entirely
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin no'
+  notify: Restart sshd
+
+- name: Disable password authentication for all users
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  notify: Restart sshd
+
+- name: Limit SSH auth attempts
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: '^#?MaxAuthTries'
+    line: 'MaxAuthTries 3'
+  notify: Restart sshd
+
+- name: Shorten login grace time
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: '^#?LoginGraceTime'
+    line: 'LoginGraceTime 20'
+  notify: Restart sshd

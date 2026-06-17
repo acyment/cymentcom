@@ -1,0 +1,37 @@
+---
+- name: Ensure user bin directory exists
+  ansible.builtin.file:
+    path: '/home/{{ created_username }}/bin'
+    state: directory
+    owner: '{{ created_username }}'
+    group: '{{ created_username }}'
+    mode: '0755'
+
+- name: Install local Postgres backup wrapper script
+  ansible.builtin.copy:
+    src: ops/pg_backup_local.sh
+    dest: '/home/{{ created_username }}/bin/pg_backup_local.sh'
+    owner: '{{ created_username }}'
+    group: '{{ created_username }}'
+    mode: '0755'
+
+- name: Add nightly cron for local Postgres backup (02:00 UTC)
+  ansible.builtin.cron:
+    name: 'Postgres local backup nightly'
+    user: '{{ created_username }}'
+    minute: '0'
+    hour: '2'
+    job: '/home/{{ created_username }}/bin/pg_backup_local.sh'
+
+- name: Check if docker compose production file exists (optional first run)
+  ansible.builtin.stat:
+    path: '/home/{{ created_username }}/src/production.yml'
+  register: pg_compose_file
+
+- name: Optionally run initial backup once if compose file exists
+  ansible.builtin.command:
+    cmd: '/home/{{ created_username }}/bin/pg_backup_local.sh'
+  become: true
+  become_user: '{{ created_username }}'
+  changed_when: pg_compose_file.stat.exists
+  when: pg_compose_file.stat.exists

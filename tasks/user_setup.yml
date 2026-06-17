@@ -1,0 +1,63 @@
+---
+- name: Check whether the managed user already exists
+  ansible.builtin.getent:
+    database: passwd
+    key: '{{ created_username }}'
+    fail_key: false
+
+- name: Generate random initial password
+  ansible.builtin.set_fact:
+    initial_password: "{{ lookup('password', '/dev/null length=16 chars=ascii_letters,digits') }}"
+  when: created_username not in ansible_facts.getent_passwd
+
+- name: Create user with sudo privileges, password, and Fish shell
+  ansible.builtin.user:
+    name: '{{ created_username }}'
+    state: present
+    groups: sudo
+    append: true
+    create_home: true
+    password: "{{ initial_password | password_hash('sha512') }}"
+    shell: /usr/bin/fish
+  when: created_username not in ansible_facts.getent_passwd
+
+- name: Ensure existing user keeps sudo privileges and Fish shell
+  ansible.builtin.user:
+    name: '{{ created_username }}'
+    state: present
+    groups: sudo
+    append: true
+    shell: /usr/bin/fish
+  when: created_username in ansible_facts.getent_passwd
+
+- name: Expire password immediately to force change on first login
+  ansible.builtin.command: chage -d 0 {{ created_username }} # noqa: command-instead-of-module
+  changed_when: true
+  when: created_username not in ansible_facts.getent_passwd
+
+- name: Display generated initial password (user must change on first login)
+  ansible.builtin.debug:
+    msg: 'Initial password for {{ created_username }}: {{ initial_password }}'
+  when: created_username not in ansible_facts.getent_passwd
+
+- name: Restore default sudo for sudo group (requires password)
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL:ALL) ALL'
+    validate: '/usr/sbin/visudo -cf %s'
+
+- name: NOPASSWD sudo for docker, systemctl, sysctl only
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^{{ created_username }}'
+    line: '{{ created_username }} ALL=(ALL) NOPASSWD: /usr/bin/docker, /usr/bin/systemctl, /usr/sbin/sysctl'
+    validate: '/usr/sbin/visudo -cf %s'
+
+- name: Set authorized key for remote user
+  ansible.posix.authorized_key:
+    user: '{{ created_username }}'
+    state: present
+    key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"

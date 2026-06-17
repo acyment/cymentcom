@@ -1,0 +1,53 @@
+---
+- name: Change ownership of home directory
+  ansible.builtin.file:
+    path: /home/{{ created_username }}
+    owner: '{{ created_username }}'
+    group: '{{ created_username }}'
+    recurse: true
+
+- name: Set home directory permissions
+  ansible.builtin.file:
+    path: /home/{{ created_username }}
+    mode: '0755'
+
+- name: Ensure .ssh directory has strict permissions
+  ansible.builtin.file:
+    path: /home/{{ created_username }}/.ssh
+    state: directory
+    owner: '{{ created_username }}'
+    group: '{{ created_username }}'
+    mode: '0700'
+
+- name: Create src folder in user's home
+  ansible.builtin.file:
+    path: '/home/{{ created_username }}/src'
+    state: directory
+    owner: '{{ created_username }}'
+    group: '{{ created_username }}'
+    mode: '0755'
+
+- name: Ensure .config/fish directory exists for user
+  ansible.builtin.file:
+    path: '/home/{{ created_username }}/.config/fish'
+    state: directory
+    owner: '{{ created_username }}'
+    group: '{{ created_username }}'
+    mode: '0755'
+
+- name: Set COMPOSE_BAKE env variable in Fish config
+  ansible.builtin.lineinfile:
+    path: '/home/{{ created_username }}/.config/fish/config.fish'
+    line: 'set -Ux COMPOSE_BAKE true'
+    create: true
+    owner: '{{ created_username }}'
+    group: '{{ created_username }}'
+    mode: '0644'
+
+- name: Set vm.overcommit_memory for Redis/Performance
+  ansible.posix.sysctl:
+    name: vm.overcommit_memory
+    value: '1'
+    sysctl_file: /etc/sysctl.d/99-overcommit-memory.conf
+    state: present
+    reload: true
