@@ -29,43 +29,18 @@ const Hero = () => {
         <section>
           <div className="HeroCopy">
             <p className="HeroText">
-              Agilidad para <b className="HeroTextBold">escépticos</b>
+              Alan Cyment — Diseño organizacional y desarrollo de producto.
               <br />
-              Menos dogma, más{' '}
-              <RoughNotation
-                color="#7b68ee"
-                type="underline"
-                show="true"
-                animate="true"
-                iterations={8}
-                padding={[0, 5]}
-              >
-                resultados.
-              </RoughNotation>{' '}
-              Transforma la agilidad en cambios estructurales y resultados{' '}
-              <RoughNotation
-                padding={[3, 10]}
-                strokeWidth={2}
-                color="#7b68ee"
-                type="circle"
-                show="true"
-                animate="true"
-              >
-                tangibles
-              </RoughNotation>{' '}
-              para toda tu organización.
+              20 años trabajando con equipos y organizaciones, hoy investigando
+              qué cambia con IA.
             </p>
             <div className="HeroCTARow">
-              <button
+              <a
                 className="HeroCTA HeroCTAPrimary"
-                onClick={() => {
-                  const el = document.querySelector('#cursos');
-                  el &&
-                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }}
+                href="https://www.linkedin.com/in/alancyment/"
               >
-                Ver cursos
-              </button>
+                LinkedIn
+              </a>
               <button
                 className="HeroCTA HeroCTAPrimary"
                 onClick={() => {

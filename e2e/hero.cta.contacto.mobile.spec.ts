@@ -6,7 +6,7 @@ test.describe('Hero CTA Contacto (mobile)', () => {
     page,
   }, ti) => {
     if (ti.project.name !== 'mobile') test.skip();
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
     await hideDebugToolbar(page);
 
     let cta = page.getByRole('button', { name: /contacto/i });

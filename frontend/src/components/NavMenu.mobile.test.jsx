@@ -48,8 +48,16 @@ describe('NavMenu (mobile behavior)', () => {
     expect(
       await screen.findByRole('link', { name: 'Inicio' }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Cursos' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Intervenciones' }),
+    ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Contacto' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'Cursos' }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'Agilidad profunda' }),
+    ).not.toBeInTheDocument();
     // No dialog is rendered
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
@@ -64,9 +72,15 @@ describe('NavMenu (desktop behavior)', () => {
       screen.queryByRole('button', { name: /menu/i }),
     ).not.toBeInTheDocument();
     expect(
-      await screen.findByRole('link', { name: 'Cursos' }),
+      await screen.findByRole('link', { name: 'Intervenciones' }),
     ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Contacto' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'Cursos' }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'Agilidad profunda' }),
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -74,11 +88,13 @@ it('annotations: desktop shows hover-only circle, mobile shows current underline
   // Desktop: annotation wrapper exists but stays hidden until hover
   mockMatchMedia({ mobile: false });
   const { unmount } = render(<NavMenu />);
-  const cursos = await screen.findByRole('link', { name: 'Cursos' });
+  const intervenciones = await screen.findByRole('link', {
+    name: 'Intervenciones',
+  });
   expect(
     document.querySelector('.NavNotation[data-rough-show="false"]'),
   ).toBeInTheDocument();
-  await userEvent.hover(cursos);
+  await userEvent.hover(intervenciones);
   await waitFor(() => {
     expect(
       document.querySelector('.NavNotation[data-rough-show="true"]'),
