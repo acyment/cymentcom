@@ -80,7 +80,7 @@ const buildCourse = (slug, overrides = {}) => ({
   ...overrides,
 });
 
-describe('Desktop catalogue routing (current behaviour)', () => {
+describe('Desktop course routing', () => {
   beforeEach(() => {
     axios.get.mockReset();
     openCheckoutMock.mockReset();
@@ -89,7 +89,7 @@ describe('Desktop catalogue routing (current behaviour)', () => {
     __clearCursosCache();
   });
 
-  it('keeps the URL on "/" while switching courses in desktop carousel', async () => {
+  it('omits the course catalogue from the desktop homepage', async () => {
     axios.get.mockImplementation((url) => {
       if (url === '/api/tipos-de-curso') {
         return Promise.resolve({
@@ -112,23 +112,12 @@ describe('Desktop catalogue routing (current behaviour)', () => {
     const router = createRouter({ routeTree, history });
     render(<RouterProvider router={router} />);
 
-    await screen.findByText(/CSM Title/i);
-    const clbHeading = await screen.findByText(/CLB Title/i);
-
     expect(history.location.pathname).toBe('/');
-
-    await userEvent.click(clbHeading);
-
-    expect(history.location.pathname).toBe('/');
-    expect(await screen.findByText(/CLB Title/)).toBeInTheDocument();
-
-    const csmHeading = await screen.findByText(/CSM Title/i);
-    await userEvent.click(csmHeading);
-    expect(history.location.pathname).toBe('/');
-    expect(await screen.findByText(/CSM Title/)).toBeInTheDocument();
+    expect(screen.queryByText(/CSM Title/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/CLB Title/i)).not.toBeInTheDocument();
   });
 
-  it('deep links to /cursos/CLB and shows desktop catalogue with that course selected', async () => {
+  it('deep links to /cursos/CLB and uses the desktop course experience', async () => {
     axios.get.mockImplementation((url) => {
       if (url === '/api/tipos-de-curso') {
         return Promise.resolve({
@@ -149,9 +138,9 @@ describe('Desktop catalogue routing (current behaviour)', () => {
     render(<RouterProvider router={router} />);
 
     expect(history.location.pathname).toBe('/cursos/CLB');
-    expect(await screen.findByText(/Agilidad para/i)).toBeInTheDocument();
-    expect(await screen.findByText(/CLB Title/)).toBeInTheDocument();
-    expect(screen.getByText(/CSM summary/)).toBeInTheDocument();
+    expect(
+      await screen.findByTestId('desktop-course-experience'),
+    ).toHaveTextContent('CLB');
   });
 
   it('deep links without triggering hero auto-scroll on desktop', async () => {
@@ -184,10 +173,7 @@ describe('Desktop catalogue routing (current behaviour)', () => {
       const router = createRouter({ routeTree, history });
       render(<RouterProvider router={router} />);
 
-      await screen.findByText(/CLB Title/i);
-      await screen.findByTestId('CourseDetailPanel', undefined, {
-        timeout: 5000,
-      });
+      await screen.findByTestId('desktop-course-experience');
     } finally {
       Element.prototype.scrollIntoView = originalScrollIntoView;
     }
@@ -206,13 +192,11 @@ describe('Desktop catalogue routing (current behaviour)', () => {
       });
     }
 
-    const detailScrolls = targets.filter(({ id }) => id === 'detalle-curso');
     const heroScrolls = targets.filter(
       ({ className }) =>
         typeof className === 'string' && className.includes('HeroContent'),
     );
 
-    expect(detailScrolls.length).toBeGreaterThan(0);
     expect(heroScrolls).toHaveLength(0);
   });
 });

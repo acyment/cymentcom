@@ -9,7 +9,7 @@ test.describe('Checkout forms (mobile)', () => {
     if (testInfo.project.name !== 'mobile') test.skip();
 
     const opened = await openInscripcionForFirstCourse(page);
-    if (!opened) test.skip(true, 'No courses present');
+    if (!opened) test.skip(true, 'Checkout did not open');
     await assertNoHOverflow(page);
 
     // Attempt to continue without filling fields
@@ -38,7 +38,7 @@ test.describe('Checkout forms (mobile)', () => {
     if (testInfo.project.name !== 'mobile') test.skip();
 
     const opened2 = await openInscripcionForFirstCourse(page);
-    if (!opened2) test.skip(true, 'No courses present');
+    if (!opened2) test.skip(true, 'Checkout did not open');
 
     // Complete StepParticipantes quickly
     await page.getByLabel('Nombre*').fill('Ada');

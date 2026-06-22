@@ -1,5 +1,8 @@
 import { expect, type Page } from '@playwright/test';
 
+const CHECKOUT_WITH_COURSE =
+  '/checkout?checkout=1&idCurso=1&nombreCorto=Agilidad&costoUSD=100';
+
 export async function hideDebugToolbar(page: Page): Promise<void> {
   const hideBtn = page.locator('#djHideToolBarButton');
   if (await hideBtn.count()) {
@@ -12,24 +15,9 @@ export async function hideDebugToolbar(page: Page): Promise<void> {
 export async function openInscripcionForFirstCourse(
   page: Page,
 ): Promise<boolean> {
-  await page.goto('/');
+  await page.goto(CHECKOUT_WITH_COURSE);
   await hideDebugToolbar(page);
-  const cursos = page.locator('#cursos');
-  await expect(cursos).toHaveCount(1);
-  await page.evaluate(() => {
-    const el = document.querySelector('#cursos');
-    el && el.scrollIntoView({ behavior: 'instant', block: 'start' });
-  });
-  const items = page.locator('.ToggleResumenCurso');
-  if ((await items.count()) === 0) return false; // caller should handle skip
-  await items.first().click();
-  await expect(page.locator('#detalle-curso')).toBeVisible();
-  const trigger = (await page.getByTestId('inscripcion-open').count())
-    ? page.getByTestId('inscripcion-open')
-    : page.getByRole('button', { name: /inscribirme/i });
-  await expect(trigger).toBeVisible();
-  await trigger.click();
-  // Support both desktop modal and mobile fullscreen routing
+
   const dialog = page.getByRole('dialog');
   const fullscreen = page.getByTestId('checkout-fullscreen');
   const fieldNombre = page.getByLabel('Nombre*');

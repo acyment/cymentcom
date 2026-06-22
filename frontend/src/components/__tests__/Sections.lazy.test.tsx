@@ -97,19 +97,19 @@ describe('Sections lazy loading', () => {
     expect(screen.queryByTestId('intervenciones-loading')).toBeNull();
   });
 
-  it('lazily loads AgilidadProfunda on desktop', async () => {
-    const deferred = createDeferred();
-    const mockAgilidad = () => <div data-testid="agilidad" />;
-    const loader = vi.fn(() => deferred.promise);
+  it('omits Cursos and AgilidadProfunda from the homepage', async () => {
+    const agilidadLoader = vi.fn(() =>
+      Promise.resolve({ default: () => <div data-testid="agilidad" /> }),
+    );
 
     vi.resetModules();
     vi.clearAllMocks();
     baseMocks(false);
     vi.doMock('../loadIntervenciones', () => ({
-      loadIntervenciones: () => Promise.resolve({ default: () => null }),
+      loadIntervenciones: () => new Promise(() => {}),
     }));
     vi.doMock('../loadAgilidadProfunda', () => ({
-      loadAgilidadProfunda: loader,
+      loadAgilidadProfunda: agilidadLoader,
     }));
 
     const Sections = (await import('../Sections.jsx')).default;
@@ -120,40 +120,8 @@ describe('Sections lazy loading', () => {
       </Suspense>,
     );
 
-    await waitFor(() => {
-      expect(loader).toHaveBeenCalledTimes(1);
-    });
-    expect(await screen.findByTestId('agilidad-loading')).toBeInTheDocument();
-
-    deferred.resolve({ default: mockAgilidad });
-    await waitFor(() => {
-      expect(screen.getByTestId('agilidad')).toBeInTheDocument();
-    });
-  });
-
-  it('avoids loading AgilidadProfunda on mobile', async () => {
-    const deferred = createDeferred();
-    const loader = vi.fn(() => deferred.promise);
-
-    vi.resetModules();
-    vi.clearAllMocks();
-    baseMocks(true);
-    vi.doMock('../loadAgilidadProfunda', () => ({
-      loadAgilidadProfunda: loader,
-    }));
-    vi.doMock('../loadIntervenciones', () => ({
-      loadIntervenciones: () => Promise.resolve({ default: () => null }),
-    }));
-
-    const Sections = (await import('../Sections.jsx')).default;
-
-    render(
-      <Suspense>
-        <Sections />
-      </Suspense>,
-    );
-
-    expect(loader).not.toHaveBeenCalled();
+    expect(screen.queryByTestId('cursos')).toBeNull();
+    expect(agilidadLoader).not.toHaveBeenCalled();
     expect(screen.queryByTestId('agilidad-loading')).toBeNull();
   });
 
@@ -164,6 +132,6 @@ describe('Sections lazy loading', () => {
     expect(source.includes("from './Intervenciones'")).toBe(false);
     expect(source.includes('loadIntervenciones')).toBe(true);
     expect(source.includes("from './AgilidadProfunda'")).toBe(false);
-    expect(source.includes('loadAgilidadProfunda')).toBe(true);
+    expect(source.includes('loadAgilidadProfunda')).toBe(false);
   });
 });

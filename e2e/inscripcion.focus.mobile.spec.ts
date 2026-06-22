@@ -6,11 +6,13 @@ test.describe('Inscripción dialog focus trap (mobile)', () => {
     if (testInfo.project.name !== 'mobile') test.skip();
 
     const opened = await openInscripcionForFirstCourse(page);
-    if (!opened) test.skip(true, 'No courses present');
+    if (!opened) test.skip(true, 'Checkout did not open');
 
     const inside = async () =>
       await page.evaluate(() => {
-        const content = document.querySelector('.DialogContent');
+        const content = document.querySelector(
+          '.CheckoutFullscreen__content, .DialogContent',
+        );
         return Boolean(content && content.contains(document.activeElement));
       });
 

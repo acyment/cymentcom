@@ -63,8 +63,8 @@ function useCourseDetail(slug, initialCourse) {
     const cached = courseDetailCache.get(slug) || null;
     const baseline = cached || seededInitial;
 
-    if (baseline && course !== baseline) {
-      setCourse(baseline);
+    if (baseline) {
+      setCourse((current) => (current === baseline ? current : baseline));
       setStatus('success');
       setError(null);
     }
@@ -107,7 +107,7 @@ function useCourseDetail(slug, initialCourse) {
     return () => {
       isMounted = false;
     };
-  }, [slug, reloadToken, seededInitial, course]);
+  }, [slug, reloadToken, seededInitial]);
 
   return { status, course, error, refetch };
 }
@@ -151,6 +151,8 @@ export default function CourseDetail() {
   );
 
   useEffect(() => {
+    if (!headerRef.current) return undefined;
+
     // Prevent the browser from restoring a mid-page scroll when arriving from the catalog
     const prev =
       typeof window !== 'undefined' && window.history
@@ -163,8 +165,6 @@ export default function CourseDetail() {
         // ignore
       }
     }
-
-    if (!headerRef.current) return undefined;
 
     const updatePadding = (height) => {
       const resolved = Number.isFinite(height) ? height : 0;
@@ -190,12 +190,15 @@ export default function CourseDetail() {
       document.documentElement.style.scrollPaddingTop = offsetPx;
     };
 
-    if (typeof ResizeObserver === 'undefined') {
+    const ResizeObserverCtor =
+      typeof window !== 'undefined' ? window.ResizeObserver : undefined;
+
+    if (typeof ResizeObserverCtor === 'undefined') {
       updatePadding(headerRef.current.offsetHeight ?? 0);
       return undefined;
     }
 
-    const observer = new ResizeObserver((entries) => {
+    const observer = new ResizeObserverCtor((entries) => {
       const entry = entries[0];
       if (!entry) return;
       const nextHeight =
@@ -221,7 +224,7 @@ export default function CourseDetail() {
         }
       }
     };
-  }, []);
+  }, [status]);
 
   useEffect(() => {
     if (status !== 'loading') return;

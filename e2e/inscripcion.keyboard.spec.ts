@@ -6,7 +6,7 @@ test.describe('Inscripción dialog keyboard behavior (desktop)', () => {
     if (testInfo.project.name !== 'desktop') test.skip();
 
     const opened = await openInscripcionForFirstCourse(page);
-    if (!opened) test.skip(true, 'No courses present');
+    if (!opened) test.skip(true, 'Checkout did not open');
 
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();

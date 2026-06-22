@@ -7,10 +7,8 @@ import { Outlet } from '@tanstack/react-router';
 import { CheckoutEntry } from '@/features/checkout/CheckoutEntry';
 import CheckoutFlow from '@/features/checkout/CheckoutFlow';
 import { loadIntervenciones } from './loadIntervenciones';
-import { loadAgilidadProfunda } from './loadAgilidadProfunda';
 
 const LazyIntervenciones = lazy(() => loadIntervenciones());
-const LazyAgilidadProfunda = lazy(() => loadAgilidadProfunda());
 
 const Sections = ({
   initialSlug = null,
@@ -21,18 +19,15 @@ const Sections = ({
   return (
     <Accordion.Root type="multiple">
       <Hero />
-      <Cursos
-        initialSlug={initialSlug}
-        onCourseDetailReady={onCourseDetailReady}
-      />
+      {initialSlug ? (
+        <Cursos
+          initialSlug={initialSlug}
+          onCourseDetailReady={onCourseDetailReady}
+        />
+      ) : null}
       {!isMobile && (
         <Suspense fallback={<div data-testid="intervenciones-loading" />}>
           <LazyIntervenciones />
-        </Suspense>
-      )}
-      {!isMobile && (
-        <Suspense fallback={<div data-testid="agilidad-loading" />}>
-          <LazyAgilidadProfunda />
         </Suspense>
       )}
       {renderOutlet ? <Outlet /> : null}

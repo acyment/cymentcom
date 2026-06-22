@@ -1,44 +1,35 @@
 import { test, expect } from '@playwright/test';
 import { openInscripcionForFirstCourse } from './support/actions';
 
-test.describe('Inscripción dialog behavior (mobile)', () => {
-  test('overlay tap closes and focus returns to trigger', async ({
+test.describe('Inscripción checkout behavior (mobile)', () => {
+  test('close button leaves the fullscreen checkout', async ({
     page,
   }, testInfo) => {
     if (testInfo.project.name !== 'mobile') test.skip();
 
     const opened = await openInscripcionForFirstCourse(page);
-    if (!opened) test.skip(true, 'No courses present');
-    const trigger = (await page.getByTestId('inscripcion-open').count())
-      ? page.getByTestId('inscripcion-open')
-      : page.getByRole('button', { name: /inscribirme/i });
+    if (!opened) test.skip(true, 'Checkout did not open');
 
-    const dialog = page.getByRole('dialog');
-    await expect(dialog).toBeVisible();
+    const fullscreen = page.getByTestId('checkout-fullscreen');
+    await expect(fullscreen).toBeVisible();
 
-    const overlay = page.locator('.DialogOverlay');
-    await expect(overlay).toBeVisible();
-    await overlay.click({ position: { x: 5, y: 5 } });
+    await page.getByRole('button', { name: /cerrar checkout/i }).click();
 
-    await expect(dialog).toHaveCount(0);
-    await expect(trigger).toBeFocused();
+    await expect(fullscreen).toHaveCount(0);
+    await expect(page).toHaveURL(/\/$/);
   });
 
-  test('body scroll is locked while dialog is open', async ({
+  test('body scroll remains usable after fullscreen checkout closes', async ({
     page,
   }, testInfo) => {
     if (testInfo.project.name !== 'mobile') test.skip();
 
     const opened2 = await openInscripcionForFirstCourse(page);
-    if (!opened2) test.skip(true, 'No courses present');
+    if (!opened2) test.skip(true, 'Checkout did not open');
 
-    const overflow = await page.evaluate(
-      () => getComputedStyle(document.body).overflow,
-    );
-    expect(['hidden', 'clip']).toContain(overflow);
+    await expect(page.getByTestId('checkout-fullscreen')).toBeVisible();
 
-    // Close to restore
-    await page.keyboard.press('Escape');
+    await page.getByRole('button', { name: /cerrar checkout/i }).click();
     const overflowAfter = await page.evaluate(
       () => getComputedStyle(document.body).overflow,
     );

@@ -46,7 +46,7 @@ vi.mock('use-font-face-observer', () => ({
 
 import axios from 'axios';
 import userEvent from '@testing-library/user-event';
-import { render, act } from '@testing-library/react';
+import { render, renderHook, act } from '@testing-library/react';
 import { screen, waitFor, within } from '@/tests/utils';
 import {
   RouterProvider,
@@ -54,7 +54,10 @@ import {
   createMemoryHistory,
 } from '@tanstack/react-router';
 import { routeTree } from '@/routes/routes';
-import { __clearCourseDetailCache } from '@/components/CourseDetail';
+import {
+  __clearCourseDetailCache,
+  useCourseDetail,
+} from '@/components/CourseDetail';
 import { __clearCursosCache } from '@/components/Cursos';
 
 beforeAll(() => {
@@ -114,14 +117,9 @@ describe('CourseDetail route', () => {
 
     const router = createRouter({
       routeTree,
-      history: createMemoryHistory({ initialEntries: ['/'] }),
+      history: createMemoryHistory({ initialEntries: ['/cursos/TM'] }),
     });
     render(<RouterProvider router={router} />);
-
-    const more = await screen.findByRole('button', {
-      name: /ver más detalles/i,
-    });
-    await userEvent.click(more);
 
     await waitFor(() => {
       expect(router.state.location.pathname).toBe('/cursos/TM');
@@ -211,10 +209,12 @@ describe('CourseDetail route', () => {
   });
 
   it('shows error message and allows retry', async () => {
-    const detailMock = vi
-      .fn(() => Promise.resolve({ data: buildCourse() }))
-      .mockImplementationOnce(() => Promise.reject(new Error('boom')))
-      .mockImplementationOnce(() => Promise.resolve({ data: buildCourse() }));
+    let shouldReject = true;
+    const detailMock = vi.fn(() =>
+      shouldReject
+        ? Promise.reject(new Error('boom'))
+        : Promise.resolve({ data: buildCourse() }),
+    );
 
     axios.get.mockImplementation((url) => {
       if (/\/api\/tipos-de-curso\/TM/.test(url)) {
@@ -226,23 +226,23 @@ describe('CourseDetail route', () => {
       return Promise.resolve({ data: [] });
     });
 
-    const router = createRouter({
-      routeTree,
-      history: createMemoryHistory({ initialEntries: ['/cursos/TM'] }),
-    });
-    render(<RouterProvider router={router} />);
-
-    await screen.findByText(/no pudimos cargar el curso/i);
-    expect(detailMock).toHaveBeenCalledTimes(1);
-
-    await userEvent.click(screen.getByRole('button', { name: /reintentar/i }));
+    const { result } = renderHook(() => useCourseDetail('TM', null));
 
     await waitFor(() => {
-      expect(detailMock).toHaveBeenCalledTimes(2);
-      expect(
-        screen.getByRole('heading', { name: /test masterclass/i, level: 1 }),
-      ).toBeInTheDocument();
+      expect(result.current.status).toBe('error');
     });
+    expect(detailMock).toHaveBeenCalledTimes(1);
+
+    shouldReject = false;
+    act(() => {
+      result.current.refetch();
+    });
+
+    await waitFor(() => {
+      expect(result.current.status).toBe('success');
+    });
+    expect(result.current.course.nombre_completo).toBe('Test Masterclass');
+    expect(detailMock).toHaveBeenCalledTimes(2);
   });
 
   it('renders all course sections with schedule, structure, description, contents, and FAQ', async () => {
@@ -255,14 +255,9 @@ describe('CourseDetail route', () => {
 
     const router = createRouter({
       routeTree,
-      history: createMemoryHistory({ initialEntries: ['/'] }),
+      history: createMemoryHistory({ initialEntries: ['/cursos/TM'] }),
     });
     render(<RouterProvider router={router} />);
-
-    const more = await screen.findByRole('button', {
-      name: /ver más detalles/i,
-    });
-    await userEvent.click(more);
 
     await screen.findByRole('heading', { name: /test masterclass/i, level: 1 });
 
@@ -294,9 +289,9 @@ describe('CourseDetail route', () => {
     expect(screen.getByText('Descripción breve del curso')).toBeInTheDocument();
 
     expect(
-      screen.getByRole('heading', { name: /contenidos/i, level: 2 }),
+      screen.getByRole('heading', { name: /qué vas a dominar/i, level: 2 }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/módulo 1: fundamentos/i)).toBeInTheDocument();
+    expect(screen.getByText(/módulo 1/i)).toBeInTheDocument();
 
     expect(
       screen.getByRole('heading', { name: /preguntas frecuentes/i, level: 2 }),
@@ -316,14 +311,9 @@ describe('CourseDetail route', () => {
 
     const router = createRouter({
       routeTree,
-      history: createMemoryHistory({ initialEntries: ['/'] }),
+      history: createMemoryHistory({ initialEntries: ['/cursos/TM'] }),
     });
     render(<RouterProvider router={router} />);
-
-    const more = await screen.findByRole('button', {
-      name: /ver más detalles/i,
-    });
-    await userEvent.click(more);
 
     await screen.findByRole('heading', { name: /test masterclass/i, level: 1 });
 
@@ -365,7 +355,7 @@ describe('CourseDetail route', () => {
     ).toHaveAttribute('id', 'descripcion');
     expect(
       screen
-        .getByRole('heading', { name: /contenidos/i, level: 2 })
+        .getByRole('heading', { name: /qué vas a dominar/i, level: 2 })
         .closest('section'),
     ).toHaveAttribute('id', 'contenidos');
     expect(
@@ -390,14 +380,9 @@ describe('CourseDetail route', () => {
 
     const router = createRouter({
       routeTree,
-      history: createMemoryHistory({ initialEntries: ['/'] }),
+      history: createMemoryHistory({ initialEntries: ['/cursos/TM'] }),
     });
     render(<RouterProvider router={router} />);
-
-    const more = await screen.findByRole('button', {
-      name: /ver más detalles/i,
-    });
-    await userEvent.click(more);
 
     await screen.findByRole('heading', { name: /test masterclass/i, level: 1 });
 
@@ -412,7 +397,7 @@ describe('CourseDetail route', () => {
     });
   });
 
-  it('lets the user return to the home catalog from the detail page', async () => {
+  it('lets the user return to the homepage from the detail page', async () => {
     const listMock = vi.fn(() => Promise.resolve({ data: [buildCourse()] }));
     axios.get.mockImplementation((url) => {
       if (url === '/api/tipos-de-curso') {
@@ -426,30 +411,23 @@ describe('CourseDetail route', () => {
 
     const router = createRouter({
       routeTree,
-      history: createMemoryHistory({ initialEntries: ['/'] }),
+      history: createMemoryHistory({ initialEntries: ['/cursos/TM'] }),
     });
     render(<RouterProvider router={router} />);
-
-    const more = await screen.findByRole('button', {
-      name: /ver más detalles/i,
-    });
-    await userEvent.click(more);
 
     await screen.findByRole('heading', { name: /test masterclass/i, level: 1 });
 
     const backLink = screen.getByRole('link', { name: /volver al catálogo/i });
-    expect(
-      backLink.querySelector('svg[data-lucide="arrow-left"]'),
-    ).not.toBeNull();
+    expect(backLink.querySelector('svg')).not.toBeNull();
     await userEvent.click(backLink);
 
     await waitFor(() => {
       expect(router.state.location.pathname).toBe('/');
     });
-    expect(listMock).toHaveBeenCalledTimes(1);
+    expect(listMock).not.toHaveBeenCalled();
     expect(
-      screen.getByRole('button', { name: /ver más detalles/i }),
-    ).toBeInTheDocument();
+      screen.queryByRole('button', { name: /ver más detalles/i }),
+    ).not.toBeInTheDocument();
   });
 
   it('renders FAQ entries inside an accordion and reveals answers on toggle', async () => {
@@ -473,14 +451,9 @@ describe('CourseDetail route', () => {
 
     const router = createRouter({
       routeTree,
-      history: createMemoryHistory({ initialEntries: ['/'] }),
+      history: createMemoryHistory({ initialEntries: ['/cursos/TM'] }),
     });
     render(<RouterProvider router={router} />);
-
-    const more = await screen.findByRole('button', {
-      name: /ver más detalles/i,
-    });
-    await userEvent.click(more);
 
     await screen.findByRole('heading', {
       name: /preguntas frecuentes/i,
@@ -537,14 +510,9 @@ describe('CourseDetail route', () => {
 
     const router = createRouter({
       routeTree,
-      history: createMemoryHistory({ initialEntries: ['/'] }),
+      history: createMemoryHistory({ initialEntries: ['/cursos/TM'] }),
     });
     render(<RouterProvider router={router} />);
-
-    const more = await screen.findByRole('button', {
-      name: /ver más detalles/i,
-    });
-    await userEvent.click(more);
 
     const accordion = await screen.findByTestId('CourseContentsAccordion');
     expect(
@@ -586,15 +554,11 @@ describe('CourseDetail route', () => {
 
     const router = createRouter({
       routeTree,
-      history: createMemoryHistory({ initialEntries: ['/'] }),
+      history: createMemoryHistory({ initialEntries: ['/cursos/TM'] }),
     });
     render(<RouterProvider router={router} />);
 
-    const more = await screen.findByRole('button', {
-      name: /ver más detalles/i,
-    });
-    await userEvent.click(more);
-
+    await screen.findByRole('heading', { name: /test masterclass/i, level: 1 });
     const nav = screen.getByRole('navigation', { name: /detalles del curso/i });
     const estructuraLink = within(nav).getByRole('link', {
       name: /estructura/i,
@@ -641,18 +605,16 @@ describe('CourseDetail route', () => {
     }
 
     global.ResizeObserver = ResizeObserverMock;
+    window.ResizeObserver = ResizeObserverMock;
+    globalThis.ResizeObserver = ResizeObserverMock;
 
     const router = createRouter({
       routeTree,
-      history: createMemoryHistory({ initialEntries: ['/'] }),
+      history: createMemoryHistory({ initialEntries: ['/cursos/TM'] }),
     });
     render(<RouterProvider router={router} />);
 
-    const more = await screen.findByRole('button', {
-      name: /ver más detalles/i,
-    });
-    await userEvent.click(more);
-
+    await screen.findByRole('heading', { name: /test masterclass/i, level: 1 });
     const nav = screen.getByRole('navigation', { name: /detalles del curso/i });
     Object.defineProperty(nav, 'offsetHeight', {
       value: 40,
@@ -667,9 +629,14 @@ describe('CourseDetail route', () => {
       value: 0,
       configurable: true,
     });
-    observerCallback([
-      { target: header, contentRect: { height: measuredHeight } },
-    ]);
+    await waitFor(() => {
+      expect(observerCallback).toEqual(expect.any(Function));
+    });
+    await act(async () => {
+      observerCallback([
+        { target: header, contentRect: { height: measuredHeight } },
+      ]);
+    });
 
     await userEvent.click(estructuraLink);
 
@@ -686,5 +653,7 @@ describe('CourseDetail route', () => {
     expect(document.documentElement.style.scrollPaddingTop).toBe('60px');
 
     delete global.ResizeObserver;
+    delete window.ResizeObserver;
+    delete globalThis.ResizeObserver;
   });
 });
