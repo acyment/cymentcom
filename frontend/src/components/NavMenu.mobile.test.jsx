@@ -49,7 +49,7 @@ describe('NavMenu (mobile behavior)', () => {
       await screen.findByRole('link', { name: 'Inicio' }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('link', { name: 'Intervenciones' }),
+      screen.getByRole('link', { name: 'Cómo trabajo' }),
     ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Contacto' })).toBeInTheDocument();
     expect(
@@ -72,9 +72,8 @@ describe('NavMenu (desktop behavior)', () => {
       screen.queryByRole('button', { name: /menu/i }),
     ).not.toBeInTheDocument();
     expect(
-      await screen.findByRole('link', { name: 'Intervenciones' }),
+      await screen.findByRole('link', { name: 'Contacto' }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Contacto' })).toBeInTheDocument();
     expect(
       screen.queryByRole('link', { name: 'Cursos' }),
     ).not.toBeInTheDocument();
@@ -88,13 +87,13 @@ it('annotations: desktop shows hover-only circle, mobile shows current underline
   // Desktop: annotation wrapper exists but stays hidden until hover
   mockMatchMedia({ mobile: false });
   const { unmount } = render(<NavMenu />);
-  const intervenciones = await screen.findByRole('link', {
-    name: 'Intervenciones',
+  const contacto = await screen.findByRole('link', {
+    name: 'Contacto',
   });
   expect(
     document.querySelector('.NavNotation[data-rough-show="false"]'),
   ).toBeInTheDocument();
-  await userEvent.hover(intervenciones);
+  await userEvent.hover(contacto);
   await waitFor(() => {
     expect(
       document.querySelector('.NavNotation[data-rough-show="true"]'),

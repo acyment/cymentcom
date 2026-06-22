@@ -1182,43 +1182,66 @@ ul {
     250ms ease;
 }
 
-.IntervencionesAccordion {
+.ComoTrabajoSection {
   background-color: black;
   color: white;
-  padding-top: 2em;
-  padding-left: $main-padding-left;
-  padding-right: $main-padding-left;
-  position: relative;
+  padding: 2.5vw $main-padding-left 6vw;
 }
 
-.IntervencionesTitulo {
+.ComoTrabajoTitulo {
   font-size: 1.6em;
   font-weight: 700;
-}
-
-.IntervencionesAreaPreguntas {
-  display: flex;
-  padding-top: 6em;
-  padding-bottom: 6em;
-}
-
-.IntervencionesSeccionPregunta {
-  flex-grow: 1;
-  flex: 1;
-  padding-left: 4vw;
-  padding-right: 4vw;
-}
-
-.IntervencionesTituloPregunta {
-  font-size: 8vw;
-  font-weight: 700;
-  padding-bottom: 2em;
+  margin: 0;
   display: inline-block;
 }
 
-.IntervencionesContenidoPregunta {
-  font-size: 2.4vw;
+.ComoTrabajoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 8vw;
+  row-gap: 4vw;
+  padding-top: 4.5vw;
+}
+
+.ComoTrabajoCard {
+  border-top: 1px solid rgba(120, 84, 250, 0.4);
+  padding-top: 2vw;
+}
+
+.ComoTrabajoCardTitulo {
+  font-size: 2.6vw;
+  font-weight: 700;
+  color: white;
+  display: inline-block;
+  margin: 0;
+}
+
+.ComoTrabajoCardTexto {
+  font-size: 1.7vw;
   font-weight: 100;
+  line-height: 1.45;
+  margin: 1.6vw 0 0;
+}
+
+@include down($bp-md) {
+  .ComoTrabajoSection {
+    padding: 9vw clamp(16px, 5vw, 40px);
+  }
+
+  .ComoTrabajoGrid {
+    grid-template-columns: 1fr;
+    row-gap: 7vw;
+    padding-top: 8vw;
+  }
+
+  .ComoTrabajoCardTitulo {
+    font-size: 5.4vw;
+  }
+
+  .ComoTrabajoCardTexto {
+    font-size: 4vw;
+    margin-top: 3.5vw;
+  }
 }
 
 .AgilidadProfundaAccordion {
@@ -2231,40 +2254,6 @@ select,
 
 /* Removed: Mobile nav drawer and item styles (unused) */
 
-.CarouselCasos {
-  display: flex; /* Enables Flexbox */
-  align-items: center; /* Vertically centers the flex items */
-}
-
-// Define a mixin for common styles
-@mixin carouselArrowStyles {
-  position: absolute;
-  z-index: 10;
-  background: transparent; // Ensure the button has a transparent background
-  border: none; // Vwove the default border
-  cursor: pointer;
-}
-
-// Use the mixin for both classes, applying only the unique styles
-.CarouselCasosFlechaAntes {
-  @include carouselArrowStyles;
-  left: 0;
-}
-
-.CarouselCasosFlechaDespues {
-  @include carouselArrowStyles;
-  right: 0;
-}
-
-.CarouselCasosContenido {
-  width: 80%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin-bottom: 12vw;
-}
-
 .ContenedorCasos {
   display: flex;
   overflow-x: auto;
@@ -2285,17 +2274,6 @@ select,
 
 .VideoAgilidadProfunda {
   margin-bottom: 12vw;
-}
-
-.TextosCaso {
-  display: flex;
-  justify-content: start;
-  flex-direction: column;
-}
-
-.ContenedorCarousel {
-  display: flex;
-  justify-content: center;
 }
 
 .NavigationBarScrollOffset {

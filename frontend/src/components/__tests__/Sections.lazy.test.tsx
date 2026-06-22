@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 
-describe('Sections lazy loading', () => {
+describe('Sections composition', () => {
   afterEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
@@ -16,6 +16,9 @@ describe('Sections lazy loading', () => {
     }));
     vi.doMock('../Hero.jsx', () => ({
       default: () => <div data-testid="hero" />,
+    }));
+    vi.doMock('../ComoTrabajo.jsx', () => ({
+      default: () => <div data-testid="como-trabajo" />,
     }));
     vi.doMock('../Cursos.jsx', () => ({
       default: () => <div data-testid="cursos" />,
@@ -33,25 +36,10 @@ describe('Sections lazy loading', () => {
 
   const sectionsPath = path.resolve(__dirname, '../Sections.jsx');
 
-  const createDeferred = () => {
-    let resolve;
-    const promise = new Promise((res) => {
-      resolve = res;
-    });
-    return { promise, resolve };
-  };
-
-  it('lazily loads Intervenciones on desktop', async () => {
-    const deferred = createDeferred();
-    const mockIntervenciones = () => <div data-testid="intervenciones" />;
-    const loader = vi.fn(() => deferred.promise);
-
+  it('renders Hero and ComoTrabajo on the homepage', async () => {
     vi.resetModules();
     vi.clearAllMocks();
     baseMocks(false);
-    vi.doMock('../loadIntervenciones', () => ({
-      loadIntervenciones: loader,
-    }));
 
     const Sections = (await import('../Sections.jsx')).default;
 
@@ -61,40 +49,8 @@ describe('Sections lazy loading', () => {
       </Suspense>,
     );
 
-    await waitFor(() => {
-      expect(loader).toHaveBeenCalledTimes(1);
-    });
-    expect(
-      await screen.findByTestId('intervenciones-loading'),
-    ).toBeInTheDocument();
-
-    deferred.resolve({ default: mockIntervenciones });
-    await waitFor(() => {
-      expect(screen.getByTestId('intervenciones')).toBeInTheDocument();
-    });
-  });
-
-  it('avoids loading Intervenciones on mobile', async () => {
-    const deferred = createDeferred();
-    const loader = vi.fn(() => deferred.promise);
-
-    vi.resetModules();
-    vi.clearAllMocks();
-    baseMocks(true);
-    vi.doMock('../loadIntervenciones', () => ({
-      loadIntervenciones: loader,
-    }));
-
-    const Sections = (await import('../Sections.jsx')).default;
-
-    render(
-      <Suspense>
-        <Sections />
-      </Suspense>,
-    );
-
-    expect(loader).not.toHaveBeenCalled();
-    expect(screen.queryByTestId('intervenciones-loading')).toBeNull();
+    expect(screen.getByTestId('hero')).toBeInTheDocument();
+    expect(screen.getByTestId('como-trabajo')).toBeInTheDocument();
   });
 
   it('omits Cursos and AgilidadProfunda from the homepage', async () => {
@@ -105,9 +61,6 @@ describe('Sections lazy loading', () => {
     vi.resetModules();
     vi.clearAllMocks();
     baseMocks(false);
-    vi.doMock('../loadIntervenciones', () => ({
-      loadIntervenciones: () => new Promise(() => {}),
-    }));
     vi.doMock('../loadAgilidadProfunda', () => ({
       loadAgilidadProfunda: agilidadLoader,
     }));
@@ -125,12 +78,12 @@ describe('Sections lazy loading', () => {
     expect(screen.queryByTestId('agilidad-loading')).toBeNull();
   });
 
-  it('does not contain a static Intervenciones import', () => {
+  it('does not reference Intervenciones or AgilidadProfunda', () => {
     vi.resetModules();
     vi.clearAllMocks();
     const source = fs.readFileSync(sectionsPath, 'utf8');
-    expect(source.includes("from './Intervenciones'")).toBe(false);
-    expect(source.includes('loadIntervenciones')).toBe(true);
+    expect(source.includes('Intervenciones')).toBe(false);
+    expect(source.includes('loadIntervenciones')).toBe(false);
     expect(source.includes("from './AgilidadProfunda'")).toBe(false);
     expect(source.includes('loadAgilidadProfunda')).toBe(false);
   });

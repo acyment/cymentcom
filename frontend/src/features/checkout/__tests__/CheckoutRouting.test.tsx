@@ -35,11 +35,6 @@ vi.mock('@/components/Cursos', () => ({
   default: () => <div data-testid="cursos">Cursos</div>,
 }));
 
-vi.mock('@/components/Intervenciones', () => ({
-  __esModule: true,
-  default: () => <div data-testid="intervenciones">Intervenciones</div>,
-}));
-
 vi.mock('@/components/AgilidadProfunda', () => ({
   __esModule: true,
   default: () => <div data-testid="agilidad">Agilidad</div>,

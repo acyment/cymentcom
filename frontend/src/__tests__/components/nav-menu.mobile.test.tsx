@@ -31,10 +31,10 @@ describe('NavMenu mobile underline', () => {
     defineLayout(hero, 0, 200);
     document.body.appendChild(hero);
 
-    const intervenciones = document.createElement('section');
-    intervenciones.id = 'intervenciones';
-    defineLayout(intervenciones, 60, 400);
-    document.body.appendChild(intervenciones);
+    const contacto = document.createElement('section');
+    contacto.id = 'contacto';
+    defineLayout(contacto, 60, 400);
+    document.body.appendChild(contacto);
   });
 
   afterEach(() => {
@@ -45,13 +45,13 @@ describe('NavMenu mobile underline', () => {
     render(<NavMenu />);
 
     const inicio = screen.getByRole('link', { name: 'Inicio' });
-    const intervenciones = screen.getByRole('link', {
-      name: 'Intervenciones',
+    const contacto = screen.getByRole('link', {
+      name: 'Contacto',
     });
 
     await waitFor(() => {
       expect(inicio).toHaveAttribute('aria-current', 'true');
     });
-    expect(intervenciones).not.toHaveAttribute('aria-current');
+    expect(contacto).not.toHaveAttribute('aria-current');
   });
 });
