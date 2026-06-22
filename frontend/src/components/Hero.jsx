@@ -31,8 +31,8 @@ const Hero = () => {
             <p className="HeroText">
               Alan Cyment — Diseño organizacional y desarrollo de producto.
               <br />
-              20 años trabajando con equipos y organizaciones, hoy investigando
-              qué cambia con IA.
+              20 años reduciendo fricción organizacional con ejecutivos, líderes
+              y equipos.
             </p>
             <div className="HeroCTARow">
               <a
@@ -153,9 +153,8 @@ const Hero = () => {
                 niveles jerárquicos
               </li>
               <li>
-                Se especializó en la agilidad a nivel organizacional, incluyendo
-                el conjunto de decisiones técnicas necesarias para hacerla
-                realidad
+                Se especializa en diseño organizacional, con foco en cómo los
+                equipos de producto se coordinan, deciden y entregan valor.
               </li>
             </ul>
             <img src="/static/images/firulete.svg" className="Firulete"></img>

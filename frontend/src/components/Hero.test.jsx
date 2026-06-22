@@ -32,7 +32,7 @@ describe('Hero copy and CTAs', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        /20 años trabajando con equipos y organizaciones, hoy investigando qué cambia con IA\./,
+        /20 años reduciendo fricción organizacional con ejecutivos, líderes y equipos\./,
       ),
     ).toBeInTheDocument();
   });

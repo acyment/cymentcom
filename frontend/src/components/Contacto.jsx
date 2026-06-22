@@ -57,7 +57,7 @@ const Contacto = () => {
       </div>
       <div className="Copyright">
         <img className="ImagenCopyright" src="/static/images/isotipo.svg" />
-        <span className="CopyrightText">© Cyment 2024</span>
+        <span className="CopyrightText">© Cyment 2026</span>
       </div>
     </div>
   );
