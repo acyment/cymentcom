@@ -194,10 +194,68 @@ class InscripcionAdmin(EmailActionMixin, admin.ModelAdmin):
         }
 
 
+class FacturaAdminForm(forms.ModelForm):
+    """Copia los datos de facturación del cliente cuando se deja en blanco.
+
+    La factura guarda su propia copia de estos datos (es un documento fiscal:
+    cambiar un cliente no debe reescribir facturas ya emitidas). El cliente sólo
+    actúa como valor por defecto en el alta.
+    """
+
+    CLIENTE_FIELDS = (
+        "nombre",
+        "email",
+        "tipo_identificacion_fiscal",
+        "identificacion_fiscal",
+    )
+    # Los únicos con blank=False en el modelo; los pide clean() si no hay cliente.
+    REQUIRED_FIELDS = ("nombre", "email")
+
+    class Meta:
+        model = Factura
+        # Cliente va primero: se elige y el resto se completa solo.
+        fields = (
+            "cliente",
+            "nombre",
+            "email",
+            "tipo_identificacion_fiscal",
+            "identificacion_fiscal",
+            "tipo_factura",
+            "direccion",
+            "pais",
+            "curso",
+            "monto",
+            "fecha_confeccion",
+            "pagada",
+            "archivo_pdf",
+            "se_envio_mail_facturacion",
+        )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.REQUIRED_FIELDS:
+            self.fields[field_name].required = False
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cliente = cleaned_data.get("cliente")
+        if cliente:
+            for field_name in self.CLIENTE_FIELDS:
+                if not cleaned_data.get(field_name):
+                    cleaned_data[field_name] = getattr(cliente, field_name)
+        for field_name in self.REQUIRED_FIELDS:
+            if not cleaned_data.get(field_name):
+                self.add_error(field_name, "Requerido si no se elige un cliente.")
+        return cleaned_data
+
+
 @admin.register(Factura)
 class FacturaAdmin(EmailActionMixin, admin.ModelAdmin):
+    form = FacturaAdminForm
     list_display = (
         "nombre",
+        "cliente",
+        "email",
         "curso",
         "archivo_pdf_link",
         "se_envio_mail_facturacion",

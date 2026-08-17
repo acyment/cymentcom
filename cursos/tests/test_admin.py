@@ -11,12 +11,14 @@ from django_jsonform.widgets import JSONFormWidget
 from djmoney.money import Money
 
 from cursos.admin import CursoAdmin
+from cursos.admin import FacturaAdminForm
 from cursos.admin import InscripcionAdmin
 from cursos.admin import TipoCursoAdmin
 from cursos.models import Curso
 from cursos.models import Inscripcion
 from cursos.models import TipoCurso
 from cursos.services import AltaBatchRevendedorResult
+from cursos.tests.factories import ClienteFactory
 from cursos.tests.factories import CursoFactory
 from cursos.tests.factories import InscripcionFactory
 
@@ -251,3 +253,79 @@ def test_reseller_welcome_admin_action_sets_prompted_cc_before_sending(
     inscripcion.refresh_from_db()
     assert inscripcion.cc_email == "reseller-admin@example.com"
     assert task.calls == [inscripcion.id]
+
+
+def factura_form_data(curso, **overrides):
+    data = {
+        "monto_0": "100.00",
+        "monto_1": "USD",
+        "nombre": "",
+        "pais": "AR",
+        "tipo_identificacion_fiscal": "",
+        "identificacion_fiscal": "",
+        "tipo_factura": "",
+        "direccion": "",
+        "curso": curso.pk,
+        "email": "",
+    }
+    data.update(overrides)
+    return data
+
+
+@pytest.mark.django_db
+def test_factura_form_copies_blank_billing_data_from_cliente(curso):
+    cliente = ClienteFactory(
+        nombre="Acme SA",
+        email="facturacion@acme.com",
+        tipo_identificacion_fiscal="CUIT",
+        identificacion_fiscal="30-12345678-9",
+    )
+
+    form = FacturaAdminForm(data=factura_form_data(curso, cliente=cliente.pk))
+
+    assert form.is_valid(), form.errors
+    factura = form.save()
+    assert factura.nombre == "Acme SA"
+    assert factura.email == "facturacion@acme.com"
+    assert factura.tipo_identificacion_fiscal == "CUIT"
+    assert factura.identificacion_fiscal == "30-12345678-9"
+
+
+@pytest.mark.django_db
+def test_factura_form_keeps_explicit_values_over_cliente(curso):
+    cliente = ClienteFactory(nombre="Acme SA", email="facturacion@acme.com")
+
+    form = FacturaAdminForm(
+        data=factura_form_data(
+            curso,
+            cliente=cliente.pk,
+            nombre="Acme SA - Sucursal Norte",
+            email="norte@acme.com",
+        ),
+    )
+
+    assert form.is_valid(), form.errors
+    factura = form.save()
+    assert factura.nombre == "Acme SA - Sucursal Norte"
+    assert factura.email == "norte@acme.com"
+
+
+@pytest.mark.django_db
+def test_factura_form_still_requires_billing_data_without_cliente(curso):
+    form = FacturaAdminForm(data=factura_form_data(curso))
+
+    assert not form.is_valid()
+    assert "nombre" in form.errors
+    assert "email" in form.errors
+
+
+@pytest.mark.django_db
+def test_factura_form_accepts_manual_billing_data_without_cliente(curso):
+    form = FacturaAdminForm(
+        data=factura_form_data(curso, nombre="Ana Pérez", email="ana@example.com"),
+    )
+
+    assert form.is_valid(), form.errors
+    factura = form.save()
+    assert factura.cliente is None
+    assert factura.email == "ana@example.com"

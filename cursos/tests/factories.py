@@ -9,6 +9,7 @@ from factory import SubFactory
 from factory.django import DjangoModelFactory
 
 from cursos.models import Alumno
+from cursos.models import Cliente
 from cursos.models import Curso
 from cursos.models import EstadoInscripcion
 from cursos.models import Factura
@@ -76,6 +77,18 @@ class AlumnoFactory(DjangoModelFactory):
 
     class Meta:
         model = Alumno
+
+
+class ClienteFactory(DjangoModelFactory):
+    nombre = Faker("company")
+    tipo_identificacion_fiscal = "CUIT"
+    identificacion_fiscal = Faker("numerify", text="30-########-#")
+    email = Faker("email")
+    ciclo_de_pago = 0
+    notas = ""
+
+    class Meta:
+        model = Cliente
 
 
 class FacturaFactory(DjangoModelFactory):
