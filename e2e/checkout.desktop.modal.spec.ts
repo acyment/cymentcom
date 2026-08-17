@@ -20,8 +20,15 @@ test.describe('Checkout (desktop modal)', () => {
     // First step field visible
     await expect(page.getByLabel('Nombre*')).toBeVisible();
 
-    // Close by clicking scrim, dialog disappears
-    await page.getByTestId('checkout-scrim').click();
+    // Clicking the scrim must NOT dismiss: CheckoutPresenter prevents
+    // interact-outside so a stray click cannot discard checkout data.
+    await page
+      .getByTestId('checkout-scrim')
+      .click({ position: { x: 5, y: 5 } });
+    await expect(page.getByRole('dialog', { name: /checkout/i })).toBeVisible();
+
+    // The explicit close control does dismiss it
+    await page.getByRole('button', { name: /^close$/i }).click();
     await expect(page.getByRole('dialog').first()).toBeHidden({
       timeout: 2000,
     });
