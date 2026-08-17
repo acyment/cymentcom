@@ -238,3 +238,60 @@ class TestPaymentCallbacks:
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
         body = resp.json()
         assert "Missing required parameter" in body.get("error", "")
+
+
+@pytest.mark.django_db
+class TestCourseShortcutURL:
+    """`/csm` is a vanity URL that redirects to `/cursos/CSM`."""
+
+    def test_redirects_short_name_to_course_detail(self, client):
+        TipoCursoFactory(nombre_corto="CSM", orden=1)
+
+        resp = client.get("/CSM")
+
+        assert resp.status_code == status.HTTP_302_FOUND
+        assert resp["Location"] == "/cursos/CSM"
+
+    def test_lookup_is_case_insensitive_and_redirects_to_canonical_casing(self):
+        TipoCursoFactory(nombre_corto="CSM", orden=1)
+        client = APIClient()
+
+        for path in ("/csm", "/Csm", "/cSM"):
+            resp = client.get(path)
+            assert resp.status_code == status.HTTP_302_FOUND, path
+            assert resp["Location"] == "/cursos/CSM", path
+
+    def test_trailing_slash_is_accepted(self, client):
+        TipoCursoFactory(nombre_corto="CLB", orden=1)
+
+        resp = client.get("/clb/")
+
+        assert resp.status_code == status.HTTP_302_FOUND
+        assert resp["Location"] == "/cursos/CLB"
+
+    def test_query_string_is_preserved(self, client):
+        TipoCursoFactory(nombre_corto="CSPO", orden=1)
+
+        resp = client.get("/cspo", {"utm_source": "linkedin"})
+
+        assert resp.status_code == status.HTTP_302_FOUND
+        assert resp["Location"] == "/cursos/CSPO?utm_source=linkedin"
+
+    def test_unknown_segment_serves_the_spa_instead_of_404(self, client):
+        resp = client.get("/not-a-course")
+
+        assert resp.status_code == status.HTTP_200_OK
+
+    def test_client_side_routes_are_not_shadowed(self, client):
+        # /checkout is owned by the client-side router; it must still render the
+        # SPA even if a course were ever named "checkout".
+        TipoCursoFactory(nombre_corto="checkout", orden=1)
+
+        resp = client.get("/checkout")
+
+        assert resp.status_code == status.HTTP_200_OK
+
+    def test_home_is_unaffected(self, client):
+        resp = client.get("/")
+
+        assert resp.status_code == status.HTTP_200_OK

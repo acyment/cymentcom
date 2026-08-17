@@ -8,6 +8,7 @@ from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
+from cursos.views import course_shortcut
 from .views import server_error_view
 
 handler500 = server_error_view
@@ -41,6 +42,13 @@ urlpatterns += [
         name="api-docs",
     ),
     path("api/", include("config.api_router")),
+]
+
+# Course vanity URLs (/csm -> /cursos/CSM). Must sit in front of the catch-all;
+# segments that are not course short names fall through to the SPA shell inside
+# the view, so client-side routes keep working.
+urlpatterns += [
+    re_path(r"^(?P<short_name>[A-Za-z0-9-]{1,10})/?$", course_shortcut),
 ]
 
 # Add catch-all routes for client-side routing LAST
