@@ -1,7 +1,10 @@
+from unittest.mock import patch
+
 import pytest
 from django.template.loader import render_to_string
 from mjml import mjml2html
 
+from cursos.emails import EmailSender
 from cursos.tests.factories import AlumnoFactory
 from cursos.tests.factories import FacturaFactory
 from cursos.tests.factories import InscripcionFactory
@@ -64,3 +67,15 @@ def test_invoice_email_omits_parentheses_when_no_organization():
     html = mjml2html(mjml)
 
     assert "Ana Pérez ()" not in html
+
+
+@pytest.mark.django_db
+def test_send_invoice_email_skips_factura_without_recipient():
+    factura = FacturaFactory(email="")
+
+    with patch.object(EmailSender, "_send_email") as send_email:
+        EmailSender.send_invoice_email(factura.id)
+
+    send_email.assert_not_called()
+    factura.refresh_from_db()
+    assert factura.se_envio_mail_facturacion is False

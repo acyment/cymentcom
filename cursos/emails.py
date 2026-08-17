@@ -281,6 +281,10 @@ class EmailSender:
             log.warning("factura_not_found")
             return
 
+        if not factura.email:
+            log.warning("factura_sin_email_destinatario")
+            return
+
         attachment_path = None
         attachment_filename = None
         attachment_mimetype = "application/pdf"
