@@ -218,6 +218,24 @@ const ResultadoPago = () => {
             aria-label="Resultado de pago"
             data-testid="resultado-dialog"
           >
+            {/* Radix always points aria-labelledby at its Dialog.Title. Without
+                one it references a missing id, which wins over aria-label and
+                leaves the dialog with no accessible name at all. */}
+            <Dialog.Title
+              style={{
+                position: 'absolute',
+                width: 1,
+                height: 1,
+                padding: 0,
+                margin: -1,
+                overflow: 'hidden',
+                clip: 'rect(0 0 0 0)',
+                whiteSpace: 'nowrap',
+                border: 0,
+              }}
+            >
+              Resultado de pago
+            </Dialog.Title>
             <HeaderDialogo
               stepNumber={4}
               onClose={() => handleOpenChange(false)}

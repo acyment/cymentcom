@@ -37,8 +37,10 @@ describe('PaymentResult routing', () => {
 
     render(<RouterProvider router={router} />);
 
-    // Fullscreen on mobile => site header (banner) should be absent
-    expect(screen.queryByRole('banner')).toBeNull();
+    // Fullscreen on mobile => site header (banner) should not be rendered at
+    // all. `hidden: true` so this cannot pass merely because something was
+    // marked aria-hidden.
+    expect(screen.queryByRole('banner', { hidden: true })).toBeNull();
     // Confirmation UI should be visible
     expect(await screen.findByText('¡Pago Exitoso!')).toBeInTheDocument();
     // And the fullscreen container from CheckoutPresenter should be present
@@ -61,8 +63,12 @@ describe('PaymentResult routing', () => {
 
     render(<RouterProvider router={router} />);
 
-    // Desktop keeps header
-    expect(await screen.findByRole('banner')).toBeInTheDocument();
+    // Desktop keeps the header rendered behind the dialog. Radix marks
+    // everything outside an open modal aria-hidden, which is correct, so the
+    // query has to look past that to see it.
+    expect(
+      await screen.findByRole('banner', { hidden: true }),
+    ).toBeInTheDocument();
     // And shows a dialog
     expect(
       await screen.findByRole('dialog', { name: /resultado de pago/i }),
