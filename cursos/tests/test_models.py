@@ -23,6 +23,13 @@ class TestTipoCurso:
         assert tipo.costo_ars.currency.code == "ARS"
         assert tipo.costo_ars.amount > 0
 
+    def test_factory_respects_char_field_max_lengths(self):
+        """Faker no debe desbordar los CharField cortos (flakiness histórica)."""
+        tipo = TipoCursoFactory()
+        max_length = 60
+        assert len(tipo.nombre_completo) <= max_length
+        assert len(tipo.resumen_una_linea) <= max_length
+
 
 @pytest.mark.django_db
 class TestCurso:

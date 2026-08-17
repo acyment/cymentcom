@@ -18,8 +18,9 @@ from cursos.models import TipoCurso
 
 class TipoCursoFactory(DjangoModelFactory):
     nombre_corto = Faker("lexify", text="??????")
-    nombre_completo = Faker("sentence", nb_words=3)
-    resumen_una_linea = Faker("sentence", nb_words=6)
+    # `text` respeta max_nb_chars; `sentence` no, y desbordaba el max_length=60.
+    nombre_completo = Faker("text", max_nb_chars=60)
+    resumen_una_linea = Faker("text", max_nb_chars=60)
     resumen = Faker("text", max_nb_chars=100)
     contenido = LazyAttribute(
         lambda _: [
