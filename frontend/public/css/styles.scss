@@ -2043,6 +2043,54 @@ label {
   visibility: visible;
 }
 
+/* Without hover (touch) the tooltip above is unreachable, so the validation
+   message would never be readable. On touch or narrow viewports, show the
+   message under the field as plain text instead of a hover tooltip.
+
+   The row is reserved whether or not an error is present: the message is
+   absolutely positioned into padding that is always there, so revealing one
+   cannot reflow the form. Letting it reflow moved the submit button out from
+   under the user's finger between pointerdown and pointerup, swallowing the
+   tap entirely. */
+@media (max-width: $bp-md), (hover: none) {
+  .input-container {
+    padding-bottom: $field-error-reserve;
+  }
+
+  .error-indicator {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: auto;
+    height: $field-error-reserve;
+    transform: none;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 6px;
+    overflow: hidden;
+  }
+
+  .error-text {
+    visibility: visible;
+    position: static;
+    top: auto;
+    right: auto;
+    transform: none;
+    white-space: normal;
+    text-align: left;
+    background-color: transparent;
+    color: #ff6b6b;
+    padding: 0;
+    font-size: 13px;
+    line-height: 1.25;
+    font-weight: 500;
+  }
+
+  .error-text::after {
+    display: none;
+  }
+}
+
 // Define a variable for the placeholder color
 $placeholder-color: #cccccc;
 

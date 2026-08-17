@@ -38,5 +38,9 @@ $nav-padding-inline-mobile: $space-5; /* 20px */
 /* Buttons */
 $radius-cta: 1.3vw; /* Less rounded than full pill */
 
+/* Space held under each form field for its validation message, so showing an
+   error never reflows the form. Fits two lines at 13px/1.25. */
+$field-error-reserve: 34px;
+
 /* Brand colors */
 $azul-violaceo: #7854fa;

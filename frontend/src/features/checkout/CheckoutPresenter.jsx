@@ -27,30 +27,41 @@ export function CheckoutPresenter({
 
   // Radix Dialog handles Escape; no manual keydown handler needed.
 
+  const isFullscreen = variant === 'fullscreen';
+
+  // Ensure the viewport is at the top when the fullscreen checkout opens.
+  useEffect(() => {
+    if (!open || !isFullscreen) return undefined;
+    const deferTwice = (fn) =>
+      requestAnimationFrame(() => requestAnimationFrame(fn));
+    deferTwice(() => {
+      try {
+        // Deliberately no auto-focus here: the steps opt out of it on mobile
+        // (autoFocus={!isMobile}). Focusing the first field also meant the
+        // user's first tap on "Continuar" only blurred that field, and the
+        // resulting validation error reflowed the button out from under the
+        // tap, so the click never landed.
+        if (window.scrollY !== 0) {
+          window.scrollTo({ top: 0, behavior: 'auto' });
+        }
+      } catch {}
+    });
+    return undefined;
+  }, [open, isFullscreen]);
+
+  // Modal variant: measure header and cap internal viewport. Hooks must run on
+  // every render, so this is called unconditionally and gated by `enabled`.
+  const contentRef = useRef(null);
+  useDialogHeaderHeight(
+    contentRef,
+    '.HeaderModal',
+    '--dialog-header-height',
+    open && !isFullscreen,
+  );
+
   if (!open) return null;
 
-  if (variant === 'fullscreen') {
-    // Ensure the viewport is at the top on open without stealing focus from the first field.
-    // Defer until after initial autofocus runs; only scroll if nothing is focused.
-    useEffect(() => {
-      const deferTwice = (fn) =>
-        requestAnimationFrame(() => requestAnimationFrame(fn));
-      deferTwice(() => {
-        try {
-          const root =
-            document.querySelector('.CheckoutFullscreen__content') || document;
-          const firstField = root.querySelector(
-            'input:not([disabled]):not([type="hidden"]), textarea:not([disabled]), select:not([disabled])',
-          );
-          if (firstField && typeof firstField.focus === 'function') {
-            firstField.focus({ preventScroll: true });
-          }
-          if (window.scrollY !== 0) {
-            window.scrollTo({ top: 0, behavior: 'auto' });
-          }
-        } catch {}
-      });
-    }, []);
+  if (isFullscreen) {
     return (
       <div className="CheckoutFullscreen" data-testid="checkout-fullscreen">
         <header
@@ -72,10 +83,6 @@ export function CheckoutPresenter({
       </div>
     );
   }
-
-  // Modal variant: measure header and cap internal viewport
-  const contentRef = useRef(null);
-  useDialogHeaderHeight(contentRef, '.HeaderModal', '--dialog-header-height');
 
   return (
     <Dialog.Root

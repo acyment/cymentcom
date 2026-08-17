@@ -3,6 +3,11 @@ import { assertNoHOverflow } from './support/viewport';
 import { openInscripcionForFirstCourse } from './support/actions';
 
 test.describe('Checkout forms (mobile)', () => {
+  // These drive the full catalogue → checkout → multi-step form flow against
+  // the dev server and land around 20s each, leaving no headroom under the
+  // default 30s when the suite runs 5 workers wide.
+  test.describe.configure({ timeout: 60_000 });
+
   test('StepParticipantes: shows errors then proceeds on valid input', async ({
     page,
   }, testInfo) => {
@@ -32,6 +37,30 @@ test.describe('Checkout forms (mobile)', () => {
     await assertNoHOverflow(page);
   });
 
+  test('StepParticipantes: tapping Continuar from a focused field still submits', async ({
+    page,
+  }, testInfo) => {
+    if (testInfo.project.name !== 'mobile') test.skip();
+
+    const opened = await openInscripcionForFirstCourse(page);
+    if (!opened) test.skip(true, 'Checkout did not open');
+
+    // Regression: with a field focused, tapping Continuar blurs it and renders
+    // that field's error. If showing the error reflows the form, the button
+    // moves between pointerdown and pointerup and the tap is swallowed, so the
+    // submit handler never runs and only one error ever appears. The error row
+    // is reserved in CSS precisely so this cannot happen.
+    await page.getByLabel('Nombre*').click();
+    await page.getByRole('button', { name: /^continuar$/i }).click();
+
+    // All three errors present ⇒ the handler ran, i.e. the tap was not lost
+    await expect(page.getByText(/No te olvides del nombre/i)).toBeVisible();
+    await expect(page.getByText(/No te olvides del apellido/i)).toBeVisible();
+    await expect(page.getByText(/No te olvides del e-mail/i)).toBeVisible();
+
+    await assertNoHOverflow(page);
+  });
+
   test('StepFacturacion (AR): requires extra fields; submit enabled after fill; no overflow', async ({
     page,
   }, testInfo) => {
@@ -52,7 +81,7 @@ test.describe('Checkout forms (mobile)', () => {
     // Pick Argentina to trigger AR-required fields
     await page.getByLabel('País*').selectOption('AR');
 
-    // Try to submit without required AR fields → errors should appear
+    // Try to submit without required AR fields → every error should appear
     const submit = page.getByRole('button', { name: /^continuar$/i });
     await submit.click();
 
@@ -63,7 +92,8 @@ test.describe('Checkout forms (mobile)', () => {
       page.getByText(/tipo de identificación fiscal/i),
     ).toBeVisible();
     await expect(page.getByText(/tu identificación fiscal/i)).toBeVisible();
-    await expect(page.getByText(/elegir el tipo de factura/i)).toBeVisible();
+    // No "tipo de factura" error: that field is disabled until an ID type of
+    // CUIT is chosen, and is auto-set to 'B' meanwhile, so it is never empty.
 
     // Fill required AR fields
     await page.getByLabel('Nombre completo*').fill('Ada Lovelace');

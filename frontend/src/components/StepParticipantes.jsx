@@ -15,8 +15,7 @@ const StepParticipantes = ({ idCurso }) => {
       firstFieldRef.current.focus();
     }
   }, [isMobile]);
-  const { submitForm, setTouched, isSubmitting, isValid, errors } =
-    useFormikContext(); // Access Formik context
+  const { submitForm, setTouched, isSubmitting } = useFormikContext(); // Access Formik context
 
   // Function to handle submit and show errors
   const handleSubmit = async () => {
@@ -104,7 +103,11 @@ const StepParticipantes = ({ idCurso }) => {
       <button
         className="BotonFormulario UnicoBotonSiguiente BotonContinuar"
         type="button" // Changed from "submit" to "button"
-        disabled={!isValid || isSubmitting}
+        // Not gated on isValid: handleSubmit below exists to touch every field
+        // so all required-field errors surface at once. Disabling on invalid
+        // made the button go disabled on the first blur, swallowing the click
+        // and leaving the user with a single error and no way forward.
+        disabled={isSubmitting}
         onClick={handleSubmit} // Use our custom handler
       >
         Continuar

@@ -921,14 +921,14 @@ const StepFacturacion = ({ idCurso }) => {
     setFieldValue,
   ]);
 
-  const { isValid, isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext();
 
   return (
     <Fragment>
       <h3 className="form-title">Datos para facturación</h3>
       <div className="form-row">
         <div className="form-element">
-          <label htmlFor="NombreCompleto">Nombre completo*</label>
+          <label htmlFor="nombreCompleto">Nombre completo*</label>
           <div className="input-container">
             <FieldWithInfo
               name="nombreCompleto"
@@ -1080,7 +1080,11 @@ const StepFacturacion = ({ idCurso }) => {
         <button
           type="submit"
           className="BotonFormulario BotonContinuar"
-          disabled={!isValid || isSubmitting}
+          // Matches StepParticipantes: not gated on isValid, so submitting an
+          // incomplete form surfaces every missing field at once instead of
+          // leaving the user with a greyed-out button and no explanation.
+          // Formik still blocks the actual submit while the form is invalid.
+          disabled={isSubmitting}
         >
           {isSubmitting ? ( // Show loader when submitting
             <CircleLoader size={20} color="#ffffff" />

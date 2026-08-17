@@ -7,13 +7,17 @@ import { useEffect } from 'react';
  * @param {React.RefObject<HTMLElement>} rootRef - ref to the dialog content root
  * @param {string} headerSelector - selector to find the header element
  * @param {string} cssVarName - CSS variable name to write (defaults to --dialog-header-height)
+ * @param {boolean} enabled - re-runs when this flips, so callers can hook
+ *   unconditionally (Rules of Hooks) while the dialog content mounts later
  */
 export function useDialogHeaderHeight(
   rootRef,
   headerSelector = '.HeaderModal',
   cssVarName = '--dialog-header-height',
+  enabled = true,
 ) {
   useEffect(() => {
+    if (!enabled) return;
     const root = rootRef?.current;
     if (!root) return;
 
@@ -54,5 +58,5 @@ export function useDialogHeaderHeight(
       if (ro) ro.disconnect();
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [rootRef, headerSelector, cssVarName]);
+  }, [rootRef, headerSelector, cssVarName, enabled]);
 }
