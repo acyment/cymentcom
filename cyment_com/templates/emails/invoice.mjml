@@ -152,8 +152,9 @@
           <!-- Bucle sobre las inscripciones asociadas a esta factura -->
           {% for inscripcion in inscripciones %}
           <mj-text padding="0 25px">
-            - {{ inscripcion.alumno.nombre }} {{ inscripcion.alumno.apellido }}
-            {% if inscripcion.alumno.organizacion %}({{ inscripcion.alumno.organizacion }}){% endif %}
+            {# Kept on one line so the organisation is separated from the name by a
+               single space rather than a newline and the template's indentation. #}
+            - {{ inscripcion.alumno.nombre }} {{ inscripcion.alumno.apellido }}{% if inscripcion.alumno.organizacion %} ({{ inscripcion.alumno.organizacion }}){% endif %}
           </mj-text>
           {% empty %}
           <mj-text padding="0 25px">
