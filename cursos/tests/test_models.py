@@ -30,6 +30,18 @@ class TestTipoCurso:
         assert len(tipo.nombre_completo) <= max_length
         assert len(tipo.resumen_una_linea) <= max_length
 
+    def test_factory_assigns_unique_orden(self):
+        """orden es unique: la factory no puede repetirlo entre instancias."""
+        tipos = [TipoCursoFactory() for _ in range(3)]
+        ordenes = [tipo.orden for tipo in tipos]
+        assert len(set(ordenes)) == len(ordenes)
+
+    def test_factory_orden_does_not_clash_with_explicit_values(self):
+        """Los tests que fijan orden a mano usan valores bajos (1, 2...)."""
+        explicito = TipoCursoFactory(orden=1)
+        automatico = TipoCursoFactory()
+        assert explicito.orden != automatico.orden
+
 
 @pytest.mark.django_db
 class TestCurso:

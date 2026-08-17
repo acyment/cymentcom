@@ -4,6 +4,7 @@ from decimal import Decimal
 from djmoney.money import Money
 from factory import Faker
 from factory import LazyAttribute
+from factory import Sequence
 from factory import SubFactory
 from factory.django import DjangoModelFactory
 
@@ -42,7 +43,9 @@ class TipoCursoFactory(DjangoModelFactory):
     video = ""
     foto = ""
     foto_tint = ""
-    orden = 1
+    # orden es unique: se numera solo para poder crear varios tipos en un test.
+    # Arranca en 100 para no chocar con los tests que fijan orden a mano (1, 2...).
+    orden = Sequence(lambda n: n + 100)
     url_logo = ""
     costo_usd = LazyAttribute(lambda _: Money(Decimal("99.99"), "USD"))
     costo_sin_descuento_usd = LazyAttribute(lambda _: Money(Decimal("120.00"), "USD"))
