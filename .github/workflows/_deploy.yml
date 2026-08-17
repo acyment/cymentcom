@@ -8,59 +8,91 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code Repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v7
+      - name: Create production env files
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_ADMIN_URL: ${{ secrets.DJANGO_ADMIN_URL }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          MP_ACCESS_TOKEN: ${{ secrets.MP_ACCESS_TOKEN }}
+          CELERY_FLOWER_USER: ${{ secrets.CELERY_FLOWER_USER }}
+          CELERY_FLOWER_PASSWORD: ${{ secrets.CELERY_FLOWER_PASSWORD }}
+          STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
+          MAILJET_API_KEY: ${{ secrets.MAILJET_API_KEY }}
+          MAILJET_SECRET_KEY: ${{ secrets.MAILJET_SECRET_KEY }}
+          MP_WEBHOOK_SECRET: ${{ secrets.MP_WEBHOOK_SECRET }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          MP_PUBLIC_KEY: ${{ secrets.MP_PUBLIC_KEY }}
+          STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
+          GF_SECURITY_ADMIN_USER: ${{ secrets.GF_SECURITY_ADMIN_USER }}
+          GF_SECURITY_ADMIN_PASSWORD: ${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
+        run: |
+          mkdir -p .envs/.production
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
 
-      - name: Create production .postgres
-        uses: SpicyPizza/create-envfile@v2.0.3
-        with:
-          envkey_POSTGRES_HOST: 'postgres'
-          envkey_POSTGRES_PORT: 5432
-          envkey_POSTGRES_DB: 'cyment_com'
-          envkey_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          directory: .envs/.production
-          file_name: .postgres
-      - name: Create production .django
-        uses: SpicyPizza/create-envfile@v2.0.3
-        with:
-          envkey_DJANGO_SETTINGS_MODULE: 'config.settings.production'
-          envkey_DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          envkey_DJANGO_ADMIN_URL: ${{ secrets.DJANGO_ADMIN_URL }}
-          envkey_DJANGO_ALLOWED_HOSTS: '.cyment.com'
-          envkey_DJANGO_SECURE_SSL_REDIRECT: 'False'
-          envkey_DJANGO_SERVER_EMAIL: ''
-          envkey_DJANGO_ACCOUNT_ALLOW_REGISTRATION: 'True'
-          envkey_WEB_CONCURRENCY: '4'
-          envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          envkey_REDIS_URL: 'redis://redis:6379/0'
-          envkey_MP_ACCESS_TOKEN: ${{ secrets.MP_ACCESS_TOKEN }}
-          envkey_CELERY_FLOWER_USER: ${{ secrets.CELERY_FLOWER_USER }}
-          envkey_CELERY_FLOWER_PASSWORD: ${{ secrets.CELERY_FLOWER_PASSWORD }}
-          envkey_STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
-          envkey_MAILJET_API_KEY: ${{ secrets.MAILJET_API_KEY }}
-          envkey_MAILJET_SECRET_KEY: ${{ secrets.MAILJET_SECRET_KEY }}
-          envkey_MP_WEBHOOK_SECRET: ${{ secrets.MP_WEBHOOK_SECRET }}
-          envkey_STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
-          directory: .envs/.production
-          file_name: .django
-      - name: Create production .webpack
-        uses: SpicyPizza/create-envfile@v2.0.3
-        with:
-          envkey_MP_PUBLIC_KEY: ${{ secrets.MP_PUBLIC_KEY }}
-          envkey_STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
-          envkey_POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
-          envkey_POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
-          directory: .envs/.production
-          file_name: .webpack
-      - name: Create production .grafana
-        uses: SpicyPizza/create-envfile@v2.0.3
-        with:
-          envkey_GF_SECURITY_ADMIN_USER: ${{ secrets.GF_SECURITY_ADMIN_USER }}
-          envkey_GF_SECURITY_ADMIN_PASSWORD: ${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
-          directory: .envs/.production
-          file_name: .grafana
+          def encode(value):
+            if value == "":
+              return ""
+            if "\n" not in value:
+              return value
+            escaped = value.replace("\\", "\\\\").replace("\n", "\\n").replace('"', '\\"')
+            return f'"{escaped}"'
+
+          files = {
+              ".postgres": {
+                  "POSTGRES_HOST": "postgres",
+                  "POSTGRES_PORT": "5432",
+                  "POSTGRES_DB": "cyment_com",
+                  "POSTGRES_USER": os.environ["POSTGRES_USER"],
+                  "POSTGRES_PASSWORD": os.environ["POSTGRES_PASSWORD"],
+              },
+              ".django": {
+                  "DJANGO_SETTINGS_MODULE": "config.settings.production",
+                  "DJANGO_SECRET_KEY": os.environ["DJANGO_SECRET_KEY"],
+                  "DJANGO_ADMIN_URL": os.environ["DJANGO_ADMIN_URL"],
+                  "DJANGO_ALLOWED_HOSTS": ".cyment.com",
+                  "DJANGO_SECURE_SSL_REDIRECT": "False",
+                  "DJANGO_SERVER_EMAIL": "",
+                  "DJANGO_ACCOUNT_ALLOW_REGISTRATION": "True",
+                  "WEB_CONCURRENCY": "4",
+                  "SENTRY_DSN": os.environ["SENTRY_DSN"],
+                  "REDIS_URL": "redis://redis:6379/0",
+                  "MP_ACCESS_TOKEN": os.environ["MP_ACCESS_TOKEN"],
+                  "CELERY_FLOWER_USER": os.environ["CELERY_FLOWER_USER"],
+                  "CELERY_FLOWER_PASSWORD": os.environ["CELERY_FLOWER_PASSWORD"],
+                  "STRIPE_API_KEY": os.environ["STRIPE_API_KEY"],
+                  "MAILJET_API_KEY": os.environ["MAILJET_API_KEY"],
+                  "MAILJET_SECRET_KEY": os.environ["MAILJET_SECRET_KEY"],
+                  "MP_WEBHOOK_SECRET": os.environ["MP_WEBHOOK_SECRET"],
+                  "STRIPE_WEBHOOK_SECRET": os.environ["STRIPE_WEBHOOK_SECRET"],
+              },
+              ".webpack": {
+                  "MP_PUBLIC_KEY": os.environ["MP_PUBLIC_KEY"],
+                  "STRIPE_PUBLIC_KEY": os.environ["STRIPE_PUBLIC_KEY"],
+                  "POSTHOG_API_KEY": os.environ["POSTHOG_API_KEY"],
+                  "POSTHOG_HOST": os.environ["POSTHOG_HOST"],
+              },
+              ".grafana": {
+                  "GF_SECURITY_ADMIN_USER": os.environ["GF_SECURITY_ADMIN_USER"],
+                  "GF_SECURITY_ADMIN_PASSWORD": os.environ["GF_SECURITY_ADMIN_PASSWORD"],
+              },
+          }
+
+          base_dir = Path(".envs/.production")
+          for file_name, values in files.items():
+            content = "\n".join(
+                f"{key}={encode(value)}" for key, value in values.items()
+            )
+            (base_dir / file_name).write_text(f"{content}\n", encoding="utf-8")
+          PY
       - name: Rsync deployments
-        uses: burnett01/rsync-deployments@7.0.2
+        uses: burnett01/rsync-deployments@v9
         with:
           switches: -avzr --delete --mkpath
           path: ./
@@ -68,3 +100,16 @@ jobs:
           remote_host: ${{ secrets.DEPLOY_SSH_HOST }}
           remote_user: ${{ secrets.DEPLOY_SSH_USER }}
           remote_key: ${{ secrets.DEPLOY_SSH_KEY }}
+      - name: Rebuild and restart production stack
+        env:
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
+          DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$DEPLOY_SSH_HOST" >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy_key "$DEPLOY_SSH_USER@$DEPLOY_SSH_HOST" \
+            "cd '$DEPLOY_PATH' && docker compose -f production.yml up -d --build"
