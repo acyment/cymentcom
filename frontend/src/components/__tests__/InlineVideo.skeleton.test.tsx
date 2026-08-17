@@ -14,9 +14,10 @@ describe('InlineVideo (skeleton)', () => {
 
     render(<InlineVideo poster={poster} sources={sources} />);
 
-    const video =
-      screen.getByRole('video', { hidden: true }) ||
-      (document.querySelector('video') as HTMLVideoElement | null);
+    // <video> has no implicit ARIA role, so query the element directly rather
+    // than via getByRole (which throws instead of returning null, making the
+    // querySelector fallback this test used to carry unreachable).
+    const video = document.querySelector('video') as HTMLVideoElement | null;
     expect(video).not.toBeNull();
     if (!video) return;
     expect(video.getAttribute('controls')).not.toBeNull();

@@ -76,4 +76,5 @@ export default function InlineVideo({
   );
 }
 
-export { InlineVideo as __type_shim__ };
+// Also exported by name: consumers import the default, tests import { InlineVideo }.
+export { InlineVideo };

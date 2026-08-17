@@ -7,12 +7,23 @@ vi.mock('react-rough-notation', () => ({
   RoughNotation: ({ children }: any) => <>{children}</>,
   RoughNotationGroup: ({ children }: any) => <>{children}</>,
 }));
+// The component reaches for both the namespace (Accordion.Item) and the named
+// AccordionHeader export, so the mock has to provide both. forwardRef keeps the
+// refs from useAccordionScroll from warning.
+const passthrough = (Tag: any) =>
+  React.forwardRef(({ children, ...p }: any, ref: any) => (
+    <Tag ref={ref} {...p}>
+      {children}
+    </Tag>
+  ));
+
 vi.mock('@radix-ui/react-accordion', () => ({
   __esModule: true,
-  Item: ({ children, ...p }: any) => <div {...p}>{children}</div>,
-  Header: ({ children, ...p }: any) => <div {...p}>{children}</div>,
-  Trigger: ({ children, ...p }: any) => <button {...p}>{children}</button>,
-  Content: ({ children, ...p }: any) => <div {...p}>{children}</div>,
+  Item: passthrough('div'),
+  Header: passthrough('div'),
+  AccordionHeader: passthrough('div'),
+  Trigger: passthrough('button'),
+  Content: passthrough('div'),
 }));
 
 vi.mock('@/features/video/videoFlags', () => ({
