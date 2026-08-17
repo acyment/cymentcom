@@ -52,9 +52,7 @@ describe('NavMenu (mobile behavior)', () => {
       screen.getByRole('link', { name: 'Cómo trabajo' }),
     ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Contacto' })).toBeInTheDocument();
-    expect(
-      screen.queryByRole('link', { name: 'Cursos' }),
-    ).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Cursos' })).toBeInTheDocument();
     expect(
       screen.queryByRole('link', { name: 'Agilidad profunda' }),
     ).not.toBeInTheDocument();
@@ -74,9 +72,7 @@ describe('NavMenu (desktop behavior)', () => {
     expect(
       await screen.findByRole('link', { name: 'Contacto' }),
     ).toBeInTheDocument();
-    expect(
-      screen.queryByRole('link', { name: 'Cursos' }),
-    ).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Cursos' })).toBeInTheDocument();
     expect(
       screen.queryByRole('link', { name: 'Agilidad profunda' }),
     ).not.toBeInTheDocument();

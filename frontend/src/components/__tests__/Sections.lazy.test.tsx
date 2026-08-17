@@ -36,7 +36,7 @@ describe('Sections composition', () => {
 
   const sectionsPath = path.resolve(__dirname, '../Sections.jsx');
 
-  it('renders Hero and ComoTrabajo on the homepage', async () => {
+  it('renders Hero, Cursos and ComoTrabajo on the homepage', async () => {
     vi.resetModules();
     vi.clearAllMocks();
     baseMocks(false);
@@ -50,17 +50,18 @@ describe('Sections composition', () => {
     );
 
     expect(screen.getByTestId('hero')).toBeInTheDocument();
+    expect(screen.getByTestId('cursos')).toBeInTheDocument();
     expect(screen.getByTestId('como-trabajo')).toBeInTheDocument();
   });
 
-  it('omits Cursos and AgilidadProfunda from the homepage', async () => {
+  it('keeps Cursos on mobile while omitting AgilidadProfunda', async () => {
     const agilidadLoader = vi.fn(() =>
       Promise.resolve({ default: () => <div data-testid="agilidad" /> }),
     );
 
     vi.resetModules();
     vi.clearAllMocks();
-    baseMocks(false);
+    baseMocks(true);
     vi.doMock('../loadAgilidadProfunda', () => ({
       loadAgilidadProfunda: agilidadLoader,
     }));
@@ -73,7 +74,7 @@ describe('Sections composition', () => {
       </Suspense>,
     );
 
-    expect(screen.queryByTestId('cursos')).toBeNull();
+    expect(screen.getByTestId('cursos')).toBeInTheDocument();
     expect(agilidadLoader).not.toHaveBeenCalled();
     expect(screen.queryByTestId('agilidad-loading')).toBeNull();
   });

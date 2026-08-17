@@ -61,4 +61,20 @@ describe('Hero copy and CTAs', () => {
       block: 'start',
     });
   });
+
+  it('scrolls to the cursos section from the "Ver cursos" CTA', async () => {
+    const scrollIntoView = vi.fn();
+    const cursos = document.createElement('section');
+    cursos.id = 'cursos';
+    cursos.scrollIntoView = scrollIntoView;
+    document.body.appendChild(cursos);
+
+    renderHero();
+    await userEvent.click(screen.getByRole('button', { name: 'Ver cursos' }));
+
+    expect(scrollIntoView).toHaveBeenCalledWith({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  });
 });

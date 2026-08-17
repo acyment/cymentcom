@@ -17,13 +17,11 @@ const Sections = ({
   return (
     <Accordion.Root type="multiple">
       <Hero />
+      <Cursos
+        initialSlug={initialSlug}
+        onCourseDetailReady={onCourseDetailReady}
+      />
       <ComoTrabajo />
-      {initialSlug ? (
-        <Cursos
-          initialSlug={initialSlug}
-          onCourseDetailReady={onCourseDetailReady}
-        />
-      ) : null}
       {renderOutlet ? <Outlet /> : null}
       {/* Desktop keeps the inline modal experience via query param */}
       {!isMobile && (

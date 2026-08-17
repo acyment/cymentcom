@@ -1,6 +1,7 @@
 export const NAV_ITEMS = [
   // Shared items
   { href: '#hero', text: 'Inicio', visibleOn: ['mobile', 'desktop'] },
+  { href: '#cursos', text: 'Cursos', visibleOn: ['mobile', 'desktop'] },
   {
     href: '#como-trabajo',
     text: 'Cómo trabajo',

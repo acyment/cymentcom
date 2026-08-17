@@ -58,7 +58,7 @@ vi.mock('@/features/checkout/useOpenCheckout', () => ({
 
 import axios from 'axios';
 import userEvent from '@testing-library/user-event';
-import { render, screen } from '@/tests/utils';
+import { render, screen, waitFor } from '@/tests/utils';
 import { __clearCursosCache } from '@/components/Cursos';
 import {
   RouterProvider,
@@ -89,7 +89,7 @@ describe('Desktop course routing', () => {
     __clearCursosCache();
   });
 
-  it('omits the course catalogue from the desktop homepage', async () => {
+  it('keeps the URL on "/" while switching courses in desktop carousel', async () => {
     axios.get.mockImplementation((url) => {
       if (url === '/api/tipos-de-curso') {
         return Promise.resolve({
@@ -112,9 +112,25 @@ describe('Desktop course routing', () => {
     const router = createRouter({ routeTree, history });
     render(<RouterProvider router={router} />);
 
+    await screen.findByText(/CSM Title/i);
+    const clbHeading = await screen.findByText(/CLB Title/i);
+
     expect(history.location.pathname).toBe('/');
-    expect(screen.queryByText(/CSM Title/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/CLB Title/i)).not.toBeInTheDocument();
+
+    // Selecting a course opens its detail panel inline, without leaving "/"
+    await userEvent.click(clbHeading);
+
+    expect(history.location.pathname).toBe('/');
+    await waitFor(() => {
+      expect(screen.getAllByText(/CLB Title/)).toHaveLength(2);
+    });
+
+    const csmHeading = screen.getByText(/CSM Title/i);
+    await userEvent.click(csmHeading);
+    expect(history.location.pathname).toBe('/');
+    await waitFor(() => {
+      expect(screen.getAllByText(/CSM Title/)).toHaveLength(2);
+    });
   });
 
   it('deep links to /cursos/CLB and uses the desktop course experience', async () => {

@@ -117,9 +117,14 @@ describe('CourseDetail route', () => {
 
     const router = createRouter({
       routeTree,
-      history: createMemoryHistory({ initialEntries: ['/cursos/TM'] }),
+      history: createMemoryHistory({ initialEntries: ['/'] }),
     });
     render(<RouterProvider router={router} />);
+
+    const more = await screen.findByRole('button', {
+      name: /ver más detalles/i,
+    });
+    await userEvent.click(more);
 
     await waitFor(() => {
       expect(router.state.location.pathname).toBe('/cursos/TM');
@@ -397,7 +402,7 @@ describe('CourseDetail route', () => {
     });
   });
 
-  it('lets the user return to the homepage from the detail page', async () => {
+  it('lets the user return to the home catalog from the detail page', async () => {
     const listMock = vi.fn(() => Promise.resolve({ data: [buildCourse()] }));
     axios.get.mockImplementation((url) => {
       if (url === '/api/tipos-de-curso') {
@@ -424,10 +429,10 @@ describe('CourseDetail route', () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toBe('/');
     });
-    expect(listMock).not.toHaveBeenCalled();
     expect(
-      screen.queryByRole('button', { name: /ver más detalles/i }),
-    ).not.toBeInTheDocument();
+      await screen.findByRole('button', { name: /ver más detalles/i }),
+    ).toBeInTheDocument();
+    expect(listMock).toHaveBeenCalledTimes(1);
   });
 
   it('renders FAQ entries inside an accordion and reveals answers on toggle', async () => {

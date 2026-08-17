@@ -51,6 +51,16 @@ const Hero = () => {
               >
                 Contacto
               </button>
+              <button
+                className="HeroCTA HeroCTAPrimary"
+                onClick={() => {
+                  const el = document.querySelector('#cursos');
+                  el &&
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+              >
+                Ver cursos
+              </button>
             </div>
           </div>
           <picture>

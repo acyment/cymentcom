@@ -10,9 +10,9 @@ test('mobile nav shows core links only', async ({ page }, ti) => {
   const normalized = itemsText.map((t) => t.trim().toLowerCase());
 
   expect(normalized).toEqual(
-    expect.arrayContaining(['inicio', 'intervenciones', 'contacto']),
+    expect.arrayContaining(['inicio', 'cursos', 'cómo trabajo', 'contacto']),
   );
   expect(normalized).not.toEqual(
-    expect.arrayContaining(['cursos', 'agilidad profunda']),
+    expect.arrayContaining(['intervenciones', 'agilidad profunda']),
   );
 });

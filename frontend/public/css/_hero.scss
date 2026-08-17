@@ -134,8 +134,9 @@ $negative-main-padding-left: -($main-padding-left) !default;
   }
 }
 
-/* Container query: keep CTAs on one line when the copy column has room */
-@container (min-width: 420px) {
+/* Container query: keep CTAs on one line when the copy column has room.
+   Threshold sized for the three hero CTAs (LinkedIn / Contacto / Ver cursos). */
+@container (min-width: 680px) {
   .HeroCTARow {
     flex-wrap: nowrap;
   }
@@ -143,7 +144,8 @@ $negative-main-padding-left: -($main-padding-left) !default;
 
 @media (min-width: 769px) {
   .HeroCTARow {
-    flex-wrap: nowrap;
+    /* Copy column is 30% wide here; let the CTAs wrap instead of overflowing */
+    flex-wrap: wrap;
   }
 
   .HeroCTA {
