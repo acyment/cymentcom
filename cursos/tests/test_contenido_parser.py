@@ -38,9 +38,10 @@ import pytest
                     "summary": "",
                     "topics": [
                         {
+                            # The topic title is not repeated as its own first
+                            # lesson when the topic has nested items.
                             "topic_title": "Lección 1",
                             "lessons": [
-                                {"title": "Lección 1", "description": ""},
                                 {"title": "Detalle opcional", "description": ""},
                             ],
                         },
@@ -59,9 +60,10 @@ import pytest
                     "summary": "",
                     "topics": [
                         {
+                            # First bullet becomes the topic title and the rest
+                            # become its lessons; it is not duplicated below.
                             "topic_title": "Tema principal",
                             "lessons": [
-                                {"title": "Tema principal", "description": ""},
                                 {"title": "Subtema 1", "description": ""},
                                 {"title": "Subtema 2", "description": ""},
                             ],
