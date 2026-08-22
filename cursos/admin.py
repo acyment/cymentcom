@@ -4,8 +4,12 @@ from django.contrib import admin
 from django.contrib import messages
 from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 from django.db import models
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
+from django.urls import path
+from django.urls import reverse
 from django.utils.html import format_html
 from django_json_widget.widgets import JSONEditorWidget
 from django_jsonform.widgets import JSONFormWidget
@@ -231,10 +235,22 @@ class FacturaAdminForm(forms.ModelForm):
             "se_envio_mail_facturacion",
         )
 
+    class Media:
+        js = ("cursos/js/factura_admin.js",)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name in self.REQUIRED_FIELDS:
             self.fields[field_name].required = False
+        # In the admin, ModelAdmin wraps FK widgets in RelatedFieldWidgetWrapper,
+        # whose .render() ignores its own .attrs and delegates to .widget (the
+        # actual <select>) instead - so the url template has to live there.
+        cliente_widget = self.fields["cliente"].widget
+        select_widget = getattr(cliente_widget, "widget", cliente_widget)
+        select_widget.attrs["data-billing-url-template"] = reverse(
+            "admin:cursos_factura_cliente_billing_data",
+            args=[0],
+        )
 
     def clean(self):
         cleaned_data = super().clean()
@@ -263,6 +279,24 @@ class FacturaAdmin(EmailActionMixin, admin.ModelAdmin):
     )
     # No readonly_fields needed now
     actions = ["enviar_mail_facturacion"]
+
+    def get_urls(self):
+        custom_urls = [
+            path(
+                "cliente/<int:cliente_id>/facturacion/",
+                self.admin_site.admin_view(self.cliente_billing_data),
+                name="cursos_factura_cliente_billing_data",
+            ),
+        ]
+        return custom_urls + super().get_urls()
+
+    def cliente_billing_data(self, request, cliente_id):
+        cliente = get_object_or_404(Cliente, pk=cliente_id)
+        data = {
+            field_name: getattr(cliente, field_name)
+            for field_name in FacturaAdminForm.CLIENTE_FIELDS
+        }
+        return JsonResponse(data)
 
     @admin.action(
         description="Enviar mail de facturación",

@@ -329,3 +329,57 @@ def test_factura_form_accepts_manual_billing_data_without_cliente(curso):
     factura = form.save()
     assert factura.cliente is None
     assert factura.email == "ana@example.com"
+
+
+@pytest.mark.django_db
+def test_cliente_billing_data_view_returns_cliente_fields(admin_client):
+    cliente = ClienteFactory(
+        nombre="Acme SA",
+        email="facturacion@acme.com",
+        tipo_identificacion_fiscal="CUIT",
+        identificacion_fiscal="30-12345678-9",
+    )
+
+    url = reverse("admin:cursos_factura_cliente_billing_data", args=[cliente.pk])
+    response = admin_client.get(url)
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        "nombre": "Acme SA",
+        "email": "facturacion@acme.com",
+        "tipo_identificacion_fiscal": "CUIT",
+        "identificacion_fiscal": "30-12345678-9",
+    }
+
+
+@pytest.mark.django_db
+def test_cliente_billing_data_view_404s_for_unknown_cliente(admin_client):
+    url = reverse("admin:cursos_factura_cliente_billing_data", args=[999999])
+
+    response = admin_client.get(url)
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+
+
+@pytest.mark.django_db
+def test_cliente_billing_data_view_requires_staff_login(client):
+    cliente = ClienteFactory()
+    url = reverse("admin:cursos_factura_cliente_billing_data", args=[cliente.pk])
+
+    response = client.get(url)
+
+    assert response.status_code == HTTPStatus.FOUND
+    assert response.url.startswith(reverse("admin:login"))
+
+
+@pytest.mark.django_db
+def test_factura_add_page_cliente_select_exposes_billing_data_url_template(
+    admin_client,
+):
+    url_template = reverse("admin:cursos_factura_cliente_billing_data", args=[0])
+    add_url = reverse("admin:cursos_factura_add")
+
+    response = admin_client.get(add_url)
+    html = response.content.decode()
+
+    assert f'data-billing-url-template="{url_template}"' in html
