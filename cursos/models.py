@@ -14,6 +14,20 @@ def _is_valid_email(email):
     return True
 
 
+def _split_emails(value):
+    return [email.strip() for email in value.split(",") if email.strip()]
+
+
+def _clean_cc_emails(instance):
+    invalid = [
+        email for email in instance.cc_email_list() if not _is_valid_email(email)
+    ]
+    if invalid:
+        raise ValidationError(
+            {"cc_emails": f"Direcciones inválidas: {', '.join(invalid)}"},
+        )
+
+
 class TipoCurso(models.Model):
     nombre_corto = models.CharField(max_length=10)
     nombre_completo = models.CharField(max_length=60)
@@ -88,17 +102,11 @@ class Cliente(models.Model):
         return self.nombre
 
     def cc_email_list(self):
-        return [email.strip() for email in self.cc_emails.split(",") if email.strip()]
+        return _split_emails(self.cc_emails)
 
     def clean(self):
         super().clean()
-        invalid = [
-            email for email in self.cc_email_list() if not _is_valid_email(email)
-        ]
-        if invalid:
-            raise ValidationError(
-                {"cc_emails": f"Direcciones inválidas: {', '.join(invalid)}"},
-            )
+        _clean_cc_emails(self)
 
 
 class Curso(models.Model):
@@ -197,6 +205,14 @@ class Factura(models.Model):
         blank=True,
         null=True,
     )
+    cc_emails = models.TextField(
+        blank=True,
+        default="",
+        help_text=(
+            "Direcciones a copiar (CC) al enviar el mail de facturación, "
+            "separadas por coma."
+        ),
+    )
 
     def __str__(self):
         return f"{self.nombre} - {self.curso}"
@@ -209,6 +225,13 @@ class Factura(models.Model):
 
         # Call the "real" save() method
         super().save(*args, **kwargs)
+
+    def cc_email_list(self):
+        return _split_emails(self.cc_emails)
+
+    def clean(self):
+        super().clean()
+        _clean_cc_emails(self)
 
 
 class Inscripcion(models.Model):

@@ -267,6 +267,7 @@ def factura_form_data(curso, **overrides):
         "direccion": "",
         "curso": curso.pk,
         "email": "",
+        "cc_emails": "",
     }
     data.update(overrides)
     return data
@@ -361,6 +362,19 @@ def test_factura_form_still_requires_pais_without_cliente(curso):
 
 
 @pytest.mark.django_db
+def test_factura_form_copies_cc_emails_from_cliente_when_blank(curso):
+    cliente = ClienteFactory(cc_emails="ap@acme.com, boss@acme.com")
+
+    form = FacturaAdminForm(
+        data=factura_form_data(curso, cliente=cliente.pk, cc_emails=""),
+    )
+
+    assert form.is_valid(), form.errors
+    factura = form.save()
+    assert factura.cc_emails == "ap@acme.com, boss@acme.com"
+
+
+@pytest.mark.django_db
 def test_cliente_billing_data_view_returns_cliente_fields(admin_client):
     cliente = ClienteFactory(
         nombre="Acme SA",
@@ -369,6 +383,7 @@ def test_cliente_billing_data_view_returns_cliente_fields(admin_client):
         identificacion_fiscal="30-12345678-9",
         pais="AR",
         direccion="Av. Siempre Viva 742",
+        cc_emails="ap@acme.com, boss@acme.com",
     )
 
     url = reverse("admin:cursos_factura_cliente_billing_data", args=[cliente.pk])
@@ -382,6 +397,7 @@ def test_cliente_billing_data_view_returns_cliente_fields(admin_client):
         "identificacion_fiscal": "30-12345678-9",
         "pais": "AR",
         "direccion": "Av. Siempre Viva 742",
+        "cc_emails": "ap@acme.com, boss@acme.com",
     }
 
 

@@ -91,3 +91,17 @@ class TestFactura:
     def test_pagada_defaults_false(self):
         factura = FacturaFactory()
         assert factura.pagada is False
+
+    def test_cc_email_list_splits_and_strips_comma_separated_emails(self):
+        factura = FacturaFactory.build(cc_emails=" a@x.com,  b@x.com ,c@x.com")
+        assert factura.cc_email_list() == ["a@x.com", "b@x.com", "c@x.com"]
+
+    def test_cc_email_list_empty_when_blank(self):
+        factura = FacturaFactory.build(cc_emails="")
+        assert factura.cc_email_list() == []
+
+    def test_clean_rejects_invalid_email_in_cc_emails(self):
+        factura = FacturaFactory()
+        factura.cc_emails = "not-an-email"
+        with pytest.raises(ValidationError):
+            factura.full_clean()

@@ -213,6 +213,7 @@ class FacturaAdminForm(forms.ModelForm):
         "identificacion_fiscal",
         "pais",
         "direccion",
+        "cc_emails",
     )
     # Los únicos con blank=False en el modelo; los pide clean() si no hay cliente.
     REQUIRED_FIELDS = ("nombre", "email", "pais")
@@ -224,6 +225,7 @@ class FacturaAdminForm(forms.ModelForm):
             "cliente",
             "nombre",
             "email",
+            "cc_emails",
             "tipo_identificacion_fiscal",
             "identificacion_fiscal",
             "tipo_factura",

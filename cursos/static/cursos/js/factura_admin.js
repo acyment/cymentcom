@@ -15,6 +15,7 @@
     'identificacion_fiscal',
     'pais',
     'direccion',
+    'cc_emails',
   ];
 
   function applyBillingData(data) {

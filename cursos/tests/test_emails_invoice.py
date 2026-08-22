@@ -6,7 +6,6 @@ from mjml import mjml2html
 
 from cursos.emails import EmailSender
 from cursos.tests.factories import AlumnoFactory
-from cursos.tests.factories import ClienteFactory
 from cursos.tests.factories import FacturaFactory
 from cursos.tests.factories import InscripcionFactory
 
@@ -83,9 +82,8 @@ def test_send_invoice_email_skips_factura_without_recipient():
 
 
 @pytest.mark.django_db
-def test_send_invoice_email_ccs_cliente_email_addresses():
-    cliente = ClienteFactory(cc_emails="ap@acme.com, boss@acme.com")
-    factura = FacturaFactory(cliente=cliente)
+def test_send_invoice_email_ccs_factura_cc_emails():
+    factura = FacturaFactory(cc_emails="ap@acme.com, boss@acme.com")
 
     with patch.object(EmailSender, "_send_email") as send_email:
         EmailSender.send_invoice_email(factura.id)
@@ -94,19 +92,8 @@ def test_send_invoice_email_ccs_cliente_email_addresses():
 
 
 @pytest.mark.django_db
-def test_send_invoice_email_omits_cc_without_cliente():
-    factura = FacturaFactory(cliente=None)
-
-    with patch.object(EmailSender, "_send_email") as send_email:
-        EmailSender.send_invoice_email(factura.id)
-
-    assert send_email.call_args.kwargs["cc_list"] is None
-
-
-@pytest.mark.django_db
-def test_send_invoice_email_omits_cc_when_cliente_has_no_cc_emails():
-    cliente = ClienteFactory(cc_emails="")
-    factura = FacturaFactory(cliente=cliente)
+def test_send_invoice_email_omits_cc_when_factura_has_no_cc_emails():
+    factura = FacturaFactory(cc_emails="")
 
     with patch.object(EmailSender, "_send_email") as send_email:
         EmailSender.send_invoice_email(factura.id)
