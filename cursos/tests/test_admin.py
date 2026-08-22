@@ -332,12 +332,43 @@ def test_factura_form_accepts_manual_billing_data_without_cliente(curso):
 
 
 @pytest.mark.django_db
+def test_factura_form_copies_pais_and_direccion_from_cliente_when_blank(curso):
+    cliente = ClienteFactory(pais="AR", direccion="Av. Siempre Viva 742")
+
+    form = FacturaAdminForm(
+        data=factura_form_data(curso, cliente=cliente.pk, pais="", direccion=""),
+    )
+
+    assert form.is_valid(), form.errors
+    factura = form.save()
+    assert factura.pais == "AR"
+    assert factura.direccion == "Av. Siempre Viva 742"
+
+
+@pytest.mark.django_db
+def test_factura_form_still_requires_pais_without_cliente(curso):
+    form = FacturaAdminForm(
+        data=factura_form_data(
+            curso,
+            nombre="Ana Pérez",
+            email="ana@example.com",
+            pais="",
+        ),
+    )
+
+    assert not form.is_valid()
+    assert "pais" in form.errors
+
+
+@pytest.mark.django_db
 def test_cliente_billing_data_view_returns_cliente_fields(admin_client):
     cliente = ClienteFactory(
         nombre="Acme SA",
         email="facturacion@acme.com",
         tipo_identificacion_fiscal="CUIT",
         identificacion_fiscal="30-12345678-9",
+        pais="AR",
+        direccion="Av. Siempre Viva 742",
     )
 
     url = reverse("admin:cursos_factura_cliente_billing_data", args=[cliente.pk])
@@ -349,6 +380,8 @@ def test_cliente_billing_data_view_returns_cliente_fields(admin_client):
         "email": "facturacion@acme.com",
         "tipo_identificacion_fiscal": "CUIT",
         "identificacion_fiscal": "30-12345678-9",
+        "pais": "AR",
+        "direccion": "Av. Siempre Viva 742",
     }
 
 

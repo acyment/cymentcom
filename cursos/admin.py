@@ -211,9 +211,11 @@ class FacturaAdminForm(forms.ModelForm):
         "email",
         "tipo_identificacion_fiscal",
         "identificacion_fiscal",
+        "pais",
+        "direccion",
     )
     # Los únicos con blank=False en el modelo; los pide clean() si no hay cliente.
-    REQUIRED_FIELDS = ("nombre", "email")
+    REQUIRED_FIELDS = ("nombre", "email", "pais")
 
     class Meta:
         model = Factura

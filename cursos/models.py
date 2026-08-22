@@ -1,7 +1,17 @@
 from datetime import time
 
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.db import models
 from djmoney.models.fields import MoneyField
+
+
+def _is_valid_email(email):
+    try:
+        validate_email(email)
+    except ValidationError:
+        return False
+    return True
 
 
 class TipoCurso(models.Model):
@@ -61,11 +71,34 @@ class Cliente(models.Model):
     tipo_identificacion_fiscal = models.CharField(max_length=10, blank=True)
     identificacion_fiscal = models.CharField(max_length=100, blank=True)
     email = models.EmailField()
+    pais = models.CharField(max_length=40, blank=True)
+    direccion = models.CharField(max_length=200, blank=True)
+    cc_emails = models.TextField(
+        blank=True,
+        default="",
+        help_text=(
+            "Direcciones a copiar (CC) en las facturas de este cliente, "
+            "separadas por coma."
+        ),
+    )
     ciclo_de_pago = models.IntegerField(default=0)
     notas = models.TextField(blank=True)
 
     def __str__(self):
         return self.nombre
+
+    def cc_email_list(self):
+        return [email.strip() for email in self.cc_emails.split(",") if email.strip()]
+
+    def clean(self):
+        super().clean()
+        invalid = [
+            email for email in self.cc_email_list() if not _is_valid_email(email)
+        ]
+        if invalid:
+            raise ValidationError(
+                {"cc_emails": f"Direcciones inválidas: {', '.join(invalid)}"},
+            )
 
 
 class Curso(models.Model):

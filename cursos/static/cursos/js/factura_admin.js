@@ -8,17 +8,19 @@
     return template.replace('/0/', '/' + clienteId + '/');
   }
 
+  var CLIENTE_FIELDS = [
+    'nombre',
+    'email',
+    'tipo_identificacion_fiscal',
+    'identificacion_fiscal',
+    'pais',
+    'direccion',
+  ];
+
   function applyBillingData(data) {
-    fillBlank(document.getElementById('id_nombre'), data.nombre);
-    fillBlank(document.getElementById('id_email'), data.email);
-    fillBlank(
-      document.getElementById('id_tipo_identificacion_fiscal'),
-      data.tipo_identificacion_fiscal,
-    );
-    fillBlank(
-      document.getElementById('id_identificacion_fiscal'),
-      data.identificacion_fiscal,
-    );
+    CLIENTE_FIELDS.forEach(function (field) {
+      fillBlank(document.getElementById('id_' + field), data[field]);
+    });
   }
 
   function onClienteChange(event) {

@@ -1,10 +1,28 @@
 import pytest
+from django.core.exceptions import ValidationError
 
 from cursos.models import EstadoInscripcion
+from cursos.tests.factories import ClienteFactory
 from cursos.tests.factories import CursoFactory
 from cursos.tests.factories import FacturaFactory
 from cursos.tests.factories import InscripcionFactory
 from cursos.tests.factories import TipoCursoFactory
+
+
+@pytest.mark.django_db
+class TestCliente:
+    def test_cc_email_list_splits_and_strips_comma_separated_emails(self):
+        cliente = ClienteFactory(cc_emails=" a@x.com,  b@x.com ,c@x.com")
+        assert cliente.cc_email_list() == ["a@x.com", "b@x.com", "c@x.com"]
+
+    def test_cc_email_list_empty_when_blank(self):
+        cliente = ClienteFactory(cc_emails="")
+        assert cliente.cc_email_list() == []
+
+    def test_clean_rejects_invalid_email_in_cc_emails(self):
+        cliente = ClienteFactory.build(cc_emails="not-an-email")
+        with pytest.raises(ValidationError):
+            cliente.full_clean()
 
 
 @pytest.mark.django_db

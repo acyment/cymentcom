@@ -264,6 +264,12 @@ class EmailSender:
         return None
 
     @staticmethod
+    def _get_invoice_cc_list(factura):
+        if not factura.cliente:
+            return None
+        return factura.cliente.cc_email_list() or None
+
+    @staticmethod
     @shared_task
     def send_invoice_email(factura_id):
         """
@@ -271,7 +277,11 @@ class EmailSender:
         """
         log = logger.bind(task="send_invoice_email", factura_id=factura_id)
         try:
-            factura = Factura.objects.select_related("curso", "curso__tipo").get(
+            factura = Factura.objects.select_related(
+                "curso",
+                "curso__tipo",
+                "cliente",
+            ).get(
                 id=factura_id,
             )
             inscripciones = Inscripcion.objects.filter(factura=factura).select_related(
@@ -331,6 +341,7 @@ class EmailSender:
                 context=context,
                 subject=subject,
                 recipient_list=recipient_list,
+                cc_list=EmailSender._get_invoice_cc_list(factura),
                 attachment_path=attachment_path if attachment_filename else None,
                 attachment_filename=attachment_filename,
                 attachment_mimetype=attachment_mimetype,

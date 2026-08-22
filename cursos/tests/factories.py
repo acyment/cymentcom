@@ -84,6 +84,9 @@ class ClienteFactory(DjangoModelFactory):
     tipo_identificacion_fiscal = "CUIT"
     identificacion_fiscal = Faker("numerify", text="30-########-#")
     email = Faker("email")
+    pais = "AR"
+    direccion = ""
+    cc_emails = ""
     ciclo_de_pago = 0
     notas = ""
 
