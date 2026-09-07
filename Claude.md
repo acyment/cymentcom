@@ -138,11 +138,11 @@ Only create abstractions when:
 # Django view
 def calculate_discount(request, order):
     user_type = request.user.profile.user_type
-    if user_type == 'premium':
+    if user_type == "premium":
         return order.total * 0.2
-    elif user_type == 'member':
+    elif user_type == "member":
         return order.total * 0.1
-    elif user_type == 'guest':
+    elif user_type == "guest":
         return 0
     return 0
 ```
@@ -156,23 +156,27 @@ class DiscountStrategy(ABC):
     def calculate(self, order_total: Decimal) -> Decimal:
         pass
 
+
 class PremiumDiscount(DiscountStrategy):
     def calculate(self, order_total: Decimal) -> Decimal:
-        return order_total * Decimal('0.2')
+        return order_total * Decimal("0.2")
+
 
 class MemberDiscount(DiscountStrategy):
     def calculate(self, order_total: Decimal) -> Decimal:
-        return order_total * Decimal('0.1')
+        return order_total * Decimal("0.1")
+
 
 DISCOUNT_STRATEGIES = {
-    'premium': PremiumDiscount(),
-    'member': MemberDiscount(),
-    'guest': None,
+    "premium": PremiumDiscount(),
+    "member": MemberDiscount(),
+    "guest": None,
 }
+
 
 def calculate_discount(user_type: str, order_total: Decimal) -> Decimal:
     strategy = DISCOUNT_STRATEGIES.get(user_type)
-    return strategy.calculate(order_total) if strategy else Decimal('0')
+    return strategy.calculate(order_total) if strategy else Decimal("0")
 ```
 
 ## TDD Cycle - MANDATORY for Every Feature
@@ -345,6 +349,7 @@ import pytest
 from decimal import Decimal
 from apps.products.tests.factories import ProductFactory
 
+
 @pytest.mark.django_db
 class TestProduct:
     """Test Product model behavior"""
@@ -356,10 +361,7 @@ class TestProduct:
 
     def test_product_calculates_discount_price(self):
         """Test discount calculation"""
-        product = ProductFactory(
-            price=Decimal("100.00"),
-            discount_percentage=20
-        )
+        product = ProductFactory(price=Decimal("100.00"), discount_percentage=20)
         assert product.get_discount_price() == Decimal("80.00")
 ```
 
@@ -401,11 +403,11 @@ class TestProductAPI:
         ProductFactory.create_batch(3)
 
         # When
-        response = api_client.get('/api/products/')
+        response = api_client.get("/api/products/")
 
         # Then
         assert response.status_code == 200
-        assert len(response.json()['results']) == 3
+        assert len(response.json()["results"]) == 3
 ```
 
 ### React Frontend Testing
@@ -473,15 +475,12 @@ describe('useCart', () => {
 class TestPaymentService:
     """Test payment processing"""
 
-    @patch('stripe.PaymentIntent.create')
+    @patch("stripe.PaymentIntent.create")
     def test_process_payment(self, mock_stripe):
         """Test Stripe payment processing"""
         # Given
-        mock_stripe.return_value = Mock(
-            id='pi_test123',
-            status='succeeded'
-        )
-        order = OrderFactory(total=Decimal('99.99'))
+        mock_stripe.return_value = Mock(id="pi_test123", status="succeeded")
+        order = OrderFactory(total=Decimal("99.99"))
         service = PaymentService()
 
         # When
@@ -489,7 +488,7 @@ class TestPaymentService:
 
         # Then
         assert result.success is True
-        assert result.transaction_id == 'pi_test123'
+        assert result.transaction_id == "pi_test123"
 ```
 
 #### Checkout Flow Tests
