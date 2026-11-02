@@ -27,9 +27,9 @@ def test_pages_include_single_meta_viewport(path):
 
     # Must include exactly one viewport meta tag
     matches = VIEWPORT_PATTERN.findall(html)
-    assert (
-        len(matches) == 1
-    ), f"Expected one viewport meta tag in {path}, found {len(matches)}"
+    assert len(matches) == 1, (
+        f"Expected one viewport meta tag in {path}, found {len(matches)}"
+    )
 
 
 @pytest.mark.django_db
@@ -41,6 +41,6 @@ def test_pages_include_updated_meta_description(path):
     html = resp.content.decode("utf-8")
 
     matches = DESCRIPTION_PATTERN.findall(html)
-    assert (
-        len(matches) == 1
-    ), f"Expected one updated description meta tag in {path}, found {len(matches)}"
+    assert len(matches) == 1, (
+        f"Expected one updated description meta tag in {path}, found {len(matches)}"
+    )
